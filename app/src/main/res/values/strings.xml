@@ -26,6 +26,7 @@
     <string name="setup_welcome">Welcome</string>
     <string name="select_caseworker">Case Worker</string>
     <string name="select_user_language">Language</string>
+    <string name="continue_to_user_setup">Continue to User Setup</string>
 
     <string-array name="caseworker_array">
         <item>Joe Brown</item>

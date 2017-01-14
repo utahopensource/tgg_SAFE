@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView_welcome"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         android:textSize="30sp"/>
 
     <TextView
@@ -43,5 +43,15 @@
         android:id="@+id/spinner_user_lang"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp" />
+
+    <Button
+        android:text="@string/continue_to_user_setup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_setup_continue"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="50dp"
+        android:onClick="continueClicked"/>
 
 </LinearLayout>
