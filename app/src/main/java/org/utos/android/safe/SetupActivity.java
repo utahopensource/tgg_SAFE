@@ -21,12 +21,19 @@ public class SetupActivity extends AppCompatActivity {
 
     private Spinner mCaseWorkerSpinner;
     private Spinner mLanguageSpinner;
+    private SharedPreferences mPrefs;
+    private String[] mCaseworkerArray;
+    private String[] mLanguageArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
-        //TODO: pull caseworkers and supported langs from DB
+         mPrefs = getSharedPreferences(SHARED_PREFS, 0);
+
+        if( !mPrefs.contains(CASE_WORKER) || !mPrefs.contains(USER_LANG)){
+            pullData ();
+        }
 
         mCaseWorkerSpinner = (Spinner) findViewById(R.id.spinner_caseworker);
         ArrayAdapter<CharSequence> caseWorkerAdapter = ArrayAdapter.createFromResource(this,
@@ -56,17 +63,21 @@ public class SetupActivity extends AppCompatActivity {
 
     }
 
+    private void pullData() {
+        //TODO: get the data from the DB and populate the value arrays
+        
+    }
+
     /**
      * When continue button is clicked the selected case worker and language are stored in Shared Preferences
      * and the Login activity is launched
-     * @param view
+     * @param view - button clicked in content_setup.xml
      */
     public void continueClicked(View view) {
-        SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, 0);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
         prefsEditor.putString(CASE_WORKER, mCaseWorkerSpinner.getSelectedItem().toString());
         prefsEditor.putString(USER_LANG, mLanguageSpinner.getSelectedItem().toString());
-        prefsEditor.commit();
+        prefsEditor.apply();
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
