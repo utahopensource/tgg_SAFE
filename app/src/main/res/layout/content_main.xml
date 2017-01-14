@@ -23,10 +23,11 @@
         android:id="@+id/spinner"/>
 
     <Button
-        android:text="@string/btn_urgent"
-        android:layout_width="256dp"
-        android:layout_height="128dp"
         android:id="@+id/button_urgent"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="@drawable/large_circular_button"
+        android:text="@string/btn_urgent"
         android:layout_above="@+id/button_non_urgent"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="65dp"
@@ -34,14 +35,30 @@
         />
 
     <Button
-        android:text="@string/btn_non_urgent"
-        android:layout_width="256dp"
-        android:layout_height="128dp"
         android:id="@+id/button_non_urgent"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/large_circular_button"
+        android:text="@string/btn_non_urgent"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="34dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/button_urgent"
         android:layout_alignStart="@+id/button_urgent"
-        android:onClick="startNonUrgent"/>
+        android:onClick="startNonUrgent"
+
+        />
+    <!--<Button-->
+        <!--android:text="@string/btn_non_urgent"-->
+        <!--android:layout_width="256dp"-->
+        <!--android:layout_height="128dp"-->
+        <!--android:id="@+id/button_non_urgent"-->
+        <!--android:layout_marginBottom="34dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignLeft="@+id/button_urgent"-->
+        <!--android:layout_alignStart="@+id/button_urgent"-->
+        <!--android:onClick="startNonUrgent"/>-->
 
 </RelativeLayout>
