@@ -22,6 +22,20 @@
     <string name="btn_submit">Submit</string>
     <string name="emergency_number">tel:911</string>
     <string name="test_number">tel:211</string>
+    <string name="title_activity_setup">SetupActivity</string>
+    <string name="setup_welcome">Welcome</string>
+    <string name="select_caseworker">Case Worker</string>
+    <string name="select_user_language">Language</string>
+    <string name="continue_to_user_setup">Continue to User Setup</string>
 
+    <string-array name="caseworker_array">
+        <item>Joe Brown</item>
+        <item>Mary Smith</item>
+    </string-array>
+
+    <string-array name="language_array">
+        <item>English</item>
+        <item>Spanish</item>
+    </string-array>
 
 </resources>
