@@ -1,86 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_non_urgent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="org.utos.android.safe.NonUrgentActivity">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="128dp"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:hint="@string/txt_describe_incident"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner2"
-        android:layout_marginBottom="15dp"
-        android:layout_above="@+id/attachImaage"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-
-    <ImageButton
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:srcCompat="@android:drawable/ic_menu_camera"
-        android:layout_marginLeft="46dp"
-        android:layout_marginStart="46dp"
-        android:id="@+id/attachImaage"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
-
-    <ImageButton
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:srcCompat="@android:drawable/presence_audio_online"
-        android:id="@+id/attachVoice"
-        android:layout_alignBottom="@+id/attachImaage"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="60dp"
-        android:layout_marginEnd="60dp"/>
-
-    <ImageButton
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:srcCompat="@android:drawable/stat_sys_phone_call"
-        android:id="@+id/startPhoneCall"
-        android:layout_below="@+id/attachImaage"
-        android:layout_alignLeft="@+id/attachImaage"
-        android:layout_alignStart="@+id/attachImaage"
-        android:layout_marginTop="30dp"/>
-
-    <ImageButton
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:srcCompat="@android:drawable/presence_video_online"
-        android:id="@+id/attachVideo"
-        android:layout_alignTop="@+id/startPhoneCall"
-        android:layout_alignLeft="@+id/attachVoice"
-        android:layout_alignStart="@+id/attachVoice"/>
-
+    <!-- Submit-->
     <Button
-        android:text="@string/btn_submit"
+        android:id="@+id/submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/submitButton"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/attachVideo"
-        android:layout_alignStart="@+id/attachVideo"
-        android:layout_marginBottom="17dp"/>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:padding="5dp"
+        android:background="@drawable/border"
+        android:contentDescription="@null"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:layout_margin="5dp"
+        android:drawableEnd="@drawable/ic_send"
+        android:drawableRight="@drawable/ic_send"
+        android:onClick="submitReport"
+        android:text="@string/btn_submit"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <!-- Input Description -->
+        <EditText
+            android:id="@+id/editTextDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:gravity="top"
+            android:hint="@string/txt_describe_incident"
+            android:inputType="textMultiLine|textCapSentences"
+            android:lines="5"
+            android:padding="10dp"/>
+
+        <!-- Cat Selection -->
+        <LinearLayout
+            android:id="@+id/llCat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/textViewSelect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cat_selection"
+                android:textColor="@android:color/black"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/black"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Spinner
+                    android:id="@+id/spinnerCat"
+                    style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:entries="@array/report_cat_array"
+                    android:spinnerMode="dialog"
+                    android:textSize="20sp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <!-- buttons-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/attach_image"
+                    android:textColor="@android:color/black"/>
+
+                <ImageButton
+                    android:id="@+id/attachImage"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/border"
+                    android:contentDescription="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:onClick="attachImage"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_add_photo"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/attach_voice"
+                    android:textColor="@android:color/black"/>
+
+                <ImageButton
+                    android:id="@+id/attachVoice"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/border"
+                    android:contentDescription="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:onClick="attachVoice"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_mic"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/call_case_worker"
+                    android:textColor="@android:color/black"/>
+
+                <ImageButton
+                    android:id="@+id/startPhoneCall"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/border"
+                    android:contentDescription="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:onClick="makeCall"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_call"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/attach_video"
+                    android:textColor="@android:color/black"/>
+
+                <ImageButton
+                    android:id="@+id/attachVideo"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/border"
+                    android:contentDescription="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:onClick="attachVideo"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_video"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

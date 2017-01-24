@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -15,13 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.utos.android.safe.gps.GPSStarterKit;
-import org.utos.android.safe.gps.GetLocationInfo;
 import org.utos.android.safe.updater.UpdateChecker;
-
-import java.util.List;
-
-import static org.utos.android.safe.SetupActivity.CASE_WORKER;
-import static org.utos.android.safe.SetupActivity.SHARED_PREFS;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,8 +28,7 @@ public class MainActivity extends AppCompatActivity {
     //TODO: Authentication
 
     //TODO:
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -50,11 +42,10 @@ public class MainActivity extends AppCompatActivity {
         textViewCaseWorker = (TextView) findViewById(R.id.textViewCaseWorker);
 
         // set case worker name from shared prefs
-        textViewCaseWorker.setText("- " + getSharedPreferences(SHARED_PREFS, 0).getString(CASE_WORKER, ""));
+        //        textViewCaseWorker.setText("- " + getSharedPreferences(SHARED_PREFS, 0).getString(CASE_WORKER, ""));
     }
 
-    @Override
-    public void onResume() {
+    @Override public void onResume() {
         super.onResume();
 
         // Check for Location Permissions
@@ -65,8 +56,7 @@ public class MainActivity extends AppCompatActivity {
                         setTitle("Location Permission").
                         setMessage("This app needs location permissions.");
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
+                    @Override public void onClick(DialogInterface dialogInterface, int which) {
                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION);
                     }
                 });
@@ -80,8 +70,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStop() {
+    @Override protected void onStop() {
         super.onStop();
 
         // stop using GPS
@@ -90,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onDestroy() {
+    @Override public void onDestroy() {
         super.onDestroy();
 
         // stop using GPS
@@ -100,8 +88,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onPause() {
+    @Override public void onPause() {
         super.onPause();
 
         // stop using GPS
@@ -110,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void startUrgentCall(View view) {
+    public void startUrgent(View view) {
         // Check for CALL_PHONE
         if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?
@@ -119,8 +106,7 @@ public class MainActivity extends AppCompatActivity {
                         setTitle("Call Permission").
                         setMessage("This app needs call permissions to make phone calls.");
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
+                    @Override public void onClick(DialogInterface dialogInterface, int which) {
                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE);
                     }
                 });
@@ -174,15 +160,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // set location in main activity
-        List<Address> addresses = new GetLocationInfo(this, gpsStarterKit.getLatitude(), gpsStarterKit.getLongitude()).getLocInfo();
-        textViewMyCurrentAddress.setText(addresses.get(0).getAddressLine(0) + "\n" + addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea() + " " + addresses.get(0).getPostalCode());
+        //        List<Address> addresses = new GetLocationInfo(this, gpsStarterKit.getLatitude(), gpsStarterKit.getLongitude()).getLocInfo();
+        //        textViewMyCurrentAddress.setText(addresses.get(0).getAddressLine(0) + "\n" + addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea() + " " + addresses.get(0).getPostalCode());
     }
 
     ////////////////////////////////////////////////////////
     // Permission Listener
     ////////////////////////////////////////////////////////
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    @Override public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case LOCATION_PERMISSION:
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {

@@ -18,7 +18,6 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="btn_urgent">Urgent</string>
     <string name="btn_non_urgent">Non-Urgent</string>
-    <string name="txt_describe_incident">Describe the incident</string>
     <string name="btn_submit">Submit</string>
     <string name="emergency_number">tel:911</string>
     <string name="test_number">tel:211</string>
@@ -28,6 +27,14 @@
     <string name="select_user_language">Language</string>
     <string name="continue_to_user_setup">Continue to User Setup</string>
 
+    <!--Non Urgent Activity-->
+    <string name="txt_describe_incident">Describe the incident</string>
+    <string name="cat_selection">Category Selection:</string>
+    <string name="attach_image">Attach Image</string>
+    <string name="attach_voice">Attach Voice</string>
+    <string name="call_case_worker">Call Case Worker</string>
+    <string name="attach_video">Attach Video</string>
+
     <string-array name="caseworker_array">
         <item>Joe Brown</item>
         <item>Mary Smith</item>
@@ -36,6 +43,14 @@
     <string-array name="language_array">
         <item>English</item>
         <item>Spanish</item>
+    </string-array>
+
+    <string-array name="report_cat_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
     </string-array>
 
 </resources>

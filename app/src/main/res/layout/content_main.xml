@@ -6,56 +6,99 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="org.utos.android.safe.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <Spinner
         android:id="@+id/spinner"
+        style="@style/Widget.AppCompat.DropDownItem.Spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="22dp"/>
+        android:entries="@array/language_array"
+        android:spinnerMode="dialog"/>
 
-    <Button
-        android:id="@+id/button_urgent"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_above="@+id/button_non_urgent"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="65dp"
-        android:background="@drawable/large_circular_button"
-        android:onClick="startUrgent"
-        android:text="@string/btn_urgent"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/spinner"
+        android:baselineAligned="true"
+        android:orientation="vertical"
+        android:weightSum="2">
 
-    <Button
-        android:id="@+id/button_non_urgent"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignLeft="@+id/button_urgent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/button_urgent"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="34dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
-        android:background="@drawable/large_circular_button"
-        android:onClick="startNonUrgent"
-        android:text="@string/btn_non_urgent"/>
-    <!--<Button-->
-    <!--android:text="@string/btn_non_urgent"-->
-    <!--android:layout_width="256dp"-->
-    <!--android:layout_height="128dp"-->
-    <!--android:id="@+id/button_non_urgent"-->
-    <!--android:layout_marginBottom="34dp"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:layout_alignLeft="@+id/button_urgent"-->
-    <!--android:layout_alignStart="@+id/button_urgent"-->
-    <!--android:onClick="startNonUrgent"/>-->
+        <LinearLayout
+            android:id="@+id/button_urgent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/border"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:onClick="startUrgent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="@string/btn_urgent"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"/>
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_call"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/button_non_urgent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="25dp"
+            android:layout_weight="1"
+            android:background="@drawable/border"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:onClick="startNonUrgent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="@string/btn_non_urgent"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"/>
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_assignment"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

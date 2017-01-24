@@ -44,8 +44,9 @@ public class UpdateChecker {
     /**
      * JSON response url
      */
-    private final String urlJson = "https://firebasestorage.googleapis.com/v0/b/snoop-4dcd4.appspot.com/o/data%20(3).json?alt=media&token=0a65525d-21e9-4509-9170-230439b606f0";
+    private final String urlJson = "https://firebasestorage.googleapis.com/v0/b/snoop-4dcd4.appspot.com/o/update.json?alt=media&token=8e46de92-d1aa-419a-a289-82a7031b6111";
 
+    private static final String DIRECTORY_NAME = "SAFE" + File.separator + "APK";
     private final String TAG = "UpdateChecker";
     private final Activity ctx;
     //    private ProgressDialog loadingDialog;
@@ -66,8 +67,7 @@ public class UpdateChecker {
                         setTitle("Write External Storage Permission").
                         setMessage("This app needs rite External Storage Permission to update app.");
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
+                    @Override public void onClick(DialogInterface dialogInterface, int which) {
                         ActivityCompat.requestPermissions(ctx, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE);
                     }
                 });
@@ -86,8 +86,7 @@ public class UpdateChecker {
      */
     private void checkJSON() {
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, urlJson, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
+            @Override public void onResponse(JSONObject response) {
                 Log.d(TAG, response.toString());
                 //
                 try {
@@ -125,8 +124,7 @@ public class UpdateChecker {
                                         downloadTask.execute(apkUrl);
 
                                         mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                            @Override
-                                            public void onCancel(DialogInterface dialog) {
+                                            @Override public void onCancel(DialogInterface dialog) {
                                                 downloadTask.cancel(true);
                                             }
                                         });
@@ -150,9 +148,7 @@ public class UpdateChecker {
 
             }
         }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
+            @Override public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 Toast.makeText(ctx, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -174,8 +170,7 @@ public class UpdateChecker {
             this.context = context;
         }
 
-        @Override
-        protected String doInBackground(String... sUrl) {
+        @Override protected String doInBackground(String... sUrl) {
             InputStream input = null;
             OutputStream output = null;
             HttpURLConnection connection = null;
@@ -196,7 +191,8 @@ public class UpdateChecker {
 
                 // download the file
                 input = connection.getInputStream();
-                output = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/safe.apk");
+
+                output = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + File.separator + DIRECTORY_NAME + File.separator + "safe.apk");
 
                 byte data[] = new byte[4096];
                 long total = 0;
@@ -230,8 +226,7 @@ public class UpdateChecker {
             return null;
         }
 
-        @Override
-        protected void onPreExecute() {
+        @Override protected void onPreExecute() {
             super.onPreExecute();
             // take CPU lock to prevent CPU from going off if the user
             // presses the power button during download
@@ -241,8 +236,7 @@ public class UpdateChecker {
             mProgressDialog.show();
         }
 
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
+        @Override protected void onProgressUpdate(Integer... progress) {
             super.onProgressUpdate(progress);
             // if we get here, length is known, now set indeterminate to false
             mProgressDialog.setIndeterminate(false);
@@ -250,15 +244,14 @@ public class UpdateChecker {
             mProgressDialog.setProgress(progress[0]);
         }
 
-        @Override
-        protected void onPostExecute(String result) {
+        @Override protected void onPostExecute(String result) {
             mWakeLock.release();
             mProgressDialog.dismiss();
             if (result != null) {
                 Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
             } else {
                 // Download successful start install
-                File file = new File(Environment.getExternalStorageDirectory().getPath() + "/safe.apk");
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + File.separator + DIRECTORY_NAME + File.separator + "safe.apk");
                 Intent install = new Intent(Intent.ACTION_VIEW);
                 install.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 Uri apkURI = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
