@@ -29,6 +29,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static org.utos.android.safe.SetupActivity.CASE_WORKER_NUM;
+import static org.utos.android.safe.SetupActivity.SHARED_PREFS;
+
 public class NonUrgentActivity extends AppCompatActivity {
 
     // Permissions
@@ -122,8 +125,7 @@ public class NonUrgentActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE);
             }
         } else {
-            // TODO: 1/24/17 add caseworker number
-            Intent call_intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:211"));
+            Intent call_intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getSharedPreferences(SHARED_PREFS, 0).getString(CASE_WORKER_NUM, "")));
             startActivity(call_intent);
         }
 
@@ -421,8 +423,7 @@ public class NonUrgentActivity extends AppCompatActivity {
             case CALL_PHONE:
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
-                    // TODO: 1/24/17 add caseworker number
-                    Intent call_intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:211"));
+                    Intent call_intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" +getSharedPreferences(SHARED_PREFS, 0).getString(CASE_WORKER_NUM, "")));
                     startActivity(call_intent);
                 } else {
                     // Permission Denied

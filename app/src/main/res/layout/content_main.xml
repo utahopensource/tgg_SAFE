@@ -53,7 +53,7 @@
                 android:gravity="center"
                 android:text="@string/btn_urgent"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"/>
+                android:textSize="25sp"/>
 
             <ImageView
                 android:layout_width="50dp"
@@ -88,7 +88,7 @@
                 android:gravity="center"
                 android:text="@string/btn_non_urgent"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"/>
+                android:textSize="25sp"/>
 
             <ImageView
                 android:layout_width="50dp"

@@ -11,10 +11,15 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.utos.android.safe.gps.GPSStarterKit;
 import org.utos.android.safe.updater.UpdateChecker;
+
+import static org.utos.android.safe.SetupActivity.SHARED_PREFS;
+import static org.utos.android.safe.SetupActivity.USER_LANG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +45,15 @@ public class MainActivity extends AppCompatActivity {
         // UI stuff
         textViewMyCurrentAddress = (TextView) findViewById(R.id.textViewMyCurrentAddress);
         textViewCaseWorker = (TextView) findViewById(R.id.textViewCaseWorker);
+        Spinner mLanguageSpinner = (Spinner) findViewById(R.id.spinner);
+
+        // setup language spinner
+        ArrayAdapter<CharSequence> languageAdapter = ArrayAdapter.createFromResource(this, R.array.language_array, android.R.layout.simple_spinner_dropdown_item);
+        mLanguageSpinner.setAdapter(languageAdapter);
+        if (!getSharedPreferences(SHARED_PREFS, 0).getString(USER_LANG, "").equals("")) {
+            int spinnerPosition = languageAdapter.getPosition(getSharedPreferences(SHARED_PREFS, 0).getString(USER_LANG, ""));
+            mLanguageSpinner.setSelection(spinnerPosition);
+        }
 
         // set case worker name from shared prefs
         //        textViewCaseWorker.setText("- " + getSharedPreferences(SHARED_PREFS, 0).getString(CASE_WORKER, ""));

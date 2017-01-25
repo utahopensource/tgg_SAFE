@@ -1,0 +1,12 @@
+{
+  "CaseWorkers": [
+    {
+      "name": "Joe Brown",
+      "phone": "211"
+    },
+    {
+      "name": "Mary Smith",
+      "phone": "211"
+    }
+  ]
+}

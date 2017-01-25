@@ -1,57 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="org.utos.android.safe.SetupActivity"
+    tools:showIn="@layout/activity_setup">
 
     <TextView
-        android:text="@string/setup_welcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/textView_welcome"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="70dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="@string/setup_welcome"
+        android:textColor="@color/colorPrimary"
         android:textSize="30sp"/>
 
-    <TextView
-        android:text="@string/select_caseworker"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView_caseworker"
-        android:layout_marginTop="75dp"
-        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"/>
 
-
-    <Spinner
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner_caseworker"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"/>
-    <TextView
-        android:text="@string/select_user_language"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView_user_lang"
-        android:layout_marginTop="75dp"
-        />
-    <Spinner
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/textView_caseworker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight=".25"
+            android:gravity="end"
+            android:text="@string/select_caseworker"
+            android:textColor="@color/colorPrimary"/>
+
+        <Spinner
+            android:id="@+id/spinner_caseworker"
+            style="@style/Widget.AppCompat.DropDownItem.Spinner"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight=".75"
+            android:foreground="?android:selectableItemBackground"
+            android:spinnerMode="dialog"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner_user_lang"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp" />
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/textView_user_lang"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight=".25"
+            android:gravity="end"
+            android:text="@string/select_user_language"
+            android:textColor="@color/colorPrimary"/>
+
+        <Spinner
+            android:id="@+id/spinner_user_lang"
+            style="@style/Widget.AppCompat.DropDownItem.Spinner"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight=".75"
+            android:foreground="?android:selectableItemBackground"
+            android:spinnerMode="dialog"/>
+
+    </LinearLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/input_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/setup_name"
+            android:inputType="textPersonName|textCapWords"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_layout_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/input_num"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/setup_phone"
+            android:inputType="phone"
+            android:maxLength="11"/>
+
+
+    </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:text="@string/continue_to_user_setup"
+        android:id="@+id/button_setup_continue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button_setup_continue"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
         android:layout_marginRight="50dp"
-        android:onClick="continueClicked"/>
+        android:layout_marginTop="25dp"
+        android:background="@drawable/border"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:onClick="continueClicked"
+        android:text="@string/continue_to_login"/>
 
 </LinearLayout>
