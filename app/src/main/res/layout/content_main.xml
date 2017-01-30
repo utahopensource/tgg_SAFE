@@ -40,11 +40,11 @@
             android:layout_marginStart="50dp"
             android:layout_marginTop="50dp"
             android:layout_weight="1"
-            android:background="@drawable/border"
-            android:foreground="?attr/selectableItemBackground"
+            android:background="@drawable/main_btn"
             android:gravity="center"
             android:onClick="startUrgent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:theme="@style/ThemeMainButtons">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
                 android:layout_margin="10dp"
                 android:gravity="center"
                 android:text="@string/btn_urgent"
-                android:textColor="@android:color/black"
+                android:textColor="@color/colorYellow"
                 android:textSize="25sp"/>
 
             <ImageView
@@ -60,7 +60,8 @@
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_call"/>
+                android:src="@drawable/ic_call"
+                android:tint="@color/colorYellow"/>
 
         </LinearLayout>
 
@@ -75,11 +76,11 @@
             android:layout_marginStart="50dp"
             android:layout_marginTop="25dp"
             android:layout_weight="1"
-            android:background="@drawable/border"
-            android:foreground="?attr/selectableItemBackground"
+            android:background="@drawable/main_btn"
             android:gravity="center"
             android:onClick="startNonUrgent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:theme="@style/ThemeMainButtons">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -87,7 +88,7 @@
                 android:layout_margin="10dp"
                 android:gravity="center"
                 android:text="@string/btn_non_urgent"
-                android:textColor="@android:color/black"
+                android:textColor="@color/colorYellow"
                 android:textSize="25sp"/>
 
             <ImageView
@@ -95,7 +96,8 @@
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_assignment"/>
+                android:src="@drawable/ic_assignment"
+                android:tint="@color/colorYellow"/>
 
         </LinearLayout>
 

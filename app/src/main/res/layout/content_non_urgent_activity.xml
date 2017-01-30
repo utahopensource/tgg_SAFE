@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/content_non_urgent_activity_v2"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="org.utos.android.safe.NonUrgentActivity"
+    tools:showIn="@layout/activity_non_urgent">
+
+    <!-- Submit-->
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="5dp"
+        android:contentDescription="@null"
+        android:drawableEnd="@drawable/ic_send"
+        android:drawablePadding="10dp"
+        android:drawableRight="@drawable/ic_send"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="submitReport"
+        android:padding="15dp"
+        android:text="@string/btn_submit"
+        android:textColor="@color/colorYellow"
+        android:theme="@style/ThemeOverlay.MyDarkButton"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <!-- Input Description -->
+        <EditText
+            android:id="@+id/editTextDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:gravity="top"
+            android:hint="@string/txt_describe_incident"
+            android:inputType="textMultiLine|textCapSentences"
+            android:lines="5"
+            android:padding="10dp"/>
+
+        <!-- Cat Selection -->
+        <LinearLayout
+            android:id="@+id/llCat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/border"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/textViewSelect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cat_selection"
+                android:textColor="@android:color/black"
+                android:textStyle="italic"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimary"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Spinner
+                    android:id="@+id/spinnerCat"
+                    style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:entries="@array/report_cat_array"
+                    android:spinnerMode="dialog"
+                    android:textSize="20sp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <!-- buttons-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/attach_image"
+                    android:textColor="@android:color/black"
+                    android:textStyle="italic"/>
+
+                <ImageButton
+                    android:id="@+id/attachImage"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:onClick="attachImage"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_add_photo"
+                    android:theme="@style/ThemeOverlay.MyDarkButton"
+                    android:tint="@color/colorYellow"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/attach_voice"
+                    android:textColor="@android:color/black"
+                    android:textStyle="italic"/>
+
+                <ImageButton
+                    android:id="@+id/attachVoice"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:onClick="attachVoice"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_mic"
+                    android:theme="@style/ThemeOverlay.MyDarkButton"
+                    android:tint="@color/colorYellow"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/call_case_worker"
+                    android:textColor="@android:color/black"
+                    android:textStyle="italic"/>
+
+                <ImageButton
+                    android:id="@+id/startPhoneCall"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:onClick="makeCall"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_call"
+                    android:theme="@style/ThemeOverlay.MyDarkButton"
+                    android:tint="@color/colorYellow"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/attach_video"
+                    android:textColor="@android:color/black"
+                    android:textStyle="italic"/>
+
+                <ImageButton
+                    android:id="@+id/attachVideo"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:onClick="attachVideo"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_video"
+                    android:theme="@style/ThemeOverlay.MyDarkButton"
+                    android:tint="@color/colorYellow"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

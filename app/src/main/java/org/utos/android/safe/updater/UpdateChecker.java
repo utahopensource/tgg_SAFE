@@ -1,17 +1,14 @@
 package org.utos.android.safe.updater;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.PowerManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -51,34 +48,17 @@ public class UpdateChecker {
     private final Activity ctx;
     //    private ProgressDialog loadingDialog;
     private ProgressDialog mProgressDialog;
-    private static final int WRITE_EXTERNAL_STORAGE = 102;
+    //    private static final int WRITE_EXTERNAL_STORAGE = 102;
     private final int myVersionCode;
 
     public UpdateChecker(Activity _ctx) {
         ctx = _ctx;
-        //
+        // get current version code from manifest
         myVersionCode = BuildConfig.VERSION_CODE;
 
-        // Check for WRITE_EXTERNAL_STORAGE
-        if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ctx).
-                        setTitle("Write External Storage Permission").
-                        setMessage("This app needs rite External Storage Permission to update app.");
-                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialogInterface, int which) {
-                        ActivityCompat.requestPermissions(ctx, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE);
-                    }
-                });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            } else {
-                ActivityCompat.requestPermissions(ctx, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE);
-            }
-        } else {
-            checkJSON();
-        }
+        //
+        checkJSON();
+
     }
 
     /**
@@ -107,6 +87,7 @@ public class UpdateChecker {
 
                     //
                     if (jsonVersionCode > myVersionCode) {
+                        Log.e(TAG, "App is not up to date");
                         AlertDialog.Builder builder = new AlertDialog.Builder(ctx).
                                 setMessage("Click \"YES\" to download new update.").
                                 setTitle("Update Available").
@@ -139,6 +120,8 @@ public class UpdateChecker {
 
                         AlertDialog alert = builder.create();
                         alert.show();
+                    } else {
+                        Log.e(TAG, "App is up to date");
                     }
 
                 } catch (JSONException e) {
@@ -150,7 +133,7 @@ public class UpdateChecker {
         }, new Response.ErrorListener() {
             @Override public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
-                Toast.makeText(ctx, error.getMessage(), Toast.LENGTH_SHORT).show();
+                //                Toast.makeText(ctx, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

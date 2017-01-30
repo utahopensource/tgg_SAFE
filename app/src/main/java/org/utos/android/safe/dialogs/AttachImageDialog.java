@@ -2,9 +2,13 @@ package org.utos.android.safe.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -19,6 +23,7 @@ import org.utos.android.safe.NonUrgentActivity;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import static org.utos.android.safe.NonUrgentActivity.CAMERA_CAPTURE_IMAGE_REQUEST_CODE;
 import static org.utos.android.safe.NonUrgentActivity.MEDIA_TYPE_IMAGE;
@@ -72,7 +77,28 @@ public class AttachImageDialog extends DialogFragment {
                                 if (photoFile != null) {
                                     Uri photoURI = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName() + ".provider", photoFile);
                                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                                    getActivity().startActivityForResult(cameraIntent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+                                    // FileProvider permissions
+                                    // https://github.com/commonsguy/cw-omnibus/blob/master/Camera/FileProvider/app/src/main/java/com/commonsware/android/camcon/MainActivity.java
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                        cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                        ClipData clip = ClipData.newUri(getActivity().getContentResolver(), "A photo", photoURI);
+
+                                        cameraIntent.setClipData(clip);
+                                        cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                    } else {
+                                        List<ResolveInfo> resInfoList = getActivity().getPackageManager().queryIntentActivities(cameraIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+                                        for (ResolveInfo resolveInfo : resInfoList) {
+                                            String packageName = resolveInfo.activityInfo.packageName;
+                                            getActivity().grantUriPermission(packageName, photoURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                        }
+                                    }
+                                    // Verify that the intent will resolve to an activity
+                                    if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                        getActivity().startActivityForResult(cameraIntent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+                                    }
+
                                 }
                             }
                         } else {

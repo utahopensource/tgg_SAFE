@@ -1,225 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/activity_non_urgent"
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="org.utos.android.safe.NonUrgentActivity">
 
-    <!-- Submit-->
-    <Button
-        android:id="@+id/submitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:padding="5dp"
-        android:background="@drawable/border"
-        android:contentDescription="@null"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:layout_margin="5dp"
-        android:drawableEnd="@drawable/ic_send"
-        android:drawableRight="@drawable/ic_send"
-        android:onClick="submitReport"
-        android:text="@string/btn_submit"/>
-
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <!-- Input Description -->
-        <EditText
-            android:id="@+id/editTextDesc"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/border"
-            android:gravity="top"
-            android:hint="@string/txt_describe_incident"
-            android:inputType="textMultiLine|textCapSentences"
-            android:lines="5"
-            android:padding="10dp"/>
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-        <!-- Cat Selection -->
-        <LinearLayout
-            android:id="@+id/llCat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/border"
-            android:orientation="vertical"
-            android:padding="5dp">
+    </android.support.design.widget.AppBarLayout>
 
-            <TextView
-                android:id="@+id/textViewSelect"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/cat_selection"
-                android:textColor="@android:color/black"/>
+    <include layout="@layout/content_non_urgent_activity"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/black"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Spinner
-                    android:id="@+id/spinnerCat"
-                    style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:entries="@array/report_cat_array"
-                    android:spinnerMode="dialog"
-                    android:textSize="20sp"/>
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <!-- buttons-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/attach_image"
-                    android:textColor="@android:color/black"/>
-
-                <ImageButton
-                    android:id="@+id/attachImage"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/border"
-                    android:contentDescription="@null"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:onClick="attachImage"
-                    android:padding="15dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_add_photo"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/attach_voice"
-                    android:textColor="@android:color/black"/>
-
-                <ImageButton
-                    android:id="@+id/attachVoice"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/border"
-                    android:contentDescription="@null"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:onClick="attachVoice"
-                    android:padding="15dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_mic"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/call_case_worker"
-                    android:textColor="@android:color/black"/>
-
-                <ImageButton
-                    android:id="@+id/startPhoneCall"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/border"
-                    android:contentDescription="@null"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:onClick="makeCall"
-                    android:padding="15dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_call"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/attach_video"
-                    android:textColor="@android:color/black"/>
-
-                <ImageButton
-                    android:id="@+id/attachVideo"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/border"
-                    android:contentDescription="@null"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:onClick="attachVideo"
-                    android:padding="15dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_video"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

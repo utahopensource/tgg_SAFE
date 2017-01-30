@@ -1,8 +1,9 @@
 package org.utos.android.safe.dialogs;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.os.Environment;
 
@@ -31,7 +32,7 @@ public class AttachAudioDialog {
         return Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
-    public void recordAudio(final Context ctx) {
+    public void recordAudio(final Activity ctx) {
         if (isExternalStorageReadable() && isExternalStorageWritable()) {
             final MediaRecorder mediaRecorder = new MediaRecorder();
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -57,6 +58,7 @@ public class AttachAudioDialog {
                         // Save a path
                         ((NonUrgentActivity) ctx).mCurrentAudioPath = path;
                         if (new File(((NonUrgentActivity) ctx).mCurrentAudioPath).exists()) {
+                            ((NonUrgentActivity) ctx).attachVoiceButton.setColorFilter(Color.parseColor("#009900"));
                             ((NonUrgentActivity) ctx).attachVoiceButton.setImageResource(R.drawable.ic_check);
                         }
                     }
@@ -69,8 +71,11 @@ public class AttachAudioDialog {
                 });
                 mProgressDialog.show();
             } catch (IllegalStateException | IOException e) {
+
                 e.printStackTrace();
+
             }
+
         }
 
     }

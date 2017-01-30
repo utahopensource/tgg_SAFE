@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <!--<item name="android:windowBackground">@color/colorPrimary</item>-->
+        <item name="android:windowBackground">@color/grey_300</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -18,5 +18,39 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <!-- Dark Buttons -->
+    <style name="ThemeOverlay.MyDarkButton" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+    </style>
+
+    <!--Main Activity Buttons-->
+    <style name="ThemeMainButtons">
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="colorControlHighlight">@android:color/darker_gray</item>
+    </style>
+
+    <style name="ThemeOverlay.MyTextDetail" parent="AppTheme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fadeScrollbars">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">5</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!--<style name="ThemeOverlay.FirebaseIcon" parent="AppTheme">-->
+    <!--<item name="android:layout_marginTop">@dimen/icon_top_margin</item>-->
+    <!--<item name="android:layout_marginBottom">@dimen/icon_bottom_margin</item>-->
+    <!--</style>-->
+
+    <style name="ThemeOverlay.MyTitleText" parent="AppTheme">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">36sp</item>
+    </style>
 
 </resources>
