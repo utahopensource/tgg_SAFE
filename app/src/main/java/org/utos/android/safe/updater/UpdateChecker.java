@@ -23,6 +23,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.utos.android.safe.BuildConfig;
+import org.utos.android.safe.app.AppController;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,20 +37,22 @@ import java.net.URL;
  * Created by Zac on 1/22/2017.
  */
 public class UpdateChecker {
-    // TODO need to find a hosting place for these files.  I currently use Firebase.
 
+    // TODO need to find a hosting place for these files.  I currently use Firebase.
     /**
-     * JSON response url
+     * JSON response url hosted under apps@utos.org Firebase Storage
      */
-    private final String urlJson = "https://firebasestorage.googleapis.com/v0/b/snoop-4dcd4.appspot.com/o/update.json?alt=media&token=8e46de92-d1aa-419a-a289-82a7031b6111";
+    private final String urlJson = "https://firebasestorage.googleapis.com/v0/b/safe-app-a32df.appspot.com/o/update.json?alt=media&token=82378545-b549-4b87-b386-71e838f65858";
 
     private static final String DIRECTORY_NAME = "SAFE" + File.separator + "APK";
     private final String TAG = "UpdateChecker";
     private final Activity ctx;
     //    private ProgressDialog loadingDialog;
-    private ProgressDialog mProgressDialog;
+    private ProgressDialog mProgressDialogDownload;
     //    private static final int WRITE_EXTERNAL_STORAGE = 102;
     private final int myVersionCode;
+
+    JsonObjectRequest jsonObjReq;
 
     public UpdateChecker(Activity _ctx) {
         ctx = _ctx;
@@ -58,16 +61,17 @@ public class UpdateChecker {
 
         //
         checkJSON();
-
     }
 
     /**
      * Method to make json object request
      */
     private void checkJSON() {
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, urlJson, null, new Response.Listener<JSONObject>() {
+        //
+        jsonObjReq = new JsonObjectRequest(Request.Method.GET, urlJson, null, new Response.Listener<JSONObject>() {
             @Override public void onResponse(JSONObject response) {
                 Log.d(TAG, response.toString());
+
                 //
                 try {
                     // Parsing json object response
@@ -78,8 +82,8 @@ public class UpdateChecker {
                      "apkUrl":"https://firebasestorage.googleapis.com/v0/b/snoop-4dcd4.appspot.com/o/app-debug.apk?alt=media&token=2067d5b2-008c-4687-83ce-707369793da6"
                      }
                      */
-                    int jsonVersionCode = response.getInt("currentVersion");
-                    Log.d("jsonVersionCode", "" + jsonVersionCode);
+                    int jsonVersionCode = response.getInt("currentVersionCode");
+                    Log.d("currentVersionCode", "" + jsonVersionCode);
 
                     // APK download URL
                     final String apkUrl = response.getString("apkUrl");
@@ -94,17 +98,17 @@ public class UpdateChecker {
                                 setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         // Download new APK
-                                        mProgressDialog = new ProgressDialog(ctx);
-                                        mProgressDialog.setMessage("Downloading Update");
-                                        mProgressDialog.setIndeterminate(true);
-                                        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                                        mProgressDialog.setCancelable(false);
+                                        mProgressDialogDownload = new ProgressDialog(ctx);
+                                        mProgressDialogDownload.setMessage("Downloading Update...");
+                                        mProgressDialogDownload.setIndeterminate(true);
+                                        mProgressDialogDownload.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                                        mProgressDialogDownload.setCancelable(false);
 
                                         // execute this when the downloader must be fired
                                         final DownloadTask downloadTask = new DownloadTask(ctx);
                                         downloadTask.execute(apkUrl);
 
-                                        mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                        mProgressDialogDownload.setOnCancelListener(new DialogInterface.OnCancelListener() {
                                             @Override public void onCancel(DialogInterface dialog) {
                                                 downloadTask.cancel(true);
                                             }
@@ -151,6 +155,16 @@ public class UpdateChecker {
 
         public DownloadTask(Context context) {
             this.context = context;
+        }
+
+        @Override protected void onPreExecute() {
+            super.onPreExecute();
+            // take CPU lock to prevent CPU from going off if the user
+            // presses the power button during download
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
+            mWakeLock.acquire();
+            mProgressDialogDownload.show();
         }
 
         @Override protected String doInBackground(String... sUrl) {
@@ -209,27 +223,17 @@ public class UpdateChecker {
             return null;
         }
 
-        @Override protected void onPreExecute() {
-            super.onPreExecute();
-            // take CPU lock to prevent CPU from going off if the user
-            // presses the power button during download
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
-            mWakeLock.acquire();
-            mProgressDialog.show();
-        }
-
         @Override protected void onProgressUpdate(Integer... progress) {
             super.onProgressUpdate(progress);
             // if we get here, length is known, now set indeterminate to false
-            mProgressDialog.setIndeterminate(false);
-            mProgressDialog.setMax(100);
-            mProgressDialog.setProgress(progress[0]);
+            mProgressDialogDownload.setIndeterminate(false);
+            mProgressDialogDownload.setMax(100);
+            mProgressDialogDownload.setProgress(progress[0]);
         }
 
         @Override protected void onPostExecute(String result) {
             mWakeLock.release();
-            mProgressDialog.dismiss();
+            mProgressDialogDownload.dismiss();
             if (result != null) {
                 Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
             } else {

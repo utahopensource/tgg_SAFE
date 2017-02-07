@@ -1,0 +1,31 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="App Information">
+
+        <Preference
+            android:key="app_version"
+            android:summary=""
+            android:title="Build Version"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="User Content">
+
+        <!--<Preference-->
+        <!--android:key="app_vids"-->
+        <!--android:summary=""-->
+        <!--android:title="Videos"/>-->
+
+        <Preference
+            android:key="app_lang"
+            android:summary=""
+            android:title="Language"/>
+
+        <Preference
+            android:key="app_profile"
+            android:summary=""
+            android:title="Profile"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

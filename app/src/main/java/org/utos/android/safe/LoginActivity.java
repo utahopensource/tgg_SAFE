@@ -1,9 +1,13 @@
 package org.utos.android.safe;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -27,10 +32,20 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+import org.utos.android.safe.wrapper.LanguageWrapper;
+
+public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, View.OnClickListener {
 
     // TODO: 1/25/17 need SHA1 certificate fingerprints file signing cert
-    // TODO: 1/25/17 setup firebase Authenticate Using Google Sign-In on Android when we get app Google account setup
+
+    public static final String SHARED_PREFS = "SharedPrefsFile";
+    public static final String LOGIN_NAME = "loginName";
+    public static final String LOGIN_PHOTO = "loginPhoto";
+    public static final String LOGIN_EMAIL = "loginEmail";
+    public static final String LOGIN_UNIQUE_ID = "uniqueUserId";
+    public static final String LOGIN_OAUTH2 = "loginOauth2";
+
+        public static final String USER_LANG_LOCALE = "userLangLocale";
 
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
@@ -47,6 +62,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     public ProgressDialog mProgressDialog;
 
+    ///////////////////
+    // set language
+    @Override protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LanguageWrapper.wrap(newBase, newBase.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG_LOCALE, "")));
+    }
+    //
+    ///////////////////
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -54,22 +77,24 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorYellow));
 
-        // Button listeners
-        findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.bypass).setOnClickListener(this);
-
         // [START config_signin]
         // Configure Google Sign In
-        // todo setup OAuth2 from app google account and put it in requestIdToken("Web client ID")
+        // OAuth2 from app google account and put it in requestIdToken("Web client ID")
         // https://firebase.google.com/docs/auth/android/google-signin#authenticate_with_firebase
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
-                requestIdToken("937911878732-1cinjhioid12jpvoqf3knej96nr85uf7.apps.googleusercontent.com").
+                requestIdToken("189411335655-6335jinncvroojjfmh9dbngeat3ttrq7.apps.googleusercontent.com").
                 requestEmail().build();
         // [END config_signin]
 
         mGoogleApiClient = new GoogleApiClient.Builder(this).
+                addConnectionCallbacks(this).
                 enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */).
                 addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+
+        // Button listeners
+        findViewById(R.id.sign_in_button).setOnClickListener(this);
+        findViewById(R.id.bypass).setOnClickListener(this);
+
 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
@@ -81,12 +106,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    // save info to SharedPreferences
+                    SharedPreferences.Editor prefsEditor = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit();
+                    prefsEditor.putString(LOGIN_NAME, user.getDisplayName());
+                    prefsEditor.putString(LOGIN_PHOTO, user.getPhotoUrl().toString());
+                    prefsEditor.putString(LOGIN_EMAIL, user.getEmail());
+                    prefsEditor.putString(LOGIN_UNIQUE_ID, user.getUid());
+                    prefsEditor.apply();
                     // Goto next activity if signed in is successful
                     Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                    i.putExtra("name", user.getDisplayName());
-                    i.putExtra("email", user.getEmail());
-                    i.putExtra("userid", user.getUid());
                     startActivity(i);
                 } else {
                     // User is signed out
@@ -104,6 +132,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override public void onStart() {
         super.onStart();
 
+        // auto sign in
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+
+        //
         mAuth.addAuthStateListener(mAuthListener);
 
     }
@@ -125,6 +159,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.d(TAG, "onActivityResult");
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -132,12 +167,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                // // TODO: 1/25/17 Authenticate with a backend server https://developers.google.com/identity/sign-in/android/backend-auth
+                // Authenticate with a backend server https://developers.google.com/identity/sign-in/android/backend-auth
                 GoogleSignInAccount acct = result.getSignInAccount();
                 String idToken = acct.getIdToken();
                 Log.d(TAG, "ID Token: " + idToken);
-                //                mIdTokenTextView.setText("ID Token: " + idToken);
-                // TODO(user): send token to server and validate server-side
             } else {
                 // Google Sign In failed, update UI appropriately
                 // [START_EXCLUDE]
@@ -223,13 +256,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //        }
     }
 
-    @Override public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
-        // be available.
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
-        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
-    }
-
     @Override public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.sign_in_button) {
@@ -258,5 +284,77 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             mProgressDialog.dismiss();
         }
     }
+
+    // check google play services is available and updated
+    private boolean isGooglePlayServicesAvailable(Activity activity) {
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int status = googleApiAvailability.isGooglePlayServicesAvailable(activity);
+        if (status != ConnectionResult.SUCCESS) {
+            if (googleApiAvailability.isUserResolvableError(status)) {
+                googleApiAvailability.getErrorDialog(activity, status, 2404).show();
+            }
+            Log.d("PlayServicesAvailable", "false");
+            return false;
+        }
+        Log.d("PlayServicesAvailable", "true");
+        return true;
+    }
+
+    ///////////////////////////////////////
+    // GoogleApiClient.OnConnectionFailedListener
+    @Override public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
+        // be available.
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        Toast.makeText(this, "GoogleApiClient connection failed: " + connectionResult.toString(), Toast.LENGTH_SHORT).show();
+
+        if (!connectionResult.hasResolution()) {
+            // Show a localized error dialog.
+            isGooglePlayServicesAvailable(this);
+        } else {
+            if (mGoogleApiClient != null) {
+                mGoogleApiClient.connect();
+            }
+        }
+
+    }
+    // GoogleApiClient.OnConnectionFailedListener
+    ///////////////////////////////////////
+
+    ///////////////////////////////////////
+    // GoogleApiClient.ConnectionCallbacks
+    @Override public void onConnected(@Nullable Bundle bundle) {
+        Log.d(TAG, "GoogleApiClient connected");
+
+        // OAuth 2.0
+        Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient).setResultCallback(new ResultCallback<GoogleSignInResult>() {
+            @Override public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
+                if (googleSignInResult.isSuccess()) {
+                    try {
+                        //                        Log.d(TAG, "onConnected " + googleSignInResult.getSignInAccount().getIdToken());
+                        // save OAUTH SharedPreferences
+                        SharedPreferences.Editor prefsEditor = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit();
+                        prefsEditor.putString(LOGIN_OAUTH2, googleSignInResult.getSignInAccount().getIdToken());
+                        prefsEditor.apply();
+                        // disconnect when done
+                        mGoogleApiClient.disconnect();
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.d(TAG, "isSuccess FALSE");
+                }
+
+            }
+        });
+    }
+
+    @Override public void onConnectionSuspended(int i) {
+        Log.d(TAG, "onConnectionSuspended");
+        // Attempt to reconnect
+        mGoogleApiClient.connect();
+    }
+    // GoogleApiClient.ConnectionCallbacks
+    ///////////////////////////////////////
 
 }

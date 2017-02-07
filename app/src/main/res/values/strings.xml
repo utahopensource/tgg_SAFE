@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">SAFE</string>
-
-
     <!--Setup Activity-->
     <string name="setup_name">Name</string>
     <string name="setup_phone">Phone Number</string>
@@ -14,14 +12,7 @@
     <string name="disconnect">Disconnect</string>
     <!-- Content Description for images -->
 
-
     <string name="loading">Loading…</string>
-    <string name="desc_firebase_lockup">Firebase logo and name</string>
-    <string name="google_title_text">Google Sign In</string>
-    <string name="firebase_status_fmt">Firebase User: %s</string>
-    <string name="google_status_fmt">Google User: %s</string>
-    <!--<string name="web_client_id">937911878732-1cinjhioid12jpvoqf3knej96nr85uf7.apps.googleusercontent.com</string>-->
-
 
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -32,7 +23,6 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
-
 
     <string name="title_activity_main">MainActivity</string>
     <string name="btn_urgent">Urgent</string>
@@ -59,11 +49,6 @@
         <item>Mary Smith</item>
     </string-array>
 
-    <string-array name="language_array">
-        <item>English</item>
-        <item>Spanish</item>
-    </string-array>
-
     <string-array name="report_cat_array">
         <item>1</item>
         <item>2</item>
@@ -71,7 +56,10 @@
         <item>4</item>
         <item>5</item>
     </string-array>
+
     <string name="title_activity_login_v3">SAFE</string>
     <string name="title_activity_non_urgent_v2">NonUrgentActivityV2</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_select_laguage">Select Laguage</string>
 
 </resources>

@@ -46,6 +46,8 @@
             android:layout_margin="5dp"
             android:background="@drawable/border"
             android:gravity="top"
+            android:layoutDirection="locale"
+            android:textDirection="locale"
             android:hint="@string/txt_describe_incident"
             android:inputType="textMultiLine|textCapSentences"
             android:lines="5"

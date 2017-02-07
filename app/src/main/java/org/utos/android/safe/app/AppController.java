@@ -1,6 +1,5 @@
-package org.utos.android.safe.updater;
+package org.utos.android.safe.app;
 
-import android.app.Application;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -10,7 +9,7 @@ import com.android.volley.toolbox.Volley;
 /**
  * Created by Android on 1/22/2017.
  */
-public class AppController extends Application {
+public class AppController extends MyApplication {
 
     public static final String TAG = AppController.class.getSimpleName();
 

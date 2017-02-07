@@ -1,4 +1,4 @@
-package org.utos.android.safe.util;
+package org.utos.android.safe.util.localjson;
 
 import android.content.Context;
 

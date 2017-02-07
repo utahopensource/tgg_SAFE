@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "937911878732",
-    "firebase_url": "https://testsafe-14341.firebaseio.com",
-    "project_id": "testsafe-14341",
-    "storage_bucket": "testsafe-14341.appspot.com"
+    "project_number": "189411335655",
+    "firebase_url": "https://safe-app-a32df.firebaseio.com",
+    "project_id": "safe-app-a32df",
+    "storage_bucket": "safe-app-a32df.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:937911878732:android:1b5203b97ee69c98",
+        "mobilesdk_app_id": "1:189411335655:android:1b5203b97ee69c98",
         "android_client_info": {
           "package_name": "org.utos.android.safe"
         }
       },
       "oauth_client": [
         {
-          "client_id": "937911878732-eo9h347nfhionst6crcfuc7bjv4t8ahf.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "org.utos.android.safe",
-            "certificate_hash": "3E74277A97620E00C670DCFF5BB22736CF67CE68"
-          }
-        },
-        {
-          "client_id": "937911878732-1cinjhioid12jpvoqf3knej96nr85uf7.apps.googleusercontent.com",
+          "client_id": "189411335655-6335jinncvroojjfmh9dbngeat3ttrq7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyByFOHvb5x_lg5yvGGU1V8r8cWO0iCO5r8"
+          "current_key": "AIzaSyBXpURjhpn3lRHdt-2zF_7gJcINEKj9Cy4"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "937911878732-1cinjhioid12jpvoqf3knej96nr85uf7.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

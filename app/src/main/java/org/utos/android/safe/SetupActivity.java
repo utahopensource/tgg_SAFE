@@ -24,14 +24,14 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
-import org.utos.android.safe.util.GetCaseWorkers;
+import org.utos.android.safe.wrapper.LanguageWrapper;
+import org.utos.android.safe.util.localjson.GetCaseWorkers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,15 +40,16 @@ import java.util.HashMap;
 public class SetupActivity extends AppCompatActivity {
 
     // these strings are keys to access the caseworker and user language values in SharedPrefs
-    private static final String CASE_WORKER = "caseWorker";
+    public static final String CASE_WORKER = "caseWorker";
     public static final String CASE_WORKER_NUM = "caseWorkerNum";
-    private static final String USER_NAME = "userName";
-    private static final String USER_NUMBER = "userNumber";
+    public static final String USER_NAME = "userName";
+    public static final String USER_NUMBER = "userNumber";
     public static final String USER_LANG = "userLang";
-    public static final String SHARED_PREFS = "sharedPrefsFile";
+    public static final String USER_LANG_LOCALE = "userLangLocale";
+    public static final String SHARED_PREFS = "SharedPrefsFile";
 
     private Spinner mCaseWorkerSpinner;
-    private Spinner mLanguageSpinner;
+    //    private Spinner mLanguageSpinner;
     private SharedPreferences mPrefs;
     //    private String[] mCaseworkerArray;
     //    private String[] mLanguageArray;
@@ -58,12 +59,24 @@ public class SetupActivity extends AppCompatActivity {
     private Animation shake;
 
     private String stringCaseWorkerName, stringCaseWorkerNum;
+    private String stringLanguage, stringLocale;
 
     private ArrayList<HashMap<String, String>> formCaseWorkerList;
+    private ArrayList<HashMap<String, String>> formLanguageList;
+
+    boolean isSpinnerInitial = true;
 
     // Permissions
     private static final int ALL_PERMISSION = 101;
     private final String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.RECORD_AUDIO, Manifest.permission.CALL_PHONE, Manifest.permission.SEND_SMS, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE};
+
+    ///////////////////
+    // set language
+    @Override protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LanguageWrapper.wrap(newBase, newBase.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG_LOCALE, "")));
+    }
+    //
+    ///////////////////
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,20 +88,16 @@ public class SetupActivity extends AppCompatActivity {
         // change title
         setTitle(getString(R.string.title_activity_setup));
 
+        // Shared Preferences
+        mPrefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+
         //UI
         mCaseWorkerSpinner = (Spinner) findViewById(R.id.spinner_caseworker);
-        mLanguageSpinner = (Spinner) findViewById(R.id.spinner_user_lang);
+        //        mLanguageSpinner = (Spinner) findViewById(R.id.spinner_user_lang);
         textInputLayoutName = (TextInputLayout) findViewById(R.id.input_layout_name);
         textInputLayoutNum = (TextInputLayout) findViewById(R.id.input_layout_num);
         textInputEditTextName = (TextInputEditText) findViewById(R.id.input_name);
         textInputEditTextNum = (TextInputEditText) findViewById(R.id.input_num);
-
-        // setup language spinner
-        ArrayAdapter<CharSequence> languageAdapter = ArrayAdapter.createFromResource(this, R.array.language_array, android.R.layout.simple_spinner_dropdown_item);
-        mLanguageSpinner.setAdapter(languageAdapter);
-
-        // Shared Preferences
-        mPrefs = getSharedPreferences(SHARED_PREFS, 0);
 
         // if all data is already collected move to login screen
         if (mPrefs.contains(CASE_WORKER) && mPrefs.contains(CASE_WORKER_NUM) && mPrefs.contains(USER_NAME) && mPrefs.contains(USER_NUMBER) && mPrefs.contains(USER_LANG)) {
@@ -106,8 +115,6 @@ public class SetupActivity extends AppCompatActivity {
                     textInputEditTextNum.setText(tMgr.getLine1Number());
                 }
 
-                // Open the Spinner
-                mLanguageSpinner.performClick();
             }
 
             // setup animation for feedback
@@ -121,8 +128,8 @@ public class SetupActivity extends AppCompatActivity {
 
             // setup caseworker spinner
             formCaseWorkerList = new GetCaseWorkers(this).getCaseWorkers();
-            SimpleAdapter adapter = new SimpleAdapter(this, formCaseWorkerList, android.R.layout.simple_spinner_dropdown_item, new String[]{"name"}, new int[]{android.R.id.text1});
-            mCaseWorkerSpinner.setAdapter(adapter);
+            SimpleAdapter adapterCaseWorker = new SimpleAdapter(this, formCaseWorkerList, android.R.layout.simple_spinner_dropdown_item, new String[]{"name"}, new int[]{android.R.id.text1});
+            mCaseWorkerSpinner.setAdapter(adapterCaseWorker);
             mCaseWorkerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     stringCaseWorkerName = formCaseWorkerList.get(position).get("name");
@@ -135,6 +142,11 @@ public class SetupActivity extends AppCompatActivity {
             });
             ////////////////////////////////////////////////////////
         }
+
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
 
     }
 
@@ -172,7 +184,7 @@ public class SetupActivity extends AppCompatActivity {
             prefsEditor.putString(CASE_WORKER_NUM, stringCaseWorkerNum);
             prefsEditor.putString(USER_NAME, textInputEditTextName.getText().toString().trim());
             prefsEditor.putString(USER_NUMBER, textInputEditTextNum.getText().toString().trim());
-            prefsEditor.putString(USER_LANG, mLanguageSpinner.getSelectedItem().toString());
+            //            prefsEditor.putString(USER_LANG, mLanguageSpinner.getSelectedItem().toString());
             prefsEditor.apply();
 
             //
@@ -212,9 +224,7 @@ public class SetupActivity extends AppCompatActivity {
                             textInputEditTextNum.setText(tMgr.getLine1Number());
                         }
                     }
-                    ///////
-                    // Open the Spinner
-                    mLanguageSpinner.performClick();
+
                 }
                 break;
         }

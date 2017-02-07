@@ -38,11 +38,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
             android:layout_weight=".25"
-            android:textStyle="bold"
             android:gravity="end"
             android:text="@string/select_caseworker"
             android:textColor="@color/colorPrimary"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:textStyle="bold"/>
 
         <Spinner
             android:id="@+id/spinner_caseworker"
@@ -56,36 +56,36 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:weightSum="1">
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:padding="5dp"-->
+    <!--android:weightSum="1">-->
 
-        <TextView
-            android:id="@+id/textView_user_lang"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:layout_weight=".25"
-            android:gravity="end"
-            android:textStyle="bold"
-            android:text="@string/select_user_language"
-            android:textColor="@color/colorPrimary"
-            android:textSize="18sp"/>
+    <!--<TextView-->
+    <!--android:id="@+id/textView_user_lang"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_vertical|end"-->
+    <!--android:layout_weight=".25"-->
+    <!--android:gravity="end"-->
+    <!--android:textStyle="bold"-->
+    <!--android:text="@string/select_user_language"-->
+    <!--android:textColor="@color/colorPrimary"-->
+    <!--android:textSize="18sp"/>-->
 
-        <Spinner
-            android:id="@+id/spinner_user_lang"
-            style="@style/Widget.AppCompat.DropDownItem.Spinner"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight=".75"
-            android:foreground="?android:selectableItemBackground"
-            android:spinnerMode="dialog"/>
+    <!--<Spinner-->
+    <!--android:id="@+id/spinner_user_lang"-->
+    <!--style="@style/Widget.AppCompat.DropDownItem.Spinner"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:layout_weight=".75"-->
+    <!--android:foreground="?android:selectableItemBackground"-->
+    <!--android:spinnerMode="dialog"/>-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/input_layout_name"
@@ -98,7 +98,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/setup_name"
-            android:inputType="textPersonName|textCapWords"/>
+            android:inputType="textPersonName|textCapWords"
+            android:layoutDirection="locale"
+            android:textDirection="locale"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -113,7 +115,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/setup_phone"
-            android:inputType="phone"/>
+            android:inputType="phone"
+            android:layoutDirection="locale"
+            android:textDirection="locale"/>
 
     </android.support.design.widget.TextInputLayout>
 

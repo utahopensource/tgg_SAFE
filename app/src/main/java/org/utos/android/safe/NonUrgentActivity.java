@@ -2,6 +2,7 @@ package org.utos.android.safe;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,6 +30,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import org.utos.android.safe.dialogs.AttachAudioDialog;
 import org.utos.android.safe.dialogs.AttachImageDialog;
 import org.utos.android.safe.dialogs.AttachVideoDialog;
+import org.utos.android.safe.wrapper.LanguageWrapper;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -38,11 +40,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static org.utos.android.safe.SetupActivity.CASE_WORKER_NUM;
-import static org.utos.android.safe.SetupActivity.SHARED_PREFS;
 
 public class NonUrgentActivity extends AppCompatActivity {
 
     private String TAG = "NonUrgentActivity";
+
+    public static final String SHARED_PREFS = "SharedPrefsFile";
+    public static final String USER_LANG_LOCALE = "userLangLocale";
 
     // Permissions
     private static final int CALL_PHONE = 101;
@@ -67,6 +71,14 @@ public class NonUrgentActivity extends AppCompatActivity {
     private EditText editTextDesc;
 
     public String mCurrentImagePath, mCurrentAudioPath, mCurrentVideoPath, whatToDo;
+
+    ///////////////////
+    // set language
+    @Override protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LanguageWrapper.wrap(newBase, newBase.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG_LOCALE, "")));
+    }
+    //
+    ///////////////////
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

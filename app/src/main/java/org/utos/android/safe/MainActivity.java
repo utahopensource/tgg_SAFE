@@ -1,6 +1,7 @@
 package org.utos.android.safe;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,19 +13,22 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.utos.android.safe.gps.GPSStarterKit;
 import org.utos.android.safe.updater.UpdateChecker;
+import org.utos.android.safe.wrapper.LanguageWrapper;
 
 import static android.Manifest.permission.CALL_PHONE;
-import static org.utos.android.safe.SetupActivity.SHARED_PREFS;
-import static org.utos.android.safe.SetupActivity.USER_LANG;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String SHARED_PREFS = "SharedPrefsFile";
+    public static final String USER_LANG_LOCALE = "userLangLocale";
 
     //    private static final int LOCATION_PERMISSION = 101;
     private static final int CALL_AND_LOCATION_AND_WRITE_PERMISSIONS = 101;
@@ -38,12 +42,24 @@ public class MainActivity extends AppCompatActivity {
     private boolean makeCall;
     //TODO: Authentication
 
+    ///////////////////
+    // set language
+    @Override protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LanguageWrapper.wrap(newBase, newBase.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG_LOCALE, "")));
+    }
+    //
+    ///////////////////
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorYellow));
+
+        // UI stuff
+        textViewMyCurrentAddress = (TextView) findViewById(R.id.textViewMyCurrentAddress);
+        textViewCaseWorker = (TextView) findViewById(R.id.textViewCaseWorker);
 
         // Check for Location, Call, and Storage Permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -76,21 +92,25 @@ public class MainActivity extends AppCompatActivity {
             new UpdateChecker(this);
         }
 
-        // UI stuff
-        textViewMyCurrentAddress = (TextView) findViewById(R.id.textViewMyCurrentAddress);
-        textViewCaseWorker = (TextView) findViewById(R.id.textViewCaseWorker);
-        Spinner mLanguageSpinner = (Spinner) findViewById(R.id.spinner);
-
-        // setup language spinner
-        ArrayAdapter<CharSequence> languageAdapter = ArrayAdapter.createFromResource(this, R.array.language_array, android.R.layout.simple_spinner_dropdown_item);
-        mLanguageSpinner.setAdapter(languageAdapter);
-        if (!getSharedPreferences(SHARED_PREFS, 0).getString(USER_LANG, "").equals("")) {
-            int spinnerPosition = languageAdapter.getPosition(getSharedPreferences(SHARED_PREFS, 0).getString(USER_LANG, ""));
-            mLanguageSpinner.setSelection(spinnerPosition);
-        }
-
         // set case worker name from shared prefs
         //        textViewCaseWorker.setText("- " + getSharedPreferences(SHARED_PREFS, 0).getString(CASE_WORKER, ""));
+    }
+
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intentSettings);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override public void onResume() {
