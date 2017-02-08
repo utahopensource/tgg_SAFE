@@ -2,7 +2,6 @@ package org.utos.android.safe;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,7 +12,6 @@ import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -30,7 +28,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import org.utos.android.safe.dialogs.AttachAudioDialog;
 import org.utos.android.safe.dialogs.AttachImageDialog;
 import org.utos.android.safe.dialogs.AttachVideoDialog;
-import org.utos.android.safe.wrapper.LanguageWrapper;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -39,14 +36,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.utos.android.safe.SetupActivity.CASE_WORKER_NUM;
+public class NonUrgentActivity extends BaseActivity {
 
-public class NonUrgentActivity extends AppCompatActivity {
-
-    private String TAG = "NonUrgentActivity";
-
-    public static final String SHARED_PREFS = "SharedPrefsFile";
-    public static final String USER_LANG_LOCALE = "userLangLocale";
+    private final String TAG = "NonUrgentActivity";
 
     // Permissions
     private static final int CALL_PHONE = 101;
@@ -56,7 +48,7 @@ public class NonUrgentActivity extends AppCompatActivity {
     // Activity request codes
     public static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     public static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 200;
-    public static final int VOICE_SELECTION_REQUEST_CODE = 300;
+    private static final int VOICE_SELECTION_REQUEST_CODE = 300;
     public static final int SELECT_VIDEO_SELECTION_REQUEST_CODE = 400;
     public static final int CAPTURE_VIDEO_SELECTION_REQUEST_CODE = 500;
 
@@ -66,21 +58,13 @@ public class NonUrgentActivity extends AppCompatActivity {
     // directory name to store captured images and videos
     public static final String REPORT_DIRECTORY_NAME = "SAFE" + File.separator + "Report";
 
-    public ImageButton attachImageButton, attachVoiceButton, attachVideoButton;
+    private ImageButton attachImageButton, attachVoiceButton, attachVideoButton;
     private Spinner spinner;
     private EditText editTextDesc;
 
-    public String mCurrentImagePath, mCurrentAudioPath, mCurrentVideoPath, whatToDo;
+    private String mCurrentImagePath, mCurrentAudioPath, mCurrentVideoPath, whatToDo;
 
-    ///////////////////
-    // set language
-    @Override protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageWrapper.wrap(newBase, newBase.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG_LOCALE, "")));
-    }
-    //
-    ///////////////////
-
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_non_urgent);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -164,7 +148,7 @@ public class NonUrgentActivity extends AppCompatActivity {
     }
 
     /**
-     * Will launch camera app or select imgae
+     * Will launch camera app or select image
      */
     public void attachImage(View view) {
         if (isGooglePlayServicesAvailable(this)) {

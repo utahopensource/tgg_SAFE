@@ -13,7 +13,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
@@ -30,55 +29,27 @@ import android.widget.Spinner;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
-import org.utos.android.safe.wrapper.LanguageWrapper;
 import org.utos.android.safe.util.localjson.GetCaseWorkers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+public class SetupActivity extends BaseActivity {
 
-public class SetupActivity extends AppCompatActivity {
-
-    // these strings are keys to access the caseworker and user language values in SharedPrefs
-    public static final String CASE_WORKER = "caseWorker";
-    public static final String CASE_WORKER_NUM = "caseWorkerNum";
-    public static final String USER_NAME = "userName";
-    public static final String USER_NUMBER = "userNumber";
-    public static final String USER_LANG = "userLang";
-    public static final String USER_LANG_LOCALE = "userLangLocale";
-    public static final String SHARED_PREFS = "SharedPrefsFile";
-
-    private Spinner mCaseWorkerSpinner;
-    //    private Spinner mLanguageSpinner;
-    private SharedPreferences mPrefs;
-    //    private String[] mCaseworkerArray;
-    //    private String[] mLanguageArray;
     private TextInputEditText textInputEditTextName, textInputEditTextNum;
-    TextInputLayout textInputLayoutName, textInputLayoutNum;
+    private TextInputLayout textInputLayoutName, textInputLayoutNum;
 
     private Animation shake;
 
     private String stringCaseWorkerName, stringCaseWorkerNum;
-    private String stringLanguage, stringLocale;
 
     private ArrayList<HashMap<String, String>> formCaseWorkerList;
-    private ArrayList<HashMap<String, String>> formLanguageList;
-
-    boolean isSpinnerInitial = true;
 
     // Permissions
     private static final int ALL_PERMISSION = 101;
     private final String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.RECORD_AUDIO, Manifest.permission.CALL_PHONE, Manifest.permission.SEND_SMS, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE};
 
-    ///////////////////
-    // set language
-    @Override protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageWrapper.wrap(newBase, newBase.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG_LOCALE, "")));
-    }
-    //
-    ///////////////////
-
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -89,10 +60,10 @@ public class SetupActivity extends AppCompatActivity {
         setTitle(getString(R.string.title_activity_setup));
 
         // Shared Preferences
-        mPrefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences mPrefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
         //UI
-        mCaseWorkerSpinner = (Spinner) findViewById(R.id.spinner_caseworker);
+        Spinner mCaseWorkerSpinner = (Spinner) findViewById(R.id.spinner_caseworker);
         //        mLanguageSpinner = (Spinner) findViewById(R.id.spinner_user_lang);
         textInputLayoutName = (TextInputLayout) findViewById(R.id.input_layout_name);
         textInputLayoutNum = (TextInputLayout) findViewById(R.id.input_layout_num);
@@ -179,7 +150,7 @@ public class SetupActivity extends AppCompatActivity {
 
         // make sure all fields are filled b4 sending
         if (!textInputEditTextName.getText().toString().equals("") && !textInputEditTextNum.getText().toString().equals("") && isGooglePlayServicesAvailable(this)) {
-            SharedPreferences.Editor prefsEditor = mPrefs.edit();
+            SharedPreferences.Editor prefsEditor = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit();
             prefsEditor.putString(CASE_WORKER, stringCaseWorkerName);
             prefsEditor.putString(CASE_WORKER_NUM, stringCaseWorkerNum);
             prefsEditor.putString(USER_NAME, textInputEditTextName.getText().toString().trim());

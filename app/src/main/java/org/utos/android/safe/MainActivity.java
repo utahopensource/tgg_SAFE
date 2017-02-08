@@ -8,10 +8,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,10 +25,7 @@ import org.utos.android.safe.wrapper.LanguageWrapper;
 
 import static android.Manifest.permission.CALL_PHONE;
 
-public class MainActivity extends AppCompatActivity {
-
-    public static final String SHARED_PREFS = "SharedPrefsFile";
-    public static final String USER_LANG_LOCALE = "userLangLocale";
+public class MainActivity extends BaseActivity {
 
     //    private static final int LOCATION_PERMISSION = 101;
     private static final int CALL_AND_LOCATION_AND_WRITE_PERMISSIONS = 101;
@@ -38,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     ////// Localization //////
     private GPSStarterKit gpsStarterKit;
     ////// Localization //////
-    public TextView textViewMyCurrentAddress, textViewCaseWorker;
+    private TextView textViewMyCurrentAddress, textViewCaseWorker;
     private boolean makeCall;
     //TODO: Authentication
 
@@ -50,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     //
     ///////////////////
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -224,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
     ////////////////////////////////////////////////////////
     // Permission Listener
     ////////////////////////////////////////////////////////
-    @Override public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case CALL_AND_LOCATION_AND_WRITE_PERMISSIONS:
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {

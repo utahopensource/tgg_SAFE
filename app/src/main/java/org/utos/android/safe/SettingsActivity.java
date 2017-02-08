@@ -10,7 +10,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -27,15 +26,7 @@ import org.utos.android.safe.wrapper.LanguageWrapper;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SettingsActivity extends AppCompatActivity {
-
-    public static final String SHARED_PREFS = "SharedPrefsFile";
-    public static final String USER_LANG_LOCALE = "userLangLocale";
-    public static final String USER_LANG = "userLang";
-    public static final String CASE_WORKER = "caseWorker";
-    public static final String CASE_WORKER_NUM = "caseWorkerNum";
-    public static final String USER_NAME = "userName";
-    public static final String USER_NUMBER = "userNumber";
+public class SettingsActivity extends BaseActivity {
 
     ///////////////////
     // set language

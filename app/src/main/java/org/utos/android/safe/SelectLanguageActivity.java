@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,15 +15,11 @@ import org.utos.android.safe.util.localjson.LanguagesWorkers;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SelectLanguageActivity extends AppCompatActivity {
-
-    public static final String USER_LANG = "userLang";
-    public static final String USER_LANG_LOCALE = "userLangLocale";
-    public static final String SHARED_PREFS = "SharedPrefsFile";
+public class SelectLanguageActivity extends BaseActivity {
 
     private ArrayList<HashMap<String, String>> fromLanguageList;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_lagnuage);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
