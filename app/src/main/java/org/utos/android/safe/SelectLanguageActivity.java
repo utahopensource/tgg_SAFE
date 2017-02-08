@@ -17,8 +17,6 @@ import java.util.HashMap;
 
 public class SelectLanguageActivity extends BaseActivity {
 
-    private ArrayList<HashMap<String, String>> fromLanguageList;
-
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_lagnuage);
@@ -37,7 +35,7 @@ public class SelectLanguageActivity extends BaseActivity {
 
         ListView listView = (ListView) findViewById(R.id.langList);
 
-        fromLanguageList = new LanguagesWorkers(this).getLanguages();
+        final ArrayList<HashMap<String, String>> fromLanguageList = new LanguagesWorkers(this).getLanguages();
         SimpleAdapter adapterLanguage = new SimpleAdapter(this, fromLanguageList, android.R.layout.simple_spinner_dropdown_item, new String[]{"language"}, new int[]{android.R.id.text1});
         listView.setAdapter(adapterLanguage);
 

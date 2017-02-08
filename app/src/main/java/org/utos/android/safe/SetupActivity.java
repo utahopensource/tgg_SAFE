@@ -1,6 +1,5 @@
 package org.utos.android.safe;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +35,7 @@ import java.util.HashMap;
 
 public class SetupActivity extends BaseActivity {
 
+    private static final String TAG = "SetupActivity";
     private TextInputEditText textInputEditTextName, textInputEditTextNum;
     private TextInputLayout textInputLayoutName, textInputLayoutNum;
 
@@ -44,10 +44,6 @@ public class SetupActivity extends BaseActivity {
     private String stringCaseWorkerName, stringCaseWorkerNum;
 
     private ArrayList<HashMap<String, String>> formCaseWorkerList;
-
-    // Permissions
-    private static final int ALL_PERMISSION = 101;
-    private final String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.RECORD_AUDIO, Manifest.permission.CALL_PHONE, Manifest.permission.SEND_SMS, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE};
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

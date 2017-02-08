@@ -36,14 +36,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static android.Manifest.permission.CALL_PHONE;
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 public class NonUrgentActivity extends BaseActivity {
 
     private final String TAG = "NonUrgentActivity";
-
-    // Permissions
-    private static final int CALL_PHONE = 101;
-    private static final int CAM_AND_WRITE_EXTERNAL_STORAGE = 102;
-    private static final int RECORD_AUDIO_WRITE_EXTERNAL_STORAGE = 103;
 
     // Activity request codes
     public static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
@@ -52,6 +52,7 @@ public class NonUrgentActivity extends BaseActivity {
     public static final int SELECT_VIDEO_SELECTION_REQUEST_CODE = 400;
     public static final int CAPTURE_VIDEO_SELECTION_REQUEST_CODE = 500;
 
+    // media types
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
 
@@ -70,7 +71,6 @@ public class NonUrgentActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorYellow));
-
 
         // set title works when language change
         setTitle(getString(R.string.btn_non_urgent));
@@ -128,21 +128,21 @@ public class NonUrgentActivity extends BaseActivity {
      */
     public void makeCall(View view) {
         // Check for CALL_PHONE
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CALL_PHONE)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, CALL_PHONE)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this).
                         setTitle("Call Permission").
                         setMessage("This app needs call permissions to make phone calls.");
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialogInterface, int which) {
-                        ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{android.Manifest.permission.CALL_PHONE}, CALL_PHONE);
+                        ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
                     }
                 });
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CALL_PHONE}, CALL_PHONE);
+                ActivityCompat.requestPermissions(this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
             }
         } else {
             Intent call_intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getSharedPreferences(SHARED_PREFS, 0).getString(CASE_WORKER_NUM, "")));
@@ -159,21 +159,21 @@ public class NonUrgentActivity extends BaseActivity {
             //
             whatToDo = "attachImage";
             //
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, CAMERA) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CALL_PHONE)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, CALL_PHONE)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this).
                             setTitle("Camera and Write to Storage Permission").
                             setMessage("This app needs permissions to access camera and write to storage.");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override public void onClick(DialogInterface dialogInterface, int which) {
-                            ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAM_AND_WRITE_EXTERNAL_STORAGE);
+                            ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{CAMERA, WRITE_EXTERNAL_STORAGE}, CAM_AND_WRITE_EXTERNAL_STORAGE_PERMISSION);
                         }
                     });
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                 } else {
-                    ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAM_AND_WRITE_EXTERNAL_STORAGE);
+                    ActivityCompat.requestPermissions(this, new String[]{CAMERA, WRITE_EXTERNAL_STORAGE}, CAM_AND_WRITE_EXTERNAL_STORAGE_PERMISSION);
                 }
             } else {
                 new AttachImageDialog().show(getSupportFragmentManager(), "dialog");
@@ -190,21 +190,21 @@ public class NonUrgentActivity extends BaseActivity {
             //
             whatToDo = "attachVideo";
             //
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, CAMERA) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CALL_PHONE)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, CALL_PHONE)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this).
                             setTitle("Camera and Write to Storage Permission").
                             setMessage("This app needs permissions to access camera and write to storage.");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override public void onClick(DialogInterface dialogInterface, int which) {
-                            ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAM_AND_WRITE_EXTERNAL_STORAGE);
+                            ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{CAMERA, WRITE_EXTERNAL_STORAGE}, CAM_AND_WRITE_EXTERNAL_STORAGE_PERMISSION);
                         }
                     });
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                 } else {
-                    ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAM_AND_WRITE_EXTERNAL_STORAGE);
+                    ActivityCompat.requestPermissions(this, new String[]{CAMERA, WRITE_EXTERNAL_STORAGE}, CAM_AND_WRITE_EXTERNAL_STORAGE_PERMISSION);
                 }
             } else {
                 new AttachVideoDialog().show(getSupportFragmentManager(), "dialog");
@@ -219,21 +219,21 @@ public class NonUrgentActivity extends BaseActivity {
     public void attachVoice(View view) {
         if (isGooglePlayServicesAvailable(this)) {
             //
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.RECORD_AUDIO)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, RECORD_AUDIO)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this).
                             setTitle("Record Audio and Write to Storage Permission").
                             setMessage("This app needs permissions to record audio and write to storage.");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override public void onClick(DialogInterface dialogInterface, int which) {
-                            ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{android.Manifest.permission.RECORD_AUDIO, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, RECORD_AUDIO_WRITE_EXTERNAL_STORAGE);
+                            ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE}, RECORD_AUDIO_WRITE_EXTERNAL_STORAGE_PERMISSION);
                         }
                     });
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                 } else {
-                    ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.RECORD_AUDIO, android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, RECORD_AUDIO_WRITE_EXTERNAL_STORAGE);
+                    ActivityCompat.requestPermissions(this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE}, RECORD_AUDIO_WRITE_EXTERNAL_STORAGE_PERMISSION);
                 }
             } else {
                 new AttachAudioDialog().recordAudio(this);
@@ -500,8 +500,8 @@ public class NonUrgentActivity extends BaseActivity {
     ////////////////////////////////////////////////////////
     @Override public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case CALL_PHONE:
-                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            case CALL_PHONE_PERMISSION:
+                if (ActivityCompat.checkSelfPermission(this, CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
                     Intent call_intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getSharedPreferences(SHARED_PREFS, 0).getString(CASE_WORKER_NUM, "")));
                     startActivity(call_intent);
@@ -509,8 +509,8 @@ public class NonUrgentActivity extends BaseActivity {
                     // Permission Denied
                 }
                 break;
-            case CAM_AND_WRITE_EXTERNAL_STORAGE:
-                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            case CAM_AND_WRITE_EXTERNAL_STORAGE_PERMISSION:
+                if (ActivityCompat.checkSelfPermission(this, CAMERA) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
                     if (whatToDo != null) {
                         switch (whatToDo) {
@@ -526,8 +526,8 @@ public class NonUrgentActivity extends BaseActivity {
                     // Permission Denied
                 }
                 break;
-            case RECORD_AUDIO_WRITE_EXTERNAL_STORAGE:
-                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            case RECORD_AUDIO_WRITE_EXTERNAL_STORAGE_PERMISSION:
+                if (ActivityCompat.checkSelfPermission(this, RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
                     new AttachAudioDialog().recordAudio(this);
                 } else {

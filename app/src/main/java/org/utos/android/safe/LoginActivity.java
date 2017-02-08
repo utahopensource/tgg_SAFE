@@ -33,7 +33,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class LoginActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, View.OnClickListener {
 
     // TODO: 1/25/17 need SHA1 certificate fingerprints file signing cert
-    private static final String TAG = "GoogleActivity";
+    private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 9001;
 
     // [START declare_auth]

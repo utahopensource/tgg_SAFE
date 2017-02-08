@@ -1,6 +1,5 @@
 package org.utos.android.safe;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,22 +16,23 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import org.utos.android.safe.gps.GPSStarterKit;
 import org.utos.android.safe.updater.UpdateChecker;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CALL_PHONE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 public class MainActivity extends BaseActivity {
 
-    //    private static final int LOCATION_PERMISSION = 101;
-    private static final int CALL_AND_LOCATION_AND_WRITE_PERMISSIONS = 101;
-    //    private static final int WRITE_EXTERNAL_STORAGE_PERMISSION = 102;
-    private static final int CALL_PHONE_PERMISSION = 103;
+    private static final String TAG = "MainActivity";
 
     ////// Localization //////
     private GPSStarterKit gpsStarterKit;
     ////// Localization //////
-    private TextView textViewMyCurrentAddress, textViewCaseWorker;
+
+    //    private TextView textViewMyCurrentAddress, textViewCaseWorker;
     private boolean makeCall;
     //TODO: Authentication
 
@@ -47,26 +47,26 @@ public class MainActivity extends BaseActivity {
         setTitle(getString(R.string.app_name));
 
         // UI stuff
-        textViewMyCurrentAddress = (TextView) findViewById(R.id.textViewMyCurrentAddress);
-        textViewCaseWorker = (TextView) findViewById(R.id.textViewCaseWorker);
+        //        textViewMyCurrentAddress = (TextView) findViewById(textViewMyCurrentAddress);
+        //        textViewCaseWorker = (TextView) findViewById(textViewCaseWorker);
 
         // Check for Location, Call, and Storage Permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(MainActivity.this, CALL_PHONE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(MainActivity.this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION) || ActivityCompat.shouldShowRequestPermissionRationale(this, CALL_PHONE) || ActivityCompat.shouldShowRequestPermissionRationale(this, WRITE_EXTERNAL_STORAGE)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this).
                             setTitle("Location, Call, and Storage Permission").
                             setMessage("This app needs location permission to get current location for reports, call permission to make phone calls, and storage permission to get images and videos.");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override public void onClick(DialogInterface dialogInterface, int which) {
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CALL_AND_LOCATION_AND_WRITE_PERMISSIONS);
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{ACCESS_FINE_LOCATION, CALL_PHONE, WRITE_EXTERNAL_STORAGE}, CALL_AND_LOCATION_AND_WRITE_PERMISSIONS);
                         }
                     });
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                 } else {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CALL_AND_LOCATION_AND_WRITE_PERMISSIONS);
+                    ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION, CALL_PHONE, WRITE_EXTERNAL_STORAGE}, CALL_AND_LOCATION_AND_WRITE_PERMISSIONS);
                 }
             } else {
                 // start gps
@@ -139,23 +139,23 @@ public class MainActivity extends BaseActivity {
     public void startUrgent(View view) {
         // Check for CALL_PHONE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 //
                 makeCall = true;
                 // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, CALL_PHONE)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this).
                             setTitle("Call Permission").
                             setMessage("This app needs call permissions to make phone calls.");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override public void onClick(DialogInterface dialogInterface, int which) {
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE_PERMISSION);
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
                         }
                     });
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                 } else {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE_PERMISSION);
+                    ActivityCompat.requestPermissions(this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
                 }
             } else {
                 // TODO: 1/30/17 need to change to 911
@@ -217,14 +217,14 @@ public class MainActivity extends BaseActivity {
     @Override public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case CALL_AND_LOCATION_AND_WRITE_PERMISSIONS:
-                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
                     // start gps
                     startGPS();
                 } else {
                     // Permission Denied
                 }
-                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
                     // check for app update
                     new UpdateChecker(this);
@@ -233,7 +233,7 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case CALL_PHONE_PERMISSION:
-                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
                     if (makeCall) {
                         // TODO: 1/30/17 need to change to 911

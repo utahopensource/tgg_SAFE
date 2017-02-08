@@ -6,14 +6,23 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.utos.android.safe.wrapper.LanguageWrapper;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CALL_PHONE;
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.SEND_SMS;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 /**
  * Created by zacdavis on 2/7/17.
  */
-
 public class BaseActivity extends AppCompatActivity {
 
-    public static final String SHARED_PREFS = "SharedPrefsFile";
+    private static final String TAG = "BaseActivity";
 
+    // Shared Preferences
+    public static final String SHARED_PREFS = "SharedPrefsFile";
     public static final String CASE_WORKER = "caseWorker";
     public static final String CASE_WORKER_NUM = "caseWorkerNum";
     public static final String USER_NAME = "userName";
@@ -25,6 +34,16 @@ public class BaseActivity extends AppCompatActivity {
     public static final String LOGIN_EMAIL = "loginEmail";
     public static final String LOGIN_UNIQUE_ID = "uniqueUserId";
     public static final String LOGIN_OAUTH2 = "loginOauth2";
+    // Shared Preferences
+
+    // Permissions
+    public static final int ALL_PERMISSION = 101;
+    public static final int CALL_AND_LOCATION_AND_WRITE_PERMISSIONS = 102;
+    public static final int CALL_PHONE_PERMISSION = 103;
+    public static final int CAM_AND_WRITE_EXTERNAL_STORAGE_PERMISSION = 104;
+    public static final int RECORD_AUDIO_WRITE_EXTERNAL_STORAGE_PERMISSION = 105;
+    public final String[] PERMISSIONS = {CAMERA, ACCESS_FINE_LOCATION, RECORD_AUDIO, CALL_PHONE, SEND_SMS, WRITE_EXTERNAL_STORAGE, READ_PHONE_STATE};
+    // Permissions
 
     ///////////////////
     // set language
@@ -34,8 +53,7 @@ public class BaseActivity extends AppCompatActivity {
     //
     ///////////////////
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 

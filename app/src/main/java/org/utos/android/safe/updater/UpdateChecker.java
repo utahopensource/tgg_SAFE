@@ -38,6 +38,8 @@ import java.net.URL;
  */
 public class UpdateChecker {
 
+    private final String TAG = "UpdateChecker";
+
     // TODO need to find a hosting place for these files.  I currently use Firebase.
     /**
      * JSON response url hosted under apps@utos.org Firebase Storage
@@ -45,14 +47,11 @@ public class UpdateChecker {
     private final String urlJson = "https://firebasestorage.googleapis.com/v0/b/safe-app-a32df.appspot.com/o/update.json?alt=media&token=82378545-b549-4b87-b386-71e838f65858";
 
     private static final String DIRECTORY_NAME = "SAFE" + File.separator + "APK";
-    private final String TAG = "UpdateChecker";
     private final Activity ctx;
-    //    private ProgressDialog loadingDialog;
     private ProgressDialog mProgressDialogDownload;
-    //    private static final int WRITE_EXTERNAL_STORAGE = 102;
     private final int myVersionCode;
 
-    JsonObjectRequest jsonObjReq;
+    private JsonObjectRequest jsonObjReq;
 
     public UpdateChecker(Activity _ctx) {
         ctx = _ctx;

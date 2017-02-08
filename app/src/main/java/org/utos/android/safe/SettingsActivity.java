@@ -10,7 +10,6 @@ import android.preference.PreferenceFragment;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
@@ -23,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SettingsActivity extends BaseActivity {
+
+    private static final String TAG = "SettingsActivity";
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +43,6 @@ public class SettingsActivity extends BaseActivity {
 
     public static class SettingsFragment extends PreferenceFragment {
 
-        SharedPreferences sharedPreferences;
-
         @Override public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             // Load the preferences from an XML resource
@@ -61,13 +60,13 @@ public class SettingsActivity extends BaseActivity {
 
             /////////////////////////////
             // videos
-            Preference videosPref = findPreference("app_version");
-            videosPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override public boolean onPreferenceClick(Preference preference) {
-
-                    return false;
-                }
-            });
+            //            Preference videosPref = findPreference("app_version");
+            //            videosPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            //                @Override public boolean onPreferenceClick(Preference preference) {
+            //
+            //                    return false;
+            //                }
+            //            });
 
             /////////////////////////////
             // language
@@ -164,7 +163,6 @@ public class SettingsActivity extends BaseActivity {
                             //
                             for (HashMap list : formCaseWorkerList) {
                                 if (list.get("name").equals(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(CASE_WORKER, ""))) {
-                                    Log.d("SetupActivity", "GOTEM");
                                     spinner.setSelection(formCaseWorkerList.indexOf(list));
                                 }
                             }
