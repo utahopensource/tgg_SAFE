@@ -1,7 +1,6 @@
 package org.utos.android.safe;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,9 +21,6 @@ import android.widget.TextView;
 
 import org.utos.android.safe.gps.GPSStarterKit;
 import org.utos.android.safe.updater.UpdateChecker;
-import org.utos.android.safe.wrapper.LanguageWrapper;
-
-import static android.Manifest.permission.CALL_PHONE;
 
 public class MainActivity extends BaseActivity {
 
@@ -39,20 +36,15 @@ public class MainActivity extends BaseActivity {
     private boolean makeCall;
     //TODO: Authentication
 
-    ///////////////////
-    // set language
-    @Override protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageWrapper.wrap(newBase, newBase.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG_LOCALE, "")));
-    }
-    //
-    ///////////////////
-
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorYellow));
+
+        // set title works when language change
+        setTitle(getString(R.string.app_name));
 
         // UI stuff
         textViewMyCurrentAddress = (TextView) findViewById(R.id.textViewMyCurrentAddress);
@@ -102,10 +94,12 @@ public class MainActivity extends BaseActivity {
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
+                Log.d("onOptionsItemSelected", "onOptionsItemSelected");
                 Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intentSettings);
                 return true;
             default:
+                Log.d("onOptionsItemSelected", "default");
                 return super.onOptionsItemSelected(item);
         }
     }
@@ -145,23 +139,23 @@ public class MainActivity extends BaseActivity {
     public void startUrgent(View view) {
         // Check for CALL_PHONE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ActivityCompat.checkSelfPermission(MainActivity.this, CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 //
                 makeCall = true;
                 // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, CALL_PHONE)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this).
                             setTitle("Call Permission").
                             setMessage("This app needs call permissions to make phone calls.");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override public void onClick(DialogInterface dialogInterface, int which) {
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE_PERMISSION);
                         }
                     });
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                 } else {
-                    ActivityCompat.requestPermissions(this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE_PERMISSION);
                 }
             } else {
                 // TODO: 1/30/17 need to change to 911
@@ -180,7 +174,6 @@ public class MainActivity extends BaseActivity {
     }
 
     //    public void startUrgentText(View view) {
-    //        // TODO Need SEND_SMS Permissions
     //        // http://stackoverflow.com/questions/6361428/how-can-i-send-sms-messages-in-the-background-using-android
     //        //        SmsManager smsManager = SmsManager.getDefault();
     //        //        smsManager.sendTextMessage("phone number goes here", null, "Message goes here.", null, null);

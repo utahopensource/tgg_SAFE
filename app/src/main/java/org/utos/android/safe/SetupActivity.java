@@ -64,7 +64,6 @@ public class SetupActivity extends BaseActivity {
 
         //UI
         Spinner mCaseWorkerSpinner = (Spinner) findViewById(R.id.spinner_caseworker);
-        //        mLanguageSpinner = (Spinner) findViewById(R.id.spinner_user_lang);
         textInputLayoutName = (TextInputLayout) findViewById(R.id.input_layout_name);
         textInputLayoutNum = (TextInputLayout) findViewById(R.id.input_layout_num);
         textInputEditTextName = (TextInputEditText) findViewById(R.id.input_name);

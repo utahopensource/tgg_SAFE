@@ -58,11 +58,11 @@ public class NonUrgentActivity extends BaseActivity {
     // directory name to store captured images and videos
     public static final String REPORT_DIRECTORY_NAME = "SAFE" + File.separator + "Report";
 
-    private ImageButton attachImageButton, attachVoiceButton, attachVideoButton;
+    public ImageButton attachImageButton, attachVoiceButton, attachVideoButton;
     private Spinner spinner;
     private EditText editTextDesc;
 
-    private String mCurrentImagePath, mCurrentAudioPath, mCurrentVideoPath, whatToDo;
+    public String mCurrentImagePath, mCurrentAudioPath, mCurrentVideoPath, whatToDo;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +70,10 @@ public class NonUrgentActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorYellow));
+
+
+        // set title works when language change
+        setTitle(getString(R.string.btn_non_urgent));
 
         // setup up nav
         assert getSupportActionBar() != null;

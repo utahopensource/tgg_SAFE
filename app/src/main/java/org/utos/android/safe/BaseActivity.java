@@ -12,13 +12,19 @@ import org.utos.android.safe.wrapper.LanguageWrapper;
 
 public class BaseActivity extends AppCompatActivity {
 
+    public static final String SHARED_PREFS = "SharedPrefsFile";
+
     public static final String CASE_WORKER = "caseWorker";
     public static final String CASE_WORKER_NUM = "caseWorkerNum";
     public static final String USER_NAME = "userName";
     public static final String USER_NUMBER = "userNumber";
     public static final String USER_LANG = "userLang";
     public static final String USER_LANG_LOCALE = "userLangLocale";
-    public static final String SHARED_PREFS = "SharedPrefsFile";
+    public static final String LOGIN_NAME = "loginName";
+    public static final String LOGIN_PHOTO = "loginPhoto";
+    public static final String LOGIN_EMAIL = "loginEmail";
+    public static final String LOGIN_UNIQUE_ID = "uniqueUserId";
+    public static final String LOGIN_OAUTH2 = "loginOauth2";
 
     ///////////////////
     // set language

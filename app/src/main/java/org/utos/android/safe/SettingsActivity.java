@@ -1,6 +1,5 @@
 package org.utos.android.safe;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,24 +16,13 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.utos.android.safe.util.CustomCircleNetworkImageView;
-import org.utos.android.safe.util.VolleySingleton;
 import org.utos.android.safe.util.localjson.GetCaseWorkers;
 import org.utos.android.safe.util.localjson.LanguagesWorkers;
-import org.utos.android.safe.wrapper.LanguageWrapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SettingsActivity extends BaseActivity {
-
-    ///////////////////
-    // set language
-    @Override protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageWrapper.wrap(newBase, newBase.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG_LOCALE, "")));
-    }
-    //
-    ///////////////////
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,7 +120,7 @@ public class SettingsActivity extends BaseActivity {
                     //
                     final View layoutInflater = getActivity().getLayoutInflater().inflate(R.layout.dialog_profile, null);
                     // dialog UI
-                    CustomCircleNetworkImageView editTextStreetAddress = (CustomCircleNetworkImageView) layoutInflater.findViewById(R.id.profileIMG);
+                    //                    CustomCircleNetworkImageView editTextStreetAddress = (CustomCircleNetworkImageView) layoutInflater.findViewById(R.id.profileIMG);
                     TextView textViewGName = (TextView) layoutInflater.findViewById(R.id.googleName);
                     TextView textViewGEmail = (TextView) layoutInflater.findViewById(R.id.googleEmail);
                     TextView textViewUserName = (TextView) layoutInflater.findViewById(R.id.userName);
@@ -142,7 +130,7 @@ public class SettingsActivity extends BaseActivity {
                     TextView textViewUserCWN = (TextView) layoutInflater.findViewById(R.id.userCaseWorkerNUmber);
 
                     // set text in UI
-                    editTextStreetAddress.setImageUrl(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(LoginActivity.LOGIN_PHOTO, ""), VolleySingleton.getInstance().getImageLoader());
+                    //                    editTextStreetAddress.setImageUrl(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(LoginActivity.LOGIN_PHOTO, ""), VolleySingleton.getInstance().getImageLoader());
                     textViewGName.setText(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(LoginActivity.LOGIN_NAME, ""));
                     textViewGEmail.setText(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(LoginActivity.LOGIN_EMAIL, ""));
                     textViewUserName.setText("User Name: " + getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_NAME, ""));

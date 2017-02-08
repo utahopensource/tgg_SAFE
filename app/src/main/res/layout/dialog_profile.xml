@@ -24,30 +24,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <org.utos.android.safe.util.CustomCircleNetworkImageView
-            android:id="@+id/profileIMG"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_margin="10dp"/>
+        <!--<org.utos.android.safe.util.CustomCircleNetworkImageView-->
+        <!--android:id="@+id/profileIMG"-->
+        <!--android:layout_width="75dp"-->
+        <!--android:layout_height="75dp"-->
+        <!--android:layout_margin="10dp"/>-->
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/profileIMG"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/googleName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name"/>
+                android:layoutDirection="locale"
+                android:text="Name"
+                android:textDirection="locale"/>
 
             <TextView
                 android:id="@+id/googleEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Email"/>
+                android:layoutDirection="locale"
+                android:text="Email"
+                android:textDirection="locale"/>
 
         </LinearLayout>
 
@@ -70,26 +73,36 @@
     <TextView
         android:id="@+id/userName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layoutDirection="locale"
+        android:textDirection="locale"/>
 
     <TextView
         android:id="@+id/userNum"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layoutDirection="locale"
+        android:textDirection="locale"/>
 
     <TextView
         android:id="@+id/userLanguage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layoutDirection="locale"
+        android:textDirection="locale"/>
 
     <TextView
         android:id="@+id/userCaseWorker"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layoutDirection="locale"
+        android:textDirection="locale"/>
 
     <TextView
         android:id="@+id/userCaseWorkerNUmber"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layoutDirection="locale"
+        android:textDirection="locale"/>
 
 </LinearLayout>

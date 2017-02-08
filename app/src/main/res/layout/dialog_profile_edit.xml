@@ -46,7 +46,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/setup_name"
-            android:inputType="textPersonName|textCapWords"/>
+            android:inputType="textPersonName|textCapWords"
+            android:layoutDirection="locale"
+            android:textDirection="locale"/>
 
     </android.support.design.widget.TextInputLayout>
 
@@ -60,7 +62,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/setup_phone"
-            android:inputType="phone"/>
+            android:inputType="phone"
+            android:layoutDirection="locale"
+            android:textDirection="locale"/>
 
     </android.support.design.widget.TextInputLayout>
 

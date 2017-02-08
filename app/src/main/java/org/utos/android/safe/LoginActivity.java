@@ -2,14 +2,12 @@ package org.utos.android.safe;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -32,21 +30,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import org.utos.android.safe.wrapper.LanguageWrapper;
-
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, View.OnClickListener {
+public class LoginActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, View.OnClickListener {
 
     // TODO: 1/25/17 need SHA1 certificate fingerprints file signing cert
-
-    public static final String SHARED_PREFS = "SharedPrefsFile";
-    public static final String LOGIN_NAME = "loginName";
-    public static final String LOGIN_PHOTO = "loginPhoto";
-    public static final String LOGIN_EMAIL = "loginEmail";
-    public static final String LOGIN_UNIQUE_ID = "uniqueUserId";
-    public static final String LOGIN_OAUTH2 = "loginOauth2";
-
-        public static final String USER_LANG_LOCALE = "userLangLocale";
-
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
 
@@ -62,20 +48,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     public ProgressDialog mProgressDialog;
 
-    ///////////////////
-    // set language
-    @Override protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageWrapper.wrap(newBase, newBase.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG_LOCALE, "")));
-    }
-    //
-    ///////////////////
-
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorYellow));
+
+        // set title works when language change
+        setTitle(getString(R.string.app_name));
 
         // [START config_signin]
         // Configure Google Sign In

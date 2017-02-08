@@ -26,6 +26,9 @@ public class SelectLanguageActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorYellow));
 
+        // set title works when language change
+        setTitle(getString(R.string.app_name));
+
         // goto next if got language
         if (getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).contains(USER_LANG)) {
             Intent intent = new Intent(SelectLanguageActivity.this, SetupActivity.class);
