@@ -457,6 +457,7 @@ public class NonUrgentActivity extends BaseActivity {
                 File imageFile = new File(mCurrentImagePath);
                 if (imageFile.exists()) {
                     Log.d(TAG + " image", imageFile.getAbsolutePath());
+                    Log.d(TAG + " size", humanReadableByteCount(imageFile.length(), false));
                 }
             }
 
@@ -465,6 +466,7 @@ public class NonUrgentActivity extends BaseActivity {
                 File videoFile = new File(mCurrentVideoPath);
                 if (videoFile.exists()) {
                     Log.d(TAG + " video", videoFile.getAbsolutePath());
+                    Log.d(TAG + " size", humanReadableByteCount(videoFile.length(), false));
                 }
             }
 
@@ -473,6 +475,7 @@ public class NonUrgentActivity extends BaseActivity {
                 File audioFile = new File(mCurrentAudioPath);
                 if (audioFile.exists()) {
                     Log.d(TAG + " audio", audioFile.getAbsolutePath());
+                    Log.d(TAG + " size", humanReadableByteCount(audioFile.length(), false));
                 }
             }
 
@@ -493,6 +496,14 @@ public class NonUrgentActivity extends BaseActivity {
             snackbar.show();
         }
 
+    }
+
+    public static String humanReadableByteCount(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
     ////////////////////////////////////////////////////////
