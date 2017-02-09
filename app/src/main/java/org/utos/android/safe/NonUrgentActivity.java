@@ -484,28 +484,37 @@ public class NonUrgentActivity extends BaseActivity {
             Log.d(TAG + " catSe", catSelectionString);
 
             // Image File
-            if (mCurrentImagePath != null) {
-                File imageFile = new File(mCurrentImagePath);
-                if (imageFile.exists()) {
-                    Log.d(TAG + " image", imageFile.getAbsolutePath());
+            for (String uri : imageArray) {
+                if (uri != null) {
+                    File imageFile = new File(uri);
+                    if (imageFile.exists()) {
+                        Log.d(TAG + " image", imageFile.getAbsolutePath());
+                        Log.d(TAG + " size", humanReadableByteCount(imageFile.length(), false));
+                    }
                 }
             }
 
             // Video File
-            if (mCurrentVideoPath != null) {
-                File videoFile = new File(mCurrentVideoPath);
-                if (videoFile.exists()) {
-                    Log.d(TAG + " video", videoFile.getAbsolutePath());
+            for (String uri : videoArray) {
+                if (uri != null) {
+                    File videoFile = new File(uri);
+                    if (videoFile.exists()) {
+                        Log.d(TAG + " video", videoFile.getAbsolutePath());
+                        Log.d(TAG + " size", humanReadableByteCount(videoFile.length(), false));
+                    }
                 }
             }
 
             // Audio File
-            //            if (mCurrentAudioPath != null) {
-            //                File audioFile = new File(mCurrentAudioPath);
-            //                if (audioFile.exists()) {
-            //                    Log.d(TAG + " audio", audioFile.getAbsolutePath());
-            //                }
-            //            }
+            for (String uri : audioArray) {
+                if (uri != null) {
+                    File audioFile = new File(uri);
+                    if (audioFile.exists()) {
+                        Log.d(TAG + " audio", audioFile.getAbsolutePath());
+                        Log.d(TAG + " size", humanReadableByteCount(audioFile.length(), false));
+                    }
+                }
+            }
 
             //
             Snackbar snackbar = Snackbar.make(view, "Incident Report submitted", Snackbar.LENGTH_LONG);
@@ -524,6 +533,15 @@ public class NonUrgentActivity extends BaseActivity {
             snackbar.show();
         }
 
+    }
+
+    public static String humanReadableByteCount(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit)
+            return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
     ////////////////////////////////////////////////////////

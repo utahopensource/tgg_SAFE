@@ -35,9 +35,9 @@ public class AttachAudioDialog {
         if (isExternalStorageReadable() && isExternalStorageWritable()) {
             final MediaRecorder mediaRecorder = new MediaRecorder();
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-            final String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + REPORT_DIRECTORY_NAME + File.separator + "audio_" + (((NonUrgentActivity) ctx).audioArray.size() + 1) + ".3gp";
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            final String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + REPORT_DIRECTORY_NAME + File.separator + "audio_" + (((NonUrgentActivity) ctx).audioArray.size() + 1) + ".mp3";
             mediaRecorder.setOutputFile(path);
 
             try {
