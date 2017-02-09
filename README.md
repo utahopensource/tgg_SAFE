@@ -7,7 +7,7 @@ The refugees that use the app (hereafter users) will be provided with a Nexus 6 
 
 The current state of the app. Suggestions welcome!
 
-![Recording of pre-release app in use]{/images/wip.gif}
+![Recording of pre-release app in use](/images/wip.gif)
 
 A simple wireframe of the app. The Urgent button should call 911.
 
