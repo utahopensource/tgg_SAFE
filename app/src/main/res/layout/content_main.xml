@@ -55,13 +55,12 @@
                 android:textColor="@color/colorYellow"
                 android:textSize="25sp"/>
 
-            <ImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_call"
-                android:tint="@color/colorYellow"/>
+                app:srcCompat="@drawable/ic_call"/>
 
         </LinearLayout>
 
@@ -91,13 +90,12 @@
                 android:textColor="@color/colorYellow"
                 android:textSize="25sp"/>
 
-            <ImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_assignment"
-                android:tint="@color/colorYellow"/>
+                app:srcCompat="@drawable/ic_assignment"/>
 
         </LinearLayout>
 

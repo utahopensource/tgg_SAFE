@@ -3,12 +3,11 @@ package org.utos.android.safe.dialogs;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.os.Environment;
+import android.util.Log;
 
 import org.utos.android.safe.NonUrgentActivity;
-import org.utos.android.safe.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +37,7 @@ public class AttachAudioDialog {
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-            final String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + REPORT_DIRECTORY_NAME + File.separator + "audio.3gp";
+            final String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + REPORT_DIRECTORY_NAME + File.separator + "audio_" + (((NonUrgentActivity) ctx).audioArray.size() + 1) + ".3gp";
             mediaRecorder.setOutputFile(path);
 
             try {
@@ -56,11 +55,10 @@ public class AttachAudioDialog {
                         mediaRecorder.stop();
                         mediaRecorder.release();
                         // Save a path
-                        ((NonUrgentActivity) ctx).mCurrentAudioPath = path;
-                        if (new File(((NonUrgentActivity) ctx).mCurrentAudioPath).exists()) {
-                            ((NonUrgentActivity) ctx).attachVoiceButton.setColorFilter(Color.parseColor("#009900"));
-                            ((NonUrgentActivity) ctx).attachVoiceButton.setImageResource(R.drawable.ic_check);
-                        }
+                        ((NonUrgentActivity) ctx).audioArray.add(path);
+                        Log.d(((NonUrgentActivity) ctx).TAG, "" + path);
+                        // set text
+                        ((NonUrgentActivity) ctx).attachVoiceButton.setText(String.valueOf(((NonUrgentActivity) ctx).audioArray.size()));
                     }
                 });
                 mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {

@@ -11,18 +11,16 @@
     tools:showIn="@layout/activity_non_urgent">
 
     <!-- Submit-->
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_margin="5dp"
         android:contentDescription="@null"
         android:drawableEnd="@drawable/ic_send"
         android:drawablePadding="10dp"
-        android:drawableRight="@drawable/ic_send"
         android:foreground="?android:attr/selectableItemBackground"
         android:onClick="submitReport"
         android:padding="15dp"
@@ -33,7 +31,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:orientation="vertical">
@@ -46,12 +43,12 @@
             android:layout_margin="5dp"
             android:background="@drawable/border"
             android:gravity="top"
-            android:layoutDirection="locale"
-            android:textDirection="locale"
             android:hint="@string/txt_describe_incident"
             android:inputType="textMultiLine|textCapSentences"
+            android:layoutDirection="locale"
             android:lines="5"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:textDirection="locale"/>
 
         <!-- Cat Selection -->
         <LinearLayout
@@ -85,7 +82,6 @@
                     style="@style/Widget.AppCompat.DropDownItem.Spinner"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:entries="@array/report_cat_array"
@@ -119,19 +115,19 @@
                     android:textColor="@android:color/black"
                     android:textStyle="italic"/>
 
-                <ImageButton
+                <android.support.v7.widget.AppCompatButton
                     android:id="@+id/attachImage"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_gravity="center"
                     android:contentDescription="@null"
+                    android:drawableTop="@drawable/ic_add_photo"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:onClick="attachImage"
                     android:padding="15dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_add_photo"
-                    android:theme="@style/ThemeOverlay.MyDarkButton"
-                    android:tint="@color/colorYellow"/>
+                    android:text="0"
+                    android:textColor="@color/colorYellow"
+                    android:theme="@style/ThemeOverlay.MyDarkButton"/>
 
             </LinearLayout>
 
@@ -149,19 +145,19 @@
                     android:textColor="@android:color/black"
                     android:textStyle="italic"/>
 
-                <ImageButton
+                <android.support.v7.widget.AppCompatButton
                     android:id="@+id/attachVoice"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_gravity="center"
                     android:contentDescription="@null"
+                    android:drawableTop="@drawable/ic_mic"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:onClick="attachVoice"
                     android:padding="15dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_mic"
-                    android:theme="@style/ThemeOverlay.MyDarkButton"
-                    android:tint="@color/colorYellow"/>
+                    android:text="0"
+                    android:textColor="@color/colorYellow"
+                    android:theme="@style/ThemeOverlay.MyDarkButton"/>
 
             </LinearLayout>
 
@@ -188,7 +184,7 @@
                     android:textColor="@android:color/black"
                     android:textStyle="italic"/>
 
-                <ImageButton
+                <android.support.v7.widget.AppCompatImageButton
                     android:id="@+id/startPhoneCall"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
@@ -198,9 +194,8 @@
                     android:onClick="makeCall"
                     android:padding="15dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_call"
                     android:theme="@style/ThemeOverlay.MyDarkButton"
-                    android:tint="@color/colorYellow"/>
+                    app:srcCompat="@drawable/ic_call"/>
 
             </LinearLayout>
 
@@ -218,19 +213,19 @@
                     android:textColor="@android:color/black"
                     android:textStyle="italic"/>
 
-                <ImageButton
+                <android.support.v7.widget.AppCompatButton
                     android:id="@+id/attachVideo"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_gravity="center"
                     android:contentDescription="@null"
+                    android:drawableTop="@drawable/ic_video"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:onClick="attachVideo"
                     android:padding="15dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_video"
-                    android:theme="@style/ThemeOverlay.MyDarkButton"
-                    android:tint="@color/colorYellow"/>
+                    android:text="0"
+                    android:textColor="@color/colorYellow"
+                    android:theme="@style/ThemeOverlay.MyDarkButton"/>
 
             </LinearLayout>
 

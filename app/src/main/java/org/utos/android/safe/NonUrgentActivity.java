@@ -5,20 +5,19 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -35,6 +34,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import static android.Manifest.permission.CALL_PHONE;
 import static android.Manifest.permission.CAMERA;
@@ -43,14 +43,13 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class NonUrgentActivity extends BaseActivity {
 
-    private final String TAG = "NonUrgentActivity";
+    public final String TAG = "NonUrgentActivity";
 
     // Activity request codes
     public static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     public static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 200;
-    private static final int VOICE_SELECTION_REQUEST_CODE = 300;
-    public static final int SELECT_VIDEO_SELECTION_REQUEST_CODE = 400;
-    public static final int CAPTURE_VIDEO_SELECTION_REQUEST_CODE = 500;
+    public static final int SELECT_VIDEO_SELECTION_REQUEST_CODE = 300;
+    public static final int CAPTURE_VIDEO_SELECTION_REQUEST_CODE = 400;
 
     // media types
     public static final int MEDIA_TYPE_IMAGE = 1;
@@ -59,11 +58,13 @@ public class NonUrgentActivity extends BaseActivity {
     // directory name to store captured images and videos
     public static final String REPORT_DIRECTORY_NAME = "SAFE" + File.separator + "Report";
 
-    public ImageButton attachImageButton, attachVoiceButton, attachVideoButton;
+    public AppCompatButton attachImageButton, attachVoiceButton, attachVideoButton;
     private Spinner spinner;
     private EditText editTextDesc;
 
-    public String mCurrentImagePath, mCurrentAudioPath, mCurrentVideoPath, whatToDo;
+    public String mCurrentImagePath, mCurrentVideoPath, whatToDo;
+
+    public ArrayList<String> imageArray, videoArray, audioArray;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +76,10 @@ public class NonUrgentActivity extends BaseActivity {
         // set title works when language change
         setTitle(getString(R.string.btn_non_urgent));
 
+        imageArray = new ArrayList<>();
+        videoArray = new ArrayList<>();
+        audioArray = new ArrayList<>();
+
         // setup up nav
         assert getSupportActionBar() != null;
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
@@ -83,11 +88,31 @@ public class NonUrgentActivity extends BaseActivity {
         // UI
         editTextDesc = (EditText) findViewById(R.id.editTextDesc);
         spinner = (Spinner) findViewById(R.id.spinnerCat);
-        attachImageButton = (ImageButton) findViewById(R.id.attachImage);
-        attachVoiceButton = (ImageButton) findViewById(R.id.attachVoice);
-        attachVideoButton = (ImageButton) findViewById(R.id.attachVideo);
+        attachImageButton = (AppCompatButton) findViewById(R.id.attachImage);
+        attachVoiceButton = (AppCompatButton) findViewById(R.id.attachVoice);
+        attachVideoButton = (AppCompatButton) findViewById(R.id.attachVideo);
 
     }
+
+    //    @Override protected void onStop() {
+    //        super.onStop();
+    //
+    //        Log.d(TAG, "onStop");
+    //        deleteEverything();
+    //    }
+
+    @Override public void onDestroy() {
+        super.onDestroy();
+
+        Log.d(TAG, "onDestroy");
+        deleteEverything();
+    }
+
+    //    @Override public void onPause() {
+    //        super.onPause();
+    //
+    //        Log.d(TAG, "onPause");
+    //    }
 
     /**
      * returning image / video
@@ -107,15 +132,19 @@ public class NonUrgentActivity extends BaseActivity {
         // Create a media file name
         File mediaFile;
         if (type == MEDIA_TYPE_IMAGE) {
-            Log.d("MEDIA_TYPE_IMAGE", "MEDIA_TYPE_IMAGE");
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "image.jpg");
+            Log.d(TAG, "MEDIA_TYPE_IMAGE");
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "image_" + (imageArray.size() + 1) + ".jpg");
             // Save a path
+            imageArray.add(mediaFile.getAbsolutePath());
             mCurrentImagePath = mediaFile.getAbsolutePath();
+            Log.d(TAG, "" + mediaFile.getAbsolutePath());
         } else if (type == MEDIA_TYPE_VIDEO) {
-            Log.d("MEDIA_TYPE_VIDEO", "MEDIA_TYPE_VIDEO");
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "video.mp4");
+            Log.d(TAG, "MEDIA_TYPE_VIDEO");
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "video_" + (videoArray.size() + 1) + ".mp4");
             // Save a path
+            videoArray.add(mediaFile.getAbsolutePath());
             mCurrentVideoPath = mediaFile.getAbsolutePath();
+            Log.d(TAG, "" + mediaFile.getAbsolutePath());
         } else {
             return null;
         }
@@ -241,19 +270,39 @@ public class NonUrgentActivity extends BaseActivity {
         }
     }
 
-    private void deleteImage() {
+    private void deleteCurrentImage() {
         File file = new File(mCurrentImagePath);
         boolean deleted = file.delete();
+        // remove from imageArray list
+        imageArray.remove(imageArray.size() - 1);
     }
 
-    private void deleteAudio() {
-        File file = new File(mCurrentAudioPath);
-        boolean deleted = file.delete();
-    }
-
-    private void deleteVideo() {
+    private void deleteCurrentVideo() {
         File file = new File(mCurrentVideoPath);
         boolean deleted = file.delete();
+        // remove from videoArray list
+        videoArray.remove(videoArray.size() - 1);
+    }
+
+    private void deleteEverything() {
+        // delete images
+        for (String uri : imageArray) {
+            Log.d(TAG, uri);
+            File file = new File(uri);
+            boolean deleted = file.delete();
+        }
+        // delete videos
+        for (String uri : videoArray) {
+            Log.d(TAG, uri);
+            File file = new File(uri);
+            boolean deleted = file.delete();
+        }
+        // delete audio
+        for (String uri : audioArray) {
+            Log.d(TAG, uri);
+            File file = new File(uri);
+            boolean deleted = file.delete();
+        }
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -265,27 +314,21 @@ public class NonUrgentActivity extends BaseActivity {
                 Log.d("RESULT_OK", "RESULT_OK");
                 if (new File(mCurrentImagePath).exists()) {
                     Log.d("RESULT_OK", "exists");
-                    attachImageButton.setColorFilter(Color.parseColor("#009900"));
-                    attachImageButton.setImageResource(R.drawable.ic_check);
+                    // TODO: 2/8/17 set btn to number of images
+                    attachImageButton.setText(String.valueOf(imageArray.size()));
                 } else {
                     Log.d("RESULT_OK", "NO exists");
                 }
             } else if (resultCode == RESULT_CANCELED) {
                 // user cancelled Image capture
                 Toast.makeText(getApplicationContext(), "User cancelled image capture", Toast.LENGTH_SHORT).show();
-                // delete file
-                deleteImage();
-                // return images to norm
-                attachImageButton.setColorFilter(ContextCompat.getColor(this, R.color.colorYellow));
-                attachImageButton.setImageResource(R.drawable.ic_add_photo);
+                // delete current file
+                deleteCurrentImage();
             } else {
                 // failed to capture image
                 Toast.makeText(getApplicationContext(), "Sorry! Failed to capture image", Toast.LENGTH_SHORT).show();
-                // delete file
-                deleteImage();
-                // return images to norm
-                attachImageButton.setColorFilter(ContextCompat.getColor(this, R.color.colorYellow));
-                attachImageButton.setImageResource(R.drawable.ic_add_photo);
+                // delete current file
+                deleteCurrentImage();
             }
         }
 
@@ -307,8 +350,10 @@ public class NonUrgentActivity extends BaseActivity {
                             }
                         }
 
-                        File finalDestImage = new File(storageDir.getPath() + File.separator + "image.jpg");
-                        Log.d("destinationImage", String.valueOf(finalDestImage));
+                        //
+                        File finalDestImage = new File(storageDir.getPath() + File.separator + "image_" + (imageArray.size() + 1) + ".jpg");
+                        imageArray.add(finalDestImage.getAbsolutePath());
+                        Log.d(TAG, "" + finalDestImage.getAbsolutePath());
                         BufferedOutputStream outStream = new BufferedOutputStream(new FileOutputStream(finalDestImage));
 
                         byte[] buf = new byte[1024];
@@ -324,10 +369,8 @@ public class NonUrgentActivity extends BaseActivity {
                         mCurrentImagePath = finalDestImage.getAbsolutePath();
                         //
                         Log.d("mCurrentImagePath", "B4");
-                        if (new File(mCurrentImagePath).exists()) {
-                            attachImageButton.setColorFilter(Color.parseColor("#009900"));
-                            attachImageButton.setImageResource(R.drawable.ic_check);
-                        }
+                        // TODO: 2/8/17 image button
+                        attachImageButton.setText(String.valueOf(imageArray.size()));
                     } catch (IOException re) {
                         re.printStackTrace();
                         Toast.makeText(getApplicationContext(), "File not found, try another image.", Toast.LENGTH_SHORT).show();
@@ -346,29 +389,21 @@ public class NonUrgentActivity extends BaseActivity {
 
         }
 
-        //  CAPTURE_VIDEO_SELECTION_REQUEST_CODE
+        // CAPTURE_VIDEO_SELECTION_REQUEST_CODE
         if (requestCode == CAPTURE_VIDEO_SELECTION_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                if (new File(mCurrentVideoPath).exists()) {
-                    attachVideoButton.setColorFilter(Color.parseColor("#009900"));
-                    attachVideoButton.setImageResource(R.drawable.ic_check);
-                }
+                // set text
+                attachVideoButton.setText(String.valueOf(videoArray.size()));
             } else if (resultCode == RESULT_CANCELED) {
                 // user cancelled recording
                 Toast.makeText(getApplicationContext(), "User cancelled video recording", Toast.LENGTH_SHORT).show();
                 // delete file
-                deleteVideo();
-                // return images to norm
-                attachVideoButton.setColorFilter(ContextCompat.getColor(this, R.color.colorYellow));
-                attachVideoButton.setImageResource(R.drawable.ic_video);
+                deleteCurrentVideo();
             } else {
                 // failed to record video
                 Toast.makeText(getApplicationContext(), "Sorry! Failed to record video", Toast.LENGTH_SHORT).show();
                 // delete file
-                deleteVideo();
-                // return images to norm
-                attachVideoButton.setColorFilter(ContextCompat.getColor(this, R.color.colorYellow));
-                attachVideoButton.setImageResource(R.drawable.ic_video);
+                deleteCurrentVideo();
             }
         }
 
@@ -390,7 +425,11 @@ public class NonUrgentActivity extends BaseActivity {
                             }
                         }
 
-                        File finalDestImage = new File(storageDir.getPath() + File.separator + "video.mp4");
+                        //
+                        File finalDestImage = new File(storageDir.getPath() + File.separator + "video_" + (videoArray.size() + 1) + ".mp4");
+                        videoArray.add(finalDestImage.getAbsolutePath());
+                        Log.d(TAG, "" + finalDestImage.getAbsolutePath());
+
                         BufferedOutputStream outStream = new BufferedOutputStream(new FileOutputStream(finalDestImage));
 
                         byte[] buf = new byte[1024];
@@ -405,10 +444,12 @@ public class NonUrgentActivity extends BaseActivity {
                         // Save a path
                         mCurrentVideoPath = finalDestImage.getAbsolutePath();
                         //
-                        if (new File(mCurrentVideoPath).exists()) {
-                            attachVideoButton.setColorFilter(Color.parseColor("#009900"));
-                            attachVideoButton.setImageResource(R.drawable.ic_check);
-                        }
+                        // set text
+                        attachVideoButton.setText(String.valueOf(videoArray.size()));
+                        //                        if (new File(mCurrentVideoPath).exists()) {
+                        //                            //                            attachVideoButton.setColorFilter(Color.parseColor("#009900"));
+                        //                            //                            attachVideoButton.setImageResource(R.drawable.ic_check);
+                        //                        }
                     } catch (IOException re) {
                         re.printStackTrace();
                         Toast.makeText(getApplicationContext(), "File not found, try another video.", Toast.LENGTH_SHORT).show();
@@ -424,16 +465,6 @@ public class NonUrgentActivity extends BaseActivity {
             } else {
                 // failed to record video
                 Toast.makeText(getApplicationContext(), "Sorry! Failed to select video", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        // VOICE_SELECTION_REQUEST_CODE
-        if (requestCode == VOICE_SELECTION_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                if (new File(mCurrentVideoPath).exists()) {
-                    attachVideoButton.setColorFilter(Color.parseColor("#009900"));
-                    attachVideoButton.setImageResource(R.drawable.ic_check);
-                }
             }
         }
 
@@ -469,12 +500,12 @@ public class NonUrgentActivity extends BaseActivity {
             }
 
             // Audio File
-            if (mCurrentAudioPath != null) {
-                File audioFile = new File(mCurrentAudioPath);
-                if (audioFile.exists()) {
-                    Log.d(TAG + " audio", audioFile.getAbsolutePath());
-                }
-            }
+            //            if (mCurrentAudioPath != null) {
+            //                File audioFile = new File(mCurrentAudioPath);
+            //                if (audioFile.exists()) {
+            //                    Log.d(TAG + " audio", audioFile.getAbsolutePath());
+            //                }
+            //            }
 
             //
             Snackbar snackbar = Snackbar.make(view, "Incident Report submitted", Snackbar.LENGTH_LONG);
