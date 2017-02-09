@@ -3,7 +3,11 @@ IRC application SAFE
 
 The primary goal of this app is to be able to enable refugees to make emergency calls when in danger.
 Localization of text will be done by a group of Mozilla Localization volunteers and staff.
-The refugees that use the app (hereafter users) will be provided with a Nexus 6 Android device upon arrival in Salt Lake. We'd like the app to be compatible with more than just those devices in order to let it expand to those users who may have arrived before the official start of the program. Version one will hopefully be released before January 20th.
+The refugees that use the app (hereafter users) will be provided with a Nexus 6 Android device upon arrival in Salt Lake. We'd like the app to be compatible with more than just those devices in order to let it expand to those users who may have arrived before the official start of the program. 
+
+The current state of the app. Suggestions welcome!
+
+![Recording of pre-release app in use](/images/wip.gif)
 
 A simple wireframe of the app. The Urgent button should call 911.
 
