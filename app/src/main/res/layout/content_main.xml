@@ -10,21 +10,9 @@
     tools:context="org.utos.android.safe.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <!--<Spinner-->
-    <!--android:id="@+id/spinner"-->
-    <!--style="@style/Widget.AppCompat.DropDownItem.Spinner"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="40dp"-->
-    <!--android:layout_alignParentLeft="true"-->
-    <!--android:layout_alignParentStart="true"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:entries="@array/language_array"-->
-    <!--android:spinnerMode="dialog"/>-->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/spinner"
         android:baselineAligned="true"
         android:orientation="vertical"
         android:weightSum="2">

@@ -19,6 +19,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.utos.android.safe.NonUrgentActivity;
+import org.utos.android.safe.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,8 +49,7 @@ public class AttachVideoDialog extends DialogFragment {
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        String[] sigChoiceArr = {"Take Video", "Select Video"};
-        builder.setItems(sigChoiceArr, new DialogInterface.OnClickListener() {
+        builder.setItems(getResources().getStringArray(R.array.get_vid), new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:

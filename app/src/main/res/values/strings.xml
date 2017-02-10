@@ -1,54 +1,46 @@
 <resources>
+
+    <!--Shared All Activities-->
     <string name="app_name">SAFE</string>
+    <string name="emergency_number">tel:911</string>
+    <string name="test_number">tel:211</string>
+    <string name="loading">Loading…</string>
+    <!--Shared All Activities-->
+
     <!--Setup Activity-->
+    <string name="title_activity_setup">Setup</string>
+    <string name="setup_welcome">Welcome</string>
+    <string name="caseworker">Caseworker</string>
     <string name="setup_name">Name</string>
     <string name="setup_phone">Phone Number</string>
     <string name="setup_required">Required</string>
     <string name="setup_not_valid">Not Valid</string>
+    <string name="continue_to_login">Continue to Login</string>
+    <!--Setup Activity-->
 
-    <!-- Strings related to login -->
-    <string name="sign_out">Sign Out</string>
-    <string name="signed_out">Signed out</string>
-    <string name="disconnect">Disconnect</string>
-    <!-- Content Description for images -->
-
-    <string name="loading">Loading…</string>
-
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
-
-    <string name="title_activity_main">MainActivity</string>
+    <!--Main Activity-->
     <string name="btn_urgent">Urgent</string>
     <string name="btn_non_urgent">Non-Urgent</string>
-    <string name="btn_submit">Submit</string>
-    <string name="emergency_number">tel:911</string>
-    <string name="test_number">tel:211</string>
-    <string name="title_activity_setup">Setup</string>
-    <string name="setup_welcome">Welcome</string>
-    <string name="select_caseworker">Case Worker</string>
-    <string name="select_user_language">Language</string>
-    <string name="continue_to_login">Continue to Login</string>
+    <!--Main Activity-->
 
     <!--Non Urgent Activity-->
     <string name="txt_describe_incident">Describe the incident</string>
     <string name="cat_selection">Category Selection:</string>
     <string name="attach_image">Attach Image</string>
     <string name="attach_voice">Attach Voice</string>
-    <string name="call_case_worker">Call Case Worker</string>
+    <string name="call_case_worker">Call Caseworker</string>
     <string name="attach_video">Attach Video</string>
-
-    <string-array name="caseworker_array">
-        <item>Joe Brown</item>
-        <item>Mary Smith</item>
+    <string name="audio_record">Audio Recording</string>
+    <string name="start_talking">Start Talking</string>
+    <string name="stop_record">Stop Recording</string>
+    <string-array name="get_pic">
+        <item>Take Photo</item>
+        <item>Select Photo</item>
     </string-array>
-
+    <string-array name="get_vid">
+        <item>Take Video</item>
+        <item>Select Video</item>
+    </string-array>
     <string-array name="report_cat_array">
         <item>1</item>
         <item>2</item>
@@ -56,10 +48,46 @@
         <item>4</item>
         <item>5</item>
     </string-array>
+    <string name="btn_submit">Submit</string>
+    <!--Non Urgent Activity-->
 
-    <string name="title_activity_login_v3">SAFE</string>
-    <string name="title_activity_non_urgent_v2">NonUrgentActivityV2</string>
+    <!--Settings Activity-->
     <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_select_laguage">Select Laguage</string>
+    <string name="cat_app_info">App Information</string>
+    <string name="cat_user_content">User Content</string>
+    <string name="pref_build">Build Version</string>
+    <string name="pref_language">Language</string>
+    <string name="pref_profile">Profile</string>
+    <string name="pref_google_pro">Google Profile</string>
+    <string name="pref_user_pro">User Profile</string>
+    <string name="pref_profile_edit">Edit</string>
+    <string name="pref_profile_cancel">Cancel</string>
+    <string name="pref_profile_save">Save</string>
+    <string name="user_name">User Name: %1$s </string>
+    <string name="user_num">User Number: %1$s </string>
+    <string name="user_lang">User Language: %1$s </string>
+    <string name="user_caseworker">Caseworker: %1$s </string>
+    <string name="user_caseworker_num">Caseworker Number: %1$s </string>
+    <!--Settings Activity-->
+
+
+    <!--DONT DELETE NOT USED-->
+    <!--<string name="sign_out">Sign Out</string>-->
+    <!--<string name="signed_out">Signed out</string>-->
+    <!--<string name="disconnect">Disconnect</string>-->
+    <!--<string name="prompt_email">Email</string>-->
+    <!--<string name="prompt_password">Password (optional)</string>-->
+    <!--<string name="action_sign_in">Sign in or register</string>-->
+    <!--<string name="action_sign_in_short">Sign in</string>-->
+    <!--<string name="error_invalid_email">This email address is invalid</string>-->
+    <!--<string name="error_invalid_password">This password is too short</string>-->
+    <!--<string name="error_incorrect_password">This password is incorrect</string>-->
+    <!--<string name="error_field_required">This field is required</string>-->
+    <!--<string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>-->
+    <!--<string name="title_activity_main">MainActivity</string>-->
+    <!--<string name="select_user_language">Language</string>-->
+    <!--<string name="title_activity_login_v3">SAFE</string>-->
+    <!--<string name="title_activity_non_urgent_v2">NonUrgentActivityV2</string>-->
+    <!--<string name="title_activity_select_laguage">Select Language</string>-->
 
 </resources>

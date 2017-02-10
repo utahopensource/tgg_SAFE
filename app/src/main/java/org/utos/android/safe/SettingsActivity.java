@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
@@ -49,8 +50,18 @@ public class SettingsActivity extends BaseActivity {
             addPreferencesFromResource(R.xml.pref_general);
 
             /////////////////////////////
+            // set header app info
+            PreferenceCategory appHeadApp = (PreferenceCategory) findPreference("prefs_cat_app_info");
+            appHeadApp.setTitle(getString(R.string.cat_app_info));
+            // set header user content
+            PreferenceCategory appHeadUser = (PreferenceCategory) findPreference("prefs_cat_user_content");
+            appHeadUser.setTitle(getString(R.string.cat_user_content));
+            /////////////////////////////
+
+            /////////////////////////////
             // set version
             Preference versionPref = findPreference("app_version");
+            versionPref.setTitle(getString(R.string.pref_build));
             // get version
             try {
                 versionPref.setSummary(getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName);
@@ -81,6 +92,7 @@ public class SettingsActivity extends BaseActivity {
             final String[] arrayLocale = stringLocale.toArray(new String[stringLocale.size()]);
             //
             final Preference languagePref = findPreference("app_lang");
+            languagePref.setTitle(getString(R.string.pref_language));
             languagePref.setSummary(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG, ""));
             //
             languagePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -114,6 +126,7 @@ public class SettingsActivity extends BaseActivity {
             /////////////////////////////
             // profile
             Preference profilePref = findPreference("app_profile");
+            profilePref.setTitle(getString(R.string.pref_profile));
             profilePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override public boolean onPreferenceClick(Preference preference) {
                     //
@@ -124,7 +137,7 @@ public class SettingsActivity extends BaseActivity {
                     TextView textViewGEmail = (TextView) layoutInflater.findViewById(R.id.googleEmail);
                     TextView textViewUserName = (TextView) layoutInflater.findViewById(R.id.userName);
                     TextView textViewUserNum = (TextView) layoutInflater.findViewById(R.id.userNum);
-                    TextView textViewUserLan = (TextView) layoutInflater.findViewById(R.id.userLanguage);
+                    TextView textViewUserLang = (TextView) layoutInflater.findViewById(R.id.userLanguage);
                     TextView textViewUserCW = (TextView) layoutInflater.findViewById(R.id.userCaseWorker);
                     TextView textViewUserCWN = (TextView) layoutInflater.findViewById(R.id.userCaseWorkerNUmber);
 
@@ -132,20 +145,21 @@ public class SettingsActivity extends BaseActivity {
                     //                    editTextStreetAddress.setImageUrl(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(LoginActivity.LOGIN_PHOTO, ""), VolleySingleton.getInstance().getImageLoader());
                     textViewGName.setText(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(LoginActivity.LOGIN_NAME, ""));
                     textViewGEmail.setText(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(LoginActivity.LOGIN_EMAIL, ""));
-                    textViewUserName.setText("User Name: " + getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_NAME, ""));
-                    textViewUserNum.setText("User Number: " + getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_NUMBER, ""));
-                    textViewUserLan.setText("User Language: " + getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG, ""));
-                    textViewUserCW.setText("Case Worker: " + getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(CASE_WORKER, ""));
-                    textViewUserCWN.setText("Case Worker Number: " + getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(CASE_WORKER_NUM, ""));
+                    textViewUserName.setText(String.format(getActivity().getString(R.string.user_name), getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_NAME, "")));
+                    textViewUserNum.setText(String.format(getActivity().getString(R.string.user_num), getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_NUMBER, "")));
+                    textViewUserLang.setText(String.format(getActivity().getString(R.string.user_lang), getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG, "")));
+                    textViewUserCW.setText(String.format(getActivity().getString(R.string.user_caseworker), getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(CASE_WORKER, "")));
+                    textViewUserCWN.setText(String.format(getActivity().getString(R.string.user_caseworker_num), getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(CASE_WORKER_NUM, "")));
+
                     //
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setView(layoutInflater).setCancelable(false).setTitle("Profile");
-                    builder.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setView(layoutInflater).setCancelable(false).setTitle(getString(R.string.pref_profile));
+                    builder.setPositiveButton(getString(R.string.pref_profile_edit), new DialogInterface.OnClickListener() {
                         @Override public void onClick(DialogInterface dialog, int id) {
                             //
                             dialog.dismiss();
                             //
                             final View layoutInflater = getActivity().getLayoutInflater().inflate(R.layout.dialog_profile_edit, null);
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setView(layoutInflater).setCancelable(false).setTitle("User Profile Edit");
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setView(layoutInflater).setCancelable(false).setTitle(getString(R.string.pref_profile_edit));
 
                             //
                             final TextInputEditText inputEditTextName = (TextInputEditText) layoutInflater.findViewById(R.id.input_name);
@@ -167,7 +181,7 @@ public class SettingsActivity extends BaseActivity {
                                 }
                             }
                             //
-                            builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                            builder.setPositiveButton(getString(R.string.pref_profile_save), new DialogInterface.OnClickListener() {
                                 @Override public void onClick(DialogInterface dialog, int id) {
                                     SharedPreferences.Editor prefsEditor = getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit();
                                     prefsEditor.putString(CASE_WORKER, formCaseWorkerList.get(spinner.getSelectedItemPosition()).get("name"));
@@ -176,7 +190,7 @@ public class SettingsActivity extends BaseActivity {
                                     prefsEditor.putString(USER_NUMBER, inputEditTextNum.getText().toString().trim());
                                     prefsEditor.apply();
                                 }
-                            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            }).setNegativeButton(getString(R.string.pref_profile_cancel), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.dismiss();
                                 }
@@ -185,7 +199,7 @@ public class SettingsActivity extends BaseActivity {
                             final AlertDialog alertDialog = builder.create();
                             alertDialog.show();
                         }
-                    }).setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    }).setNegativeButton(getString(R.string.pref_profile_cancel), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.dismiss();
                         }

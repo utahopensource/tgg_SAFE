@@ -64,8 +64,10 @@
                 android:id="@+id/textViewSelect"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layoutDirection="locale"
                 android:text="@string/cat_selection"
                 android:textColor="@android:color/black"
+                android:textDirection="locale"
                 android:textStyle="italic"/>
 
             <View
@@ -92,14 +94,28 @@
 
         </LinearLayout>
 
-        <!-- buttons-->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/startPhoneCall"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_call"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:onClick="makeCall"
+            android:padding="20dp"
+            android:text="@string/call_case_worker"
+            android:textColor="@color/colorYellow"
+            android:theme="@style/ThemeOverlay.MyDarkButton"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:baselineAligned="false"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:padding="10dp"
+            android:weightSum="3">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -141,6 +157,36 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:text="@string/attach_video"
+                    android:textColor="@android:color/black"
+                    android:textStyle="italic"/>
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/attachVideo"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:drawableTop="@drawable/ic_video"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:onClick="attachVideo"
+                    android:padding="15dp"
+                    android:text="0"
+                    android:textColor="@color/colorYellow"
+                    android:theme="@style/ThemeOverlay.MyDarkButton"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:text="@string/attach_voice"
                     android:textColor="@android:color/black"
                     android:textStyle="italic"/>
@@ -163,73 +209,144 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:weightSum="2">
+        <!-- buttons-->
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:baselineAligned="false"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="2">-->
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+        <!--<LinearLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:orientation="vertical">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/call_case_worker"
-                    android:textColor="@android:color/black"
-                    android:textStyle="italic"/>
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:text="@string/attach_image"-->
+        <!--android:textColor="@android:color/black"-->
+        <!--android:textStyle="italic"/>-->
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/startPhoneCall"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@null"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:onClick="makeCall"
-                    android:padding="15dp"
-                    android:scaleType="fitCenter"
-                    android:theme="@style/ThemeOverlay.MyDarkButton"
-                    app:srcCompat="@drawable/ic_call"/>
+        <!--<android.support.v7.widget.AppCompatButton-->
+        <!--android:id="@+id/attachImage"-->
+        <!--android:layout_width="70dp"-->
+        <!--android:layout_height="70dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:contentDescription="@null"-->
+        <!--android:drawableTop="@drawable/ic_add_photo"-->
+        <!--android:foreground="?android:attr/selectableItemBackground"-->
+        <!--android:onClick="attachImage"-->
+        <!--android:padding="15dp"-->
+        <!--android:text="0"-->
+        <!--android:textColor="@color/colorYellow"-->
+        <!--android:theme="@style/ThemeOverlay.MyDarkButton"/>-->
 
-            </LinearLayout>
+        <!--</LinearLayout>-->
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+        <!--<LinearLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:orientation="vertical">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/attach_video"
-                    android:textColor="@android:color/black"
-                    android:textStyle="italic"/>
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:text="@string/attach_voice"-->
+        <!--android:textColor="@android:color/black"-->
+        <!--android:textStyle="italic"/>-->
 
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/attachVideo"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@null"
-                    android:drawableTop="@drawable/ic_video"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:onClick="attachVideo"
-                    android:padding="15dp"
-                    android:text="0"
-                    android:textColor="@color/colorYellow"
-                    android:theme="@style/ThemeOverlay.MyDarkButton"/>
+        <!--<android.support.v7.widget.AppCompatButton-->
+        <!--android:id="@+id/attachVoice"-->
+        <!--android:layout_width="70dp"-->
+        <!--android:layout_height="70dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:contentDescription="@null"-->
+        <!--android:drawableTop="@drawable/ic_mic"-->
+        <!--android:foreground="?android:attr/selectableItemBackground"-->
+        <!--android:onClick="attachVoice"-->
+        <!--android:padding="15dp"-->
+        <!--android:text="0"-->
+        <!--android:textColor="@color/colorYellow"-->
+        <!--android:theme="@style/ThemeOverlay.MyDarkButton"/>-->
 
-            </LinearLayout>
+        <!--</LinearLayout>-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:baselineAligned="false"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="2">-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:text="@string/call_case_worker"-->
+        <!--android:textColor="@android:color/black"-->
+        <!--android:textStyle="italic"/>-->
+
+        <!--<android.support.v7.widget.AppCompatImageButton-->
+        <!--android:id="@+id/startPhoneCall"-->
+        <!--android:layout_width="70dp"-->
+        <!--android:layout_height="70dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:contentDescription="@null"-->
+        <!--android:foreground="?android:attr/selectableItemBackground"-->
+        <!--android:onClick="makeCall"-->
+        <!--android:padding="15dp"-->
+        <!--android:scaleType="fitCenter"-->
+        <!--android:theme="@style/ThemeOverlay.MyDarkButton"-->
+        <!--app:srcCompat="@drawable/ic_call"/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:text="@string/attach_video"-->
+        <!--android:textColor="@android:color/black"-->
+        <!--android:textStyle="italic"/>-->
+
+        <!--<android.support.v7.widget.AppCompatButton-->
+        <!--android:id="@+id/attachVideo"-->
+        <!--android:layout_width="70dp"-->
+        <!--android:layout_height="70dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:contentDescription="@null"-->
+        <!--android:drawableTop="@drawable/ic_video"-->
+        <!--android:foreground="?android:attr/selectableItemBackground"-->
+        <!--android:onClick="attachVideo"-->
+        <!--android:padding="15dp"-->
+        <!--android:text="0"-->
+        <!--android:textColor="@color/colorYellow"-->
+        <!--android:theme="@style/ThemeOverlay.MyDarkButton"/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--</LinearLayout>-->
 
     </LinearLayout>
 

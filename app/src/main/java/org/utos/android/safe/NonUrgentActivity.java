@@ -2,25 +2,26 @@ package org.utos.android.safe;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -30,6 +31,7 @@ import org.utos.android.safe.dialogs.AttachVideoDialog;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,6 +42,7 @@ import static android.Manifest.permission.CALL_PHONE;
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.provider.ContactsContract.CommonDataKinds.StructuredName.SUFFIX;
 
 public class NonUrgentActivity extends BaseActivity {
 
@@ -65,6 +68,9 @@ public class NonUrgentActivity extends BaseActivity {
     public String mCurrentImagePath, mCurrentVideoPath, whatToDo;
 
     public ArrayList<String> imageArray, videoArray, audioArray;
+
+    private ProgressDialog mProgressDialogDownload;
+
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -470,68 +476,153 @@ public class NonUrgentActivity extends BaseActivity {
 
     }
 
+    public static void createFolder(String bucketName, String folderName, AmazonS3 client) {
+        // create meta-data for your folder and set content-length to 0
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(0);
+
+        // create empty content
+        InputStream emptyContent = new ByteArrayInputStream(new byte[0]);
+
+        // create a PutObjectRequest passing the folder name suffixed by /
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, folderName + SUFFIX, emptyContent, metadata);
+
+        // send request to S3 to create folder
+        client.putObject(putObjectRequest);
+    }
+
     public void submitReport(View view) {
+//        mProgressDialogDownload = new ProgressDialog(NonUrgentActivity.this);
+//        mProgressDialogDownload.setMessage("Downloading Update...");
+//        mProgressDialogDownload.setIndeterminate(true);
+//        mProgressDialogDownload.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//        mProgressDialogDownload.setCancelable(false);
+//
+//        ////////////////////////////////
+//        // https://github.com/awslabs/aws-sdk-android-samples/tree/master/S3TransferUtilitySample
+//        // http://docs.aws.amazon.com/mobile-hub/latest/developerguide/google-auth.html
+//        // http://docs.aws.amazon.com/mobile-hub/latest/developerguide/create-oauth-android-clientid.html
+//        ////////////////////////////////
+//        // Initialize the Amazon Cognito credentials provider
+//        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(getApplicationContext(), "us-west-2:da4317d3-fe48-4dcc-b357-7026fd226af0", // Identity Pool ID
+//                Regions.US_WEST_2 // Region
+//        );
+//
+//        // Initialize the Cognito Sync client
+//        CognitoSyncManager syncClient = new CognitoSyncManager(getApplicationContext(), Regions.US_EAST_1, // Region
+//                credentialsProvider);
+//
+//        //
+//        AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
+//        //
+//        TransferUtility transferUtility = new TransferUtility(s3., getApplicationContext());
+//
+//        // Image File
+//        for (String uri : imageArray) {
+//            if (uri != null) {
+//                File imageFile = new File(uri);
+//                TransferObserver observer = transferUtility.upload(Constants.BUCKET_NAME, "dsfs/" + imageFile.getName(), imageFile);
+//                observer.setTransferListener(new TransferListener() {
+//                    @Override public void onStateChanged(int id, TransferState state) {
+//                        if (state.equals(TransferState.COMPLETED)) {
+//                            Log.d(TAG, "onStateChanged COMPLETED");
+//                            mProgressDialogDownload.dismiss();
+//                        } else if (state.equals(TransferState.FAILED)) {
+//                            Log.d(TAG, "onStateChanged FAILED");
+//                            mProgressDialogDownload.dismiss();
+//                        } else if (state.equals(TransferState.CANCELED)) {
+//                            Log.d(TAG, "onStateChanged CANCELED");
+//                            mProgressDialogDownload.dismiss();
+//                        }
+//                    }
+//
+//                    @Override public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+//                        int percentage = (int) (bytesCurrent / bytesTotal * 100);
+//                        Log.d(TAG, "percentage " + percentage);
+//                        Log.d(TAG, "bytesCurrent " + bytesCurrent);
+//                        Log.d(TAG, "bytesTotal " + bytesTotal);
+//                        Log.d(TAG, "id " + id);
+//                        mProgressDialogDownload.show();
+//                        mProgressDialogDownload.setIndeterminate(false);
+//                        mProgressDialogDownload.setMax((int) bytesTotal);
+//                        mProgressDialogDownload.setProgress((int) bytesCurrent);
+//                    }
+//
+//                    @Override public void onError(int id, Exception ex) {
+//                        Log.d(TAG + " image", ex.toString());
+//                        mProgressDialogDownload.dismiss();
+//                    }
+//                });
+//                if (imageFile.exists()) {
+//                    Log.d(TAG + " image", imageFile.getAbsolutePath());
+//                    Log.d(TAG + " size", humanReadableByteCount(imageFile.length(), false));
+//                }
+//            }
+//        }
+        ////////////////////////////////
+
+
         //gather data into object
         //submit data to POST api call to submit the report
 
-        if (!editTextDesc.getText().toString().equals("")) {
-            // Description Text
-            String desString = editTextDesc.getText().toString().trim();
-            Log.d(TAG + " desSt", desString);
-
-            // Category Selection
-            String catSelectionString = spinner.getSelectedItem().toString();
-            Log.d(TAG + " catSe", catSelectionString);
-
-            // Image File
-            for (String uri : imageArray) {
-                if (uri != null) {
-                    File imageFile = new File(uri);
-                    if (imageFile.exists()) {
-                        Log.d(TAG + " image", imageFile.getAbsolutePath());
-                        Log.d(TAG + " size", humanReadableByteCount(imageFile.length(), false));
-                    }
-                }
-            }
-
-            // Video File
-            for (String uri : videoArray) {
-                if (uri != null) {
-                    File videoFile = new File(uri);
-                    if (videoFile.exists()) {
-                        Log.d(TAG + " video", videoFile.getAbsolutePath());
-                        Log.d(TAG + " size", humanReadableByteCount(videoFile.length(), false));
-                    }
-                }
-            }
-
-            // Audio File
-            for (String uri : audioArray) {
-                if (uri != null) {
-                    File audioFile = new File(uri);
-                    if (audioFile.exists()) {
-                        Log.d(TAG + " audio", audioFile.getAbsolutePath());
-                        Log.d(TAG + " size", humanReadableByteCount(audioFile.length(), false));
-                    }
-                }
-            }
-
-            //
-            Snackbar snackbar = Snackbar.make(view, "Incident Report submitted", Snackbar.LENGTH_LONG);
-            snackbar.show();
-            // close activity when done
-            //            finish();
-
-            // TODO: 1/30/17 delete all files when done submitting
-        } else {
-            //
-            Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
-            editTextDesc.startAnimation(shake);
-            editTextDesc.setError(getString(R.string.setup_required));
-            //
-            Snackbar snackbar = Snackbar.make(view, "Description is needed before submission", Snackbar.LENGTH_LONG);
-            snackbar.show();
-        }
+        //        if (!editTextDesc.getText().toString().equals("")) {
+        //            // Description Text
+        //            String desString = editTextDesc.getText().toString().trim();
+        //            Log.d(TAG + " desSt", desString);
+        //
+        //            // Category Selection
+        //            String catSelectionString = spinner.getSelectedItem().toString();
+        //            Log.d(TAG + " catSe", catSelectionString);
+        //
+        //            // Image File
+        //            for (String uri : imageArray) {
+        //                if (uri != null) {
+        //                    File imageFile = new File(uri);
+        //                    if (imageFile.exists()) {
+        //                        Log.d(TAG + " image", imageFile.getAbsolutePath());
+        //                        Log.d(TAG + " size", humanReadableByteCount(imageFile.length(), false));
+        //                    }
+        //                }
+        //            }
+        //
+        //            // Video File
+        //            for (String uri : videoArray) {
+        //                if (uri != null) {
+        //                    File videoFile = new File(uri);
+        //                    if (videoFile.exists()) {
+        //                        Log.d(TAG + " video", videoFile.getAbsolutePath());
+        //                        Log.d(TAG + " size", humanReadableByteCount(videoFile.length(), false));
+        //                    }
+        //                }
+        //            }
+        //
+        //            // Audio File
+        //            for (String uri : audioArray) {
+        //                if (uri != null) {
+        //                    File audioFile = new File(uri);
+        //                    if (audioFile.exists()) {
+        //                        Log.d(TAG + " audio", audioFile.getAbsolutePath());
+        //                        Log.d(TAG + " size", humanReadableByteCount(audioFile.length(), false));
+        //                    }
+        //                }
+        //            }
+        //
+        //            //
+        //            Snackbar snackbar = Snackbar.make(view, "Incident Report submitted", Snackbar.LENGTH_LONG);
+        //            snackbar.show();
+        //            // close activity when done
+        //            //            finish();
+        //
+        //            // TODO: 1/30/17 delete all files when done submitting
+        //        } else {
+        //            //
+        //            Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+        //            editTextDesc.startAnimation(shake);
+        //            editTextDesc.setError(getString(R.string.setup_required));
+        //            //
+        //            Snackbar snackbar = Snackbar.make(view, "Description is needed before submission", Snackbar.LENGTH_LONG);
+        //            snackbar.show();
+        //        }
 
     }
 

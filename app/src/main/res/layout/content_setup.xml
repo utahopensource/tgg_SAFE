@@ -39,7 +39,7 @@
             android:layout_gravity="center_vertical|end"
             android:layout_weight=".25"
             android:gravity="end"
-            android:text="@string/select_caseworker"
+            android:text="@string/caseworker"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp"
             android:textStyle="bold"/>

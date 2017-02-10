@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import org.utos.android.safe.NonUrgentActivity;
+import org.utos.android.safe.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,11 +46,11 @@ public class AttachAudioDialog {
                 mediaRecorder.start();
 
                 final ProgressDialog mProgressDialog = new ProgressDialog(ctx);
-                mProgressDialog.setTitle("Audio Recording");
+                mProgressDialog.setTitle(ctx.getString(R.string.audio_record));
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 mProgressDialog.setCancelable(false);
-                mProgressDialog.setMessage("Start Talking...");
-                mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Stop recording", new DialogInterface.OnClickListener() {
+                mProgressDialog.setMessage(ctx.getString(R.string.start_talking));
+                mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, ctx.getString(R.string.stop_record), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         mProgressDialog.dismiss();
                         mediaRecorder.stop();

@@ -1,6 +1,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="App Information">
+    <PreferenceCategory
+        android:key="prefs_cat_app_info"
+        android:title="App Information">
 
         <Preference
             android:key="app_version"
@@ -9,7 +11,9 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="User Content">
+    <PreferenceCategory
+        android:key="prefs_cat_user_content"
+        android:title="User Content">
 
         <!--<Preference-->
         <!--android:key="app_vids"-->
