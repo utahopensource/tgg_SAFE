@@ -7,6 +7,18 @@
     {
       "language": "Arabic",
       "locale": "ar"
+    },
+    {
+      "language": "Rohingya",
+      "locale": "rhg"
+    },
+    {
+      "language": "Burmese",
+      "locale": "my"
+    },
+    {
+      "language": "French",
+      "locale": "fr"
     }
   ]
 }

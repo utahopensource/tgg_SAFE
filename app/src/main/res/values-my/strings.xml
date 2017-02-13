@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">လံုုျခဳေရး။ ေဘးကင္းေရး</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">အီးေမးလိပ္စာ</string>
+    <string name="prompt_password">လိွဳ့ ၀ွက္နံပါတ္ (လိုုအပ္ပါက)</string>
+    <string name="action_sign_in">၀င္ေရာက္ျခင္း။ မွတ္ပံုုတင္ျခင္း</string>
+    <string name="action_sign_in_short">၀င္ေရာက္ျခင္း</string>
+    <string name="error_invalid_email">အီးေမးလိိပ္စာ သုုံးမရပါ (မွားယြင္းေန)</string>
+    <string name="error_invalid_password">လိွဳ့ ၀ွက္နံပါတ္ တိုုလြန္းေနသည္</string>
+    <string name="error_incorrect_password">လိွ့ဳ ၀ွက္နံပါတ္ မွားေနသည္။</string>
+    <string name="error_field_required">ဒီကြက္လပ္ကိုု ျဖည့္ရန္လိုုပါသည္။</string>
+    <string name="permission_rationale">အီးေမးျပီးေျမာက္ရန္ ဆက္သြယ္ရန္အခ်က္</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="btn_urgent">အေရးၾကီး။ အျမန္</string>
+    <string name="btn_non_urgent">အေရးမၾကီး။ အျမန္မလိုု</string>
+    <string name="txt_describe_incident">ျဖစ္ပ်က္ခဲ့တာကိုု ေဖၚျပပါ</string>
+    <string name="btn_submit">တင္သည္။ တင္သြင္းသည္။</string>
+    <string name="emergency_number">tel:911</string>
+    <string name="test_number">tel:211</string>
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Soiyi-Solamot</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">email</string>
+    <string name="prompt_password">faswad</string>
+    <string name="action_sign_in">ragista</string>
+    <string name="action_sign_in_short">line kuliba</string>
+    <string name="error_invalid_email">email lombor soiyi</string>
+    <string name="error_invalid_password">faswad bishi baitta</string>
+    <string name="error_incorrect_password">faswad gollot</string>
+    <string name="error_field_required">zaga yan zorurot leka foribo</string>
+    <string name="permission_rationale">phungor lombor leka foribo, kessu oile phong gori-farefan</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="btn_urgent">zoruri</string>
+    <string name="btn_non_urgent">zoruri-no</string>
+    <string name="txt_describe_incident">Ken-ken oiye-de ere leko</string>
+    <string name="btn_submit">fosai-do</string>
+    <string name="emergency_number">tel:911</string>
+    <string name="test_number">tel:211</string>
+</resources>
