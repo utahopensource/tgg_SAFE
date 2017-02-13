@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Securisé</string>
-    <!-- Strings related to login -->
+    <!--- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Mot de passe (facultatif)</string>
     <string name="action_sign_in">Connectez-vous ou enregistrez-vous</string>
