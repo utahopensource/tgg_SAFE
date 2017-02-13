@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Securisé</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Mot de passe (facultatif)</string>
+    <string name="action_sign_in">Connectez-vous ou enregistrez-vous</string>
+    <string name="action_sign_in_short">Connexion</string>
+    <string name="error_invalid_email">Cette adresse e-mail est incorrecte</string>
+    <string name="error_invalid_password">Ce mot de passe est trop court</string>
+    <string name="error_incorrect_password">Ce mot de passe est incorrect</string>
+    <string name="error_field_required">Ce champ est requis</string>
+    <string name="permission_rationale">Les autorisations relatives aux contacts sont nécessaires pour fournir des adresses de courrier électronique.</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="btn_urgent">Urgent</string>
+    <string name="btn_non_urgent">Non urgent</string>
+    <string name="txt_describe_incident">Décrire l\'incident</string>
+    <string name="btn_submit">Soumettre</string>
+    <string name="emergency_number">tel:911</string>
+    <string name="test_number">tel:211</string>
+</resources>

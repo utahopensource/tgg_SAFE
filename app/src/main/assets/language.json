@@ -11,6 +11,14 @@
     {
       "language": "Rohingya",
       "locale": "rhg"
+    },
+    {
+      "language": "Burmese",
+      "locale": "my"
+    },
+    {
+      "language": "French",
+      "locale": "fr"
     }
   ]
 }
