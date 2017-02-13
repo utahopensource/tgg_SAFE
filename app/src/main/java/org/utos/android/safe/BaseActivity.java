@@ -1,10 +1,14 @@
 package org.utos.android.safe;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import org.utos.android.safe.wrapper.LanguageWrapper;
+
+import java.util.Locale;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CALL_PHONE;
@@ -45,16 +49,35 @@ public class BaseActivity extends AppCompatActivity {
     public final String[] PERMISSIONS = {CAMERA, ACCESS_FINE_LOCATION, RECORD_AUDIO, CALL_PHONE, SEND_SMS, WRITE_EXTERNAL_STORAGE, READ_PHONE_STATE};
     // Permissions
 
+    // SMS Receivers
+    public static String ACTION_SMS_SENT = "SMS_SENT";
+    public static String ACTION_SMS_DELIVERED = "SMS_DELIVERED";
+    public static int MAX_SMS_MESSAGE_LENGTH = 160;
+    // SMS Receivers
+
     ///////////////////
     // set language
-    @Override protected void attachBaseContext(Context newBase) {
+    @Override
+    protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LanguageWrapper.wrap(newBase, newBase.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG_LOCALE, "en")));
     }
     //
     ///////////////////
 
-    @Override public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+
+    //
+    @TargetApi(Build.VERSION_CODES.N)
+    public Locale getCurrentLocale() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return getResources().getConfiguration().getLocales().get(0);
+        } else {
+            //noinspection deprecation
+            return getResources().getConfiguration().locale;
+        }
+    }
 }

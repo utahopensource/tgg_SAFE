@@ -143,8 +143,8 @@ public class SettingsActivity extends BaseActivity {
 
                     // set text in UI
                     //                    editTextStreetAddress.setImageUrl(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(LoginActivity.LOGIN_PHOTO, ""), VolleySingleton.getInstance().getImageLoader());
-                    textViewGName.setText(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(LoginActivity.LOGIN_NAME, ""));
-                    textViewGEmail.setText(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(LoginActivity.LOGIN_EMAIL, ""));
+                    textViewGName.setText(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(LOGIN_NAME, ""));
+                    textViewGEmail.setText(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(LOGIN_EMAIL, ""));
                     textViewUserName.setText(String.format(getActivity().getString(R.string.user_name), getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_NAME, "")));
                     textViewUserNum.setText(String.format(getActivity().getString(R.string.user_num), getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_NUMBER, "")));
                     textViewUserLang.setText(String.format(getActivity().getString(R.string.user_lang), getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG, "")));

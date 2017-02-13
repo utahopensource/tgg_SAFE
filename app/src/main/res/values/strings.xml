@@ -21,6 +21,9 @@
     <!--Main Activity-->
     <string name="btn_urgent">Urgent</string>
     <string name="btn_non_urgent">Non-Urgent</string>
+    <string name="irc">IRC</string>
+    <string name="irc_all">International Rescue Committee</string>
+    <string name="hospital">Hospital</string>
     <!--Main Activity-->
 
     <!--Non Urgent Activity-->

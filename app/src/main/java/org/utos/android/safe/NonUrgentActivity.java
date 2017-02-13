@@ -37,6 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static android.Manifest.permission.CALL_PHONE;
 import static android.Manifest.permission.CAMERA;
@@ -72,7 +73,8 @@ public class NonUrgentActivity extends BaseActivity {
     private ProgressDialog mProgressDialogDownload;
 
 
-    @Override public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_non_urgent);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -107,7 +109,8 @@ public class NonUrgentActivity extends BaseActivity {
     //        deleteEverything();
     //    }
 
-    @Override public void onDestroy() {
+    @Override
+    public void onDestroy() {
         super.onDestroy();
 
         Log.d(TAG, "onDestroy");
@@ -159,34 +162,6 @@ public class NonUrgentActivity extends BaseActivity {
     }
 
     /**
-     * Will make call to caseworker
-     */
-    public void makeCall(View view) {
-        // Check for CALL_PHONE
-        if (ActivityCompat.checkSelfPermission(this, CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, CALL_PHONE)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this).
-                        setTitle("Call Permission").
-                        setMessage("This app needs call permissions to make phone calls.");
-                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialogInterface, int which) {
-                        ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
-                    }
-                });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
-            }
-        } else {
-            Intent call_intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getSharedPreferences(SHARED_PREFS, 0).getString(CASE_WORKER_NUM, "")));
-            startActivity(call_intent);
-        }
-
-    }
-
-    /**
      * Will launch camera app or select image
      */
     public void attachImage(View view) {
@@ -201,7 +176,8 @@ public class NonUrgentActivity extends BaseActivity {
                             setTitle("Camera and Write to Storage Permission").
                             setMessage("This app needs permissions to access camera and write to storage.");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override public void onClick(DialogInterface dialogInterface, int which) {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int which) {
                             ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{CAMERA, WRITE_EXTERNAL_STORAGE}, CAM_AND_WRITE_EXTERNAL_STORAGE_PERMISSION);
                         }
                     });
@@ -232,7 +208,8 @@ public class NonUrgentActivity extends BaseActivity {
                             setTitle("Camera and Write to Storage Permission").
                             setMessage("This app needs permissions to access camera and write to storage.");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override public void onClick(DialogInterface dialogInterface, int which) {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int which) {
                             ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{CAMERA, WRITE_EXTERNAL_STORAGE}, CAM_AND_WRITE_EXTERNAL_STORAGE_PERMISSION);
                         }
                     });
@@ -261,7 +238,8 @@ public class NonUrgentActivity extends BaseActivity {
                             setTitle("Record Audio and Write to Storage Permission").
                             setMessage("This app needs permissions to record audio and write to storage.");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override public void onClick(DialogInterface dialogInterface, int which) {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int which) {
                             ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE}, RECORD_AUDIO_WRITE_EXTERNAL_STORAGE_PERMISSION);
                         }
                     });
@@ -311,7 +289,8 @@ public class NonUrgentActivity extends BaseActivity {
         }
     }
 
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         //  CAMERA_CAPTURE_IMAGE_REQUEST_CODE
@@ -626,29 +605,21 @@ public class NonUrgentActivity extends BaseActivity {
 
     }
 
-    public static String humanReadableByteCount(long bytes, boolean si) {
+    public String humanReadableByteCount(long bytes, boolean si) {
         int unit = si ? 1000 : 1024;
         if (bytes < unit)
             return bytes + " B";
         int exp = (int) (Math.log(bytes) / Math.log(unit));
         String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
-        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+        return String.format(getCurrentLocale(), "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
     ////////////////////////////////////////////////////////
     // Permission Listener
     ////////////////////////////////////////////////////////
-    @Override public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case CALL_PHONE_PERMISSION:
-                if (ActivityCompat.checkSelfPermission(this, CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                    // Permission Granted
-                    Intent call_intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getSharedPreferences(SHARED_PREFS, 0).getString(CASE_WORKER_NUM, "")));
-                    startActivity(call_intent);
-                } else {
-                    // Permission Denied
-                }
-                break;
             case CAM_AND_WRITE_EXTERNAL_STORAGE_PERMISSION:
                 if (ActivityCompat.checkSelfPermission(this, CAMERA) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted

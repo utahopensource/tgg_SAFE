@@ -1,92 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/content_main"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:baselineAligned="true"
+    android:orientation="vertical"
+    android:weightSum="3"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="org.utos.android.safe.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <LinearLayout
+        android:id="@+id/button_urgent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:baselineAligned="true"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/main_emerg_btn"
+        android:gravity="center"
+        android:onClick="startUrgent"
         android:orientation="vertical"
-        android:weightSum="2">
+        android:theme="@style/ThemeMainButtons">
 
-        <LinearLayout
-            android:id="@+id/button_urgent"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="25dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="50dp"
-            android:layout_weight="1"
-            android:background="@drawable/main_btn"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:gravity="center"
-            android:onClick="startUrgent"
-            android:orientation="vertical"
-            android:theme="@style/ThemeMainButtons">
+            android:text="@string/btn_urgent"
+            android:textColor="@color/colorRed"
+            android:textSize="25sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="@string/btn_urgent"
-                android:textColor="@color/colorYellow"
-                android:textSize="25sp"/>
-
-            <android.support.v7.widget.AppCompatImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_call"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/button_non_urgent"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="50dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="25dp"
-            android:layout_weight="1"
-            android:background="@drawable/main_btn"
-            android:gravity="center"
-            android:onClick="startNonUrgent"
-            android:orientation="vertical"
-            android:theme="@style/ThemeMainButtons">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="@string/btn_non_urgent"
-                android:textColor="@color/colorYellow"
-                android:textSize="25sp"/>
-
-            <android.support.v7.widget.AppCompatImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_assignment"/>
-
-        </LinearLayout>
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:scaleType="fitCenter"
+            android:tint="@color/colorRed"
+            app:srcCompat="@drawable/ic_call" />
 
     </LinearLayout>
 
-</RelativeLayout>
+    <LinearLayout
+        android:id="@+id/button_call_caseworker"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/main_btn"
+        android:gravity="center"
+        android:onClick="callCaseworker"
+        android:orientation="vertical"
+        android:theme="@style/ThemeMainButtons">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="@string/call_case_worker"
+            android:textColor="@color/colorYellow"
+            android:textSize="25sp" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_call" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_non_urgent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/main_btn"
+        android:gravity="center"
+        android:onClick="startNonUrgent"
+        android:orientation="vertical"
+        android:theme="@style/ThemeMainButtons">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="@string/btn_non_urgent"
+            android:textColor="@color/colorYellow"
+            android:textSize="25sp" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_assignment" />
+
+    </LinearLayout>
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/button_irc"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginEnd="50dp"-->
+        <!--android:layout_marginStart="50dp"-->
+        <!--android:layout_marginTop="2.5dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="@drawable/main_btn"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="vertical"-->
+        <!--android:theme="@style/ThemeMainButtons">-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="IRC"-->
+            <!--android:textColor="@color/colorYellow"-->
+            <!--android:textSize="25sp" />-->
+
+        <!--<android.support.v7.widget.AppCompatImageView-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:scaleType="fitCenter"-->
+            <!--app:srcCompat="@drawable/ic_info" />-->
+
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_weight="0.46"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<android.support.v7.widget.AppCompatButton-->
+            <!--android:layout_width="70dp"-->
+            <!--android:layout_height="70dp"-->
+            <!--android:contentDescription="@null"-->
+            <!--android:drawableTop="@drawable/ic_add_photo"-->
+            <!--android:foreground="?android:attr/selectableItemBackground"-->
+            <!--android:padding="15dp"-->
+            <!--android:text="0"-->
+            <!--android:textColor="@color/colorYellow"-->
+            <!--android:theme="@style/ThemeOverlay.MyDarkButton" />-->
+
+        <!--<android.support.v7.widget.AppCompatButton-->
+            <!--android:layout_width="70dp"-->
+            <!--android:layout_height="70dp"-->
+            <!--android:contentDescription="@null"-->
+            <!--android:drawableTop="@drawable/ic_add_photo"-->
+            <!--android:foreground="?android:attr/selectableItemBackground"-->
+            <!--android:padding="15dp"-->
+            <!--android:text="0"-->
+            <!--android:textColor="@color/colorYellow"-->
+            <!--android:theme="@style/ThemeOverlay.MyDarkButton"-->
+            <!--android:id="@+id/appCompatButton" />-->
+
+        <!--<android.support.v7.widget.AppCompatButton-->
+            <!--android:layout_width="70dp"-->
+            <!--android:layout_height="70dp"-->
+            <!--android:contentDescription="@null"-->
+            <!--android:drawableTop="@drawable/ic_add_photo"-->
+            <!--android:foreground="?android:attr/selectableItemBackground"-->
+            <!--android:padding="15dp"-->
+            <!--android:text="0"-->
+            <!--android:textColor="@color/colorYellow"-->
+            <!--android:theme="@style/ThemeOverlay.MyDarkButton"-->
+            <!--android:id="@+id/appCompatButton2" />-->
+
+    <!--</LinearLayout>-->
+
+
+</LinearLayout>

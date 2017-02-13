@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Google Profile"
+        android:text="@string/pref_google_pro"
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:textStyle="bold|italic"/>
@@ -60,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="User Profile"
+        android:text="@string/pref_user_pro"
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:textStyle="bold|italic"/>
