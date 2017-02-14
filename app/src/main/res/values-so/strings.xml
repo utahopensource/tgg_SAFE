@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SAFE</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Gal ama diiwaan</string>
+    <string name="action_sign_in_short">Gal</string>
+    <string name="error_invalid_email">Cinwaanka email-kan waa khalad</string>
+    <string name="error_invalid_password">Password tani waa mid aad u gaaban</string>
+    <string name="error_incorrect_password">Password tani waa sax ahayn</string>
+    <string name="error_field_required">Beerta Tani waxaa loo baahan yahay</string>
+    <string name="permission_rationale">Xiriirada rukhsadda loo baahan yahay bixinta dhammaystirka email.</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="btn_urgent">Deg</string>
+    <string name="btn_non_urgent">Non-Deg</string>
+    <string name="txt_describe_incident">Sharaxaad dhacdada</string>
+    <string name="btn_submit">Gudbi</string>
+    <string name="emergency_number">tel:911</string>
+    <string name="test_number">tel:211</string>
+</resources>
