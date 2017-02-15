@@ -20,6 +20,18 @@ public class LanguageWrapper extends ContextWrapper {
     @SuppressWarnings("deprecation") public static ContextWrapper wrap(Context context, String language) {
         Configuration config = context.getResources().getConfiguration();
         if (!language.equals("")) {
+            //            Locale locale;
+            //
+            //            if (language.contains("_")) {
+            //                Log.d("LanguageWrapper", "YES");
+            //                String[] separated = language.split("_");
+            //                Log.d("LanguageWrapper", separated[0]);
+            //                Log.d("LanguageWrapper", separated[1].substring(1));
+            //                locale = new Locale(separated[0], separated[1].substring(1));
+            //            } else {
+            //                Log.d("LanguageWrapper", "NO");
+            //                locale = new Locale(language);
+            //            }
             Locale locale = new Locale(language);
             Locale.setDefault(locale);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

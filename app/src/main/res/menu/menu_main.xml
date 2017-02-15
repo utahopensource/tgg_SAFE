@@ -5,22 +5,30 @@
 
     <item
         android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings"
         android:orderInCategory="100"
         android:title="@string/title_activity_settings"
-        app:showAsAction="never"/>
+        app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/action_irc"
-        android:orderInCategory="99"
-        android:icon="@drawable/ic_info"
-        android:title="@string/irc"
-        app:showAsAction="always"/>
+    <!--<item-->
+    <!--android:id="@+id/action_irc"-->
+    <!--android:icon="@drawable/ic_info"-->
+    <!--android:orderInCategory="99"-->
+    <!--android:title="@string/irc"-->
+    <!--app:showAsAction="ifRoom"/>-->
 
-    <item
-        android:id="@+id/action_hospital"
-        android:orderInCategory="98"
-        android:icon="@drawable/ic_local_hospital"
-        android:title="@string/hospital"
-        app:showAsAction="always"/>
+    <!--<item-->
+    <!--android:id="@+id/action_hospital"-->
+    <!--android:icon="@drawable/ic_local_hospital"-->
+    <!--android:orderInCategory="98"-->
+    <!--android:title="@string/hospital"-->
+    <!--app:showAsAction="ifRoom"/>-->
+
+    <!--<item-->
+    <!--android:id="@+id/action_police"-->
+    <!--android:icon="@drawable/ic_police"-->
+    <!--android:orderInCategory="97"-->
+    <!--android:title="@string/police"-->
+    <!--app:showAsAction="ifRoom"/>-->
 
 </menu>

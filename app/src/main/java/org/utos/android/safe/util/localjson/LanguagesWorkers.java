@@ -1,10 +1,12 @@
 package org.utos.android.safe.util.localjson;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.utos.android.safe.model.LanguageModel;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +19,7 @@ import java.util.HashMap;
 
 public class LanguagesWorkers {
 
+    private String TAG = "LanguagesWorkers";
     private final Context ctx;
 
     public LanguagesWorkers(Context _ctx) {
@@ -73,6 +76,41 @@ public class LanguagesWorkers {
         }
 
         return caseWorkersList;
+    }
+
+    public ArrayList<LanguageModel> getLanguagesLanguageModel() {
+
+        //
+        ArrayList<LanguageModel> list = new ArrayList<>();
+
+        try {
+            JSONObject jsonObj = new JSONObject(loadJSONFromAsset());
+
+            // Getting JSON Array node
+            JSONArray caseWorkers = jsonObj.getJSONArray("Languages");
+
+            // looping through All bases
+            for (int i = 0; i < caseWorkers.length(); i++) {
+                JSONObject c = caseWorkers.getJSONObject(i);
+                LanguageModel languageModel = new LanguageModel();
+
+                String language = c.getString("language");
+                String locale = c.getString("locale");
+                Log.d(TAG, language);
+                Log.d(TAG, locale);
+
+                languageModel.setLanguage(language);
+                languageModel.setLocal(locale);
+
+                // add model to list
+                list.add(languageModel);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 
 }

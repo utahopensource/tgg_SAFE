@@ -1,4 +1,4 @@
-package org.utos.android.safe.gps;
+package org.utos.android.safe.util.gps;
 
 /**
  * Created by zachariah.davis on 12/6/16.

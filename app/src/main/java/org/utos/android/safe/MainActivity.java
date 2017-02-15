@@ -1,9 +1,6 @@
 package org.utos.android.safe;
 
-import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,13 +18,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import org.utos.android.safe.dialogs.AttachImageDialog;
 import org.utos.android.safe.dialogs.HospitalDialog;
 import org.utos.android.safe.dialogs.IRCDialog;
-import org.utos.android.safe.gps.GPSStarterKit;
+import org.utos.android.safe.dialogs.PoliceDialog;
 import org.utos.android.safe.updater.UpdateChecker;
+import org.utos.android.safe.util.ActivePhoneCall;
+import org.utos.android.safe.util.gps.GPSStarterKit;
 
 import java.util.ArrayList;
 
@@ -38,15 +35,16 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
-    private String calling;
+    public String calling;
     ////// Localization //////
     public GPSStarterKit gpsStarterKit;
     ////// Localization //////
 
+    public String whatPlaceSelected;
+
     //TODO: Authentication
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -54,7 +52,7 @@ public class MainActivity extends BaseActivity {
 
         //
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorYellow));
-//        toolbar.setLogo(R.drawable.ic_action_hands);
+        //        toolbar.setLogo(R.drawable.ic_action_hands);
 
         // set title works when language change
         setTitle(getString(R.string.app_name));
@@ -68,8 +66,7 @@ public class MainActivity extends BaseActivity {
                             setTitle("Location, Call, and Storage Permission").
                             setMessage("This app needs location permission to get current location for reports, call permission to make phone calls, and storage permission to get images and videos.");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int which) {
+                        @Override public void onClick(DialogInterface dialogInterface, int which) {
                             ActivityCompat.requestPermissions(MainActivity.this, new String[]{ACCESS_FINE_LOCATION, CALL_PHONE, WRITE_EXTERNAL_STORAGE}, CALL_AND_LOCATION_AND_WRITE_PERMISSIONS);
                         }
                     });
@@ -93,28 +90,18 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_main, menu);
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 Log.d(TAG, "Settings");
                 Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intentSettings);
-                return true;
-            case R.id.action_hospital:
-                Log.d(TAG, "Hospital");
-                new HospitalDialog().show(getSupportFragmentManager(), "dialog");
-                return true;
-            case R.id.action_irc:
-                Log.d(TAG, "IRC Info");
-                new IRCDialog().show(getSupportFragmentManager(), "dialog");
                 return true;
             default:
                 Log.d(TAG, "default");
@@ -122,14 +109,12 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onResume() {
+    @Override public void onResume() {
         super.onResume();
 
     }
 
-    @Override
-    protected void onStop() {
+    @Override protected void onStop() {
         super.onStop();
 
         // stop using GPS
@@ -138,8 +123,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onDestroy() {
+    @Override public void onDestroy() {
         super.onDestroy();
 
         // stop using GPS
@@ -148,8 +132,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onPause() {
+    @Override public void onPause() {
         super.onPause();
 
         // stop using GPS
@@ -159,38 +142,67 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
+     * Open dialog for IRC info
+     */
+    public void ircDialog(View view) {
+        //
+        new IRCDialog().show(getSupportFragmentManager(), "dialog");
+    }
+
+    /**
+     * Open dialog for police around you
+     */
+    public void policeDialog(View view) {
+        //
+        whatPlaceSelected = "police";
+        //
+        new PoliceDialog().show(getSupportFragmentManager(), "dialog");
+    }
+
+    /**
+     * Open dialog for hospitals around you
+     */
+    public void hospitalDialog(View view) {
+        //
+        whatPlaceSelected = "hospital";
+        //
+        new HospitalDialog().show(getSupportFragmentManager(), "dialog");
+    }
+
+    /**
      * Will make call to caseworker
      */
     public void callCaseworker(View view) {
         // Check for CALL_PHONE
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //
-            calling="caseworker";
-            //
-            if (ActivityCompat.checkSelfPermission(this, CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, CALL_PHONE)) {
-                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this).
-                            setTitle("Call Permission").
-                            setMessage("This app needs call permissions to make phone calls.");
-                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int which) {
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
-                        }
-                    });
-                    android.app.AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
+        if (!new ActivePhoneCall().isCallActive(this)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                //
+                calling = "caseworker";
+                //
+                if (ActivityCompat.checkSelfPermission(this, CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // Should we show an explanation?
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, CALL_PHONE)) {
+                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this).
+                                setTitle("Call Permission").
+                                setMessage("This app needs call permissions to make phone calls.");
+                        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override public void onClick(DialogInterface dialogInterface, int which) {
+                                ActivityCompat.requestPermissions(MainActivity.this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
+                            }
+                        });
+                        android.app.AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    } else {
+                        ActivityCompat.requestPermissions(this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
+                    }
                 } else {
-                    ActivityCompat.requestPermissions(this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
+                    Intent call_intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getSharedPreferences(SHARED_PREFS, 0).getString(CASE_WORKER_NUM, "")));
+                    startActivity(call_intent);
                 }
             } else {
                 Intent call_intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getSharedPreferences(SHARED_PREFS, 0).getString(CASE_WORKER_NUM, "")));
                 startActivity(call_intent);
             }
-        } else {
-            Intent call_intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + getSharedPreferences(SHARED_PREFS, 0).getString(CASE_WORKER_NUM, "")));
-            startActivity(call_intent);
         }
 
     }
@@ -200,26 +212,32 @@ public class MainActivity extends BaseActivity {
      */
     public void startUrgent(View view) {
         // Check for CALL_PHONE
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //
-            calling="urgent";
-            //
-            if (ActivityCompat.checkSelfPermission(MainActivity.this, CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, CALL_PHONE)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this).
-                            setTitle("Call Permission").
-                            setMessage("This app needs call permissions to make phone calls.");
-                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int which) {
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
-                        }
-                    });
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
+        if (!new ActivePhoneCall().isCallActive(this)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                //
+                calling = "urgent";
+                //
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // Should we show an explanation?
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, CALL_PHONE)) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this).
+                                setTitle("Call Permission").
+                                setMessage("This app needs call permissions to make phone calls.");
+                        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override public void onClick(DialogInterface dialogInterface, int which) {
+                                ActivityCompat.requestPermissions(MainActivity.this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
+                            }
+                        });
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    } else {
+                        ActivityCompat.requestPermissions(this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
+                    }
                 } else {
-                    ActivityCompat.requestPermissions(this, new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION);
+                    // TODO: 1/30/17 need to change to 911
+                    Intent call_intent = new Intent(Intent.ACTION_CALL, Uri.parse(getString(R.string.test_number)));
+                    startActivity(call_intent);
+                    // TODO: 2/12/2017 send sms
                 }
             } else {
                 // TODO: 1/30/17 need to change to 911
@@ -227,11 +245,6 @@ public class MainActivity extends BaseActivity {
                 startActivity(call_intent);
                 // TODO: 2/12/2017 send sms
             }
-        } else {
-            // TODO: 1/30/17 need to change to 911
-            Intent call_intent = new Intent(Intent.ACTION_CALL, Uri.parse(getString(R.string.test_number)));
-            startActivity(call_intent);
-            // TODO: 2/12/2017 send sms
         }
 
         // TODO Need SEND_SMS Permissions send text to case worker
@@ -244,16 +257,16 @@ public class MainActivity extends BaseActivity {
      */
     public void sendSMS(String phoneNumber, String message) {
         //        Intent sendIntent = new Intent(ACTION_SMS_SENT);
-//        sendIntent.putExtra("extra_key", "extra_value");
-////
+        //        sendIntent.putExtra("extra_key", "extra_value");
+        ////
         PendingIntent piSent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_SMS_SENT), PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent piDelivered = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_SMS_DELIVERED), 0);
-////
+        ////
         ArrayList<PendingIntent> sentPendingIntents = new ArrayList<>();
         ArrayList<PendingIntent> deliveredPendingIntents = new ArrayList<>();
-////
+        ////
         SmsManager smsManager = SmsManager.getDefault();
-////
+        ////
         int length = message.length();
         if (length > MAX_SMS_MESSAGE_LENGTH) {
             ArrayList<String> messageList = smsManager.divideMessage(message);
@@ -272,29 +285,29 @@ public class MainActivity extends BaseActivity {
     }
 
 
-//    public void sendText(View view) {
-//        PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), PendingIntent.FLAG_NO_CREATE);
-//        deliverActivity = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context arg0, Intent arg1) {
-//                switch (getResultCode()) {
-//                    case Activity.RESULT_OK:
-//                        Toast.makeText(getBaseContext(), "SMS delivered", Toast.LENGTH_LONG).show();
-//                        break;
-//                    case Activity.RESULT_CANCELED:
-//                        Toast.makeText(getBaseContext(), "SMS not delivered", Toast.LENGTH_LONG).show();
-//                        break;
-//
-//                }
-//            }
-//        };
-//
-//
-//        // http://stackoverflow.com/questions/6361428/how-can-i-send-sms-messages-in-the-background-using-android
-//        SmsManager smsManager = SmsManager.getDefault();
-//
-//        smsManager.sendTextMessage("phone number goes here", null, "Message goes here.", null, null);
-//    }
+    //    public void sendText(View view) {
+    //        PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), PendingIntent.FLAG_NO_CREATE);
+    //        deliverActivity = new BroadcastReceiver() {
+    //            @Override
+    //            public void onReceive(Context arg0, Intent arg1) {
+    //                switch (getResultCode()) {
+    //                    case Activity.RESULT_OK:
+    //                        Toast.makeText(getBaseContext(), "SMS delivered", Toast.LENGTH_LONG).show();
+    //                        break;
+    //                    case Activity.RESULT_CANCELED:
+    //                        Toast.makeText(getBaseContext(), "SMS not delivered", Toast.LENGTH_LONG).show();
+    //                        break;
+    //
+    //                }
+    //            }
+    //        };
+    //
+    //
+    //        // http://stackoverflow.com/questions/6361428/how-can-i-send-sms-messages-in-the-background-using-android
+    //        SmsManager smsManager = SmsManager.getDefault();
+    //
+    //        smsManager.sendTextMessage("phone number goes here", null, "Message goes here.", null, null);
+    //    }
 
     public void shareLocation(double lat, double lng) {
         String string = "This is my current location. \n http://maps.google.com/maps?q=loc:" + lat + "," + lng;
@@ -343,8 +356,7 @@ public class MainActivity extends BaseActivity {
     ////////////////////////////////////////////////////////
     // Permission Listener Results
     ////////////////////////////////////////////////////////
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case CALL_AND_LOCATION_AND_WRITE_PERMISSIONS:
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -365,7 +377,7 @@ public class MainActivity extends BaseActivity {
             case CALL_PHONE_PERMISSION:
                 if (ActivityCompat.checkSelfPermission(this, CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
-                    switch (calling){
+                    switch (calling) {
                         case "urgent":
                             // TODO: 1/30/17 need to change to 911
                             Intent callUrgent = new Intent(Intent.ACTION_CALL, Uri.parse(getString(R.string.test_number)));

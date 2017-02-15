@@ -9,6 +9,11 @@
             android:summary=""
             android:title="Build Version"/>
 
+        <Preference
+            android:key="app_licensing"
+            android:summary=""
+            android:title="Software Licensing"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory

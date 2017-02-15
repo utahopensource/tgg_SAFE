@@ -8,6 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:windowBackground">@color/grey_300</item>
+
+        <!--Ripple Color-->
+        <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -15,9 +18,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <!--Toolbar Overflow button yello-->
+    <!--Toolbar Overflow button yellow-->
     <style name="MainMenuOverflowColor" parent="AppTheme.NoActionBar">
         <item name="android:textColorSecondary">@color/colorYellow</item>
+        <!--Ripple Color-->
+        <item name="colorControlHighlight">@color/colorYellow</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
@@ -29,14 +34,23 @@
         <item name="colorButtonNormal">@color/colorPrimary</item>
         <item name="android:layout_marginRight">4dp</item>
         <item name="android:layout_marginLeft">4dp</item>
+        <!--Ripple Color-->
+        <!--<item name="colorControlHighlight">@color/colorYellow</item>-->
     </style>
 
     <!--Main Activity Buttons-->
     <style name="ThemeMainButtons">
-        <item name="android:foreground">?attr/selectableItemBackground</item>
-        <item name="colorControlHighlight">@android:color/darker_gray</item>
+        <!--Ripple Color-->
+        <item name="colorControlHighlight">@color/colorYellow</item>
     </style>
 
+    <!--Main Activity Urgent Button-->
+    <style name="ThemeMainUrgentButtons">
+        <!--Ripple Color-->
+        <item name="colorControlHighlight">@color/colorRed</item>
+    </style>
+
+    <!---->
     <style name="ThemeOverlay.MyTextDetail" parent="AppTheme">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -48,11 +62,7 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <!--<style name="ThemeOverlay.FirebaseIcon" parent="AppTheme">-->
-    <!--<item name="android:layout_marginTop">@dimen/icon_top_margin</item>-->
-    <!--<item name="android:layout_marginBottom">@dimen/icon_bottom_margin</item>-->
-    <!--</style>-->
-
+    <!---->
     <style name="ThemeOverlay.MyTitleText" parent="AppTheme">
         <item name="android:gravity">center</item>
         <item name="android:textSize">36sp</item>

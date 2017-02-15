@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="15dp">
 
-    <!--<TextView-->
-        <!--android:id="@+id/textView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:gravity="center"-->
-        <!--android:text="@string/irc_all"-->
-        <!--android:textColor="@color/colorPrimary"-->
-        <!--android:textSize="20sp"-->
-        <!--android:textStyle="bold|italic" />-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="locale"
+        android:text="@string/caseworker"
+        android:textColor="@color/colorPrimary"
+        android:textDirection="locale"
+        android:textSize="18sp"
+        android:textStyle="bold|italic"/>
 
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:background="@color/colorPrimary" />-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/caseWorker"
@@ -28,36 +29,59 @@
         android:gravity="center_vertical"
         android:layoutDirection="locale"
         android:padding="10dp"
-        android:text="Caseworker"
         android:textColor="@color/colorPrimary"
-        android:textDirection="locale" />
+        android:textDirection="locale"/>
+
+    <TextView
+        android:id="@+id/caseWorkerNum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:layoutDirection="locale"
+        android:layout_marginStart="25dp"
+        android:padding="10dp"
+        android:textColor="@color/colorPrimary"
+        android:textDirection="locale"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="locale"
+        android:text="@string/irc_all"
+        android:textColor="@color/colorPrimary"
+        android:textDirection="locale"
+        android:textSize="18sp"
+        android:textStyle="bold|italic"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/ircAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:drawablePadding="10dp"
-        android:gravity="center_vertical"
-        android:layoutDirection="locale"
         android:padding="10dp"
-        android:text="221 400 W, Salt Lake City, UT 84110"
-        android:textColor="@color/colorPrimary"
-        android:textDirection="locale" />
+        android:textColor="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/ircNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:drawablePadding="10dp"
-        android:gravity="center_vertical"
         android:layoutDirection="locale"
         android:padding="10dp"
-        android:text="(801) 328-1091"
         android:textColor="@color/colorPrimary"
-        android:textDirection="locale" />
+        android:textDirection="ltr"/>
 
 </LinearLayout>

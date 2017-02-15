@@ -1,4 +1,4 @@
-package org.utos.android.safe.gps;
+package org.utos.android.safe.util.gps;
 
 import android.content.Context;
 import android.location.Address;

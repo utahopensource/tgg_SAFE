@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:id="@+id/cv"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layoutDirection="locale"
+    android:textDirection="locale"
+    card_view:cardCornerRadius="3dp"
+    card_view:cardElevation="5dp"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:id="@+id/taxiNormRR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="locale"
+        android:padding="10dp"
+        android:textDirection="locale">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/taxiImageView"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_local_hospital"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewMiles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutDirection="locale"
+                android:text="Miles"
+                android:textColor="#000000"
+                android:textDirection="locale"
+                android:textSize="15sp"/>
+
+            <!--<TextView-->
+            <!--android:id="@+id/textViewIsOpen"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:layoutDirection="locale"-->
+            <!--android:shadowColor="@android:color/darker_gray"-->
+            <!--android:shadowDx="1"-->
+            <!--android:shadowDy="1"-->
+            <!--android:shadowRadius="2"-->
+            <!--android:text="OPEN"-->
+            <!--android:textColor="#000000"-->
+            <!--android:textDirection="locale"-->
+            <!--android:textSize="15sp"-->
+            <!--android:textStyle="bold"/>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llInfo"
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/taxiImageView"
+            android:layout_toStartOf="@+id/linearLayoutRight"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/locName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:layoutDirection="locale"
+                android:lines="1"
+                android:text="Name Temp"
+                android:textColor="#000000"
+                android:textDirection="locale"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/textViewNoRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layoutDirection="locale"
+                android:text="No Rating"
+                android:textColor="#000000"
+                android:textDirection="locale"
+                android:textSize="16sp"
+                android:textStyle="italic"/>
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize=".1"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

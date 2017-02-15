@@ -1,25 +1,32 @@
 package org.utos.android.safe;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.LinearLayout;
 
+import org.utos.android.safe.adapters.RecyclerViewLanguages;
+import org.utos.android.safe.model.LanguageModel;
 import org.utos.android.safe.util.localjson.LanguagesWorkers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class SelectLanguageActivity extends BaseActivity {
 
+    ////////////
+    private ArrayList<LanguageModel> languageList = new ArrayList<>();
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayout progressBar;
+    ////////////
+
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_lagnuage);
+        setContentView(R.layout.activity_select_language);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorYellow));
@@ -33,24 +40,35 @@ public class SelectLanguageActivity extends BaseActivity {
             startActivity(intent);
         }
 
-        ListView listView = (ListView) findViewById(R.id.langList);
+        ////////////////////////////////////////////////
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setAutoMeasureEnabled(true);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        languageList = new LanguagesWorkers(this).getLanguagesLanguageModel();
+        mAdapter = new RecyclerViewLanguages(this, languageList);
+        mRecyclerView.setAdapter(mAdapter);
+        ////////////////////////////////////////////////
 
-        final ArrayList<HashMap<String, String>> fromLanguageList = new LanguagesWorkers(this).getLanguages();
-        SimpleAdapter adapterLanguage = new SimpleAdapter(this, fromLanguageList, android.R.layout.simple_spinner_dropdown_item, new String[]{"language"}, new int[]{android.R.id.text1});
-        listView.setAdapter(adapterLanguage);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SharedPreferences.Editor prefsEditor = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit();
-                prefsEditor.putString(USER_LANG, fromLanguageList.get(position).get("language"));
-                prefsEditor.putString(USER_LANG_LOCALE, fromLanguageList.get(position).get("locale"));
-                prefsEditor.apply();
-
-                //
-                Intent intent = new Intent(SelectLanguageActivity.this, SetupActivity.class);
-                startActivity(intent);
-            }
-        });
+        //        ListView listView = (ListView) findViewById(R.id.langList);
+        //
+        //
+        //        SimpleAdapter adapterLanguage = new SimpleAdapter(this, fromLanguageList, android.R.layout.simple_spinner_dropdown_item, new String[]{"language"}, new int[]{android.R.id.text1});
+        //        listView.setAdapter(adapterLanguage);
+        //
+        //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //            @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //                SharedPreferences.Editor prefsEditor = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit();
+        //                prefsEditor.putString(USER_LANG, fromLanguageList.get(position).get("language"));
+        //                prefsEditor.putString(USER_LANG_LOCALE, fromLanguageList.get(position).get("locale"));
+        //                prefsEditor.apply();
+        //
+        //                //
+        //                Intent intent = new Intent(SelectLanguageActivity.this, SetupActivity.class);
+        //                startActivity(intent);
+        //            }
+        //        });
 
     }
 

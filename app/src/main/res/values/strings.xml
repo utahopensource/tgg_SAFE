@@ -5,6 +5,7 @@
     <string name="emergency_number">tel:911</string>
     <string name="test_number">tel:211</string>
     <string name="loading">Loading…</string>
+    <string name="inCall">You are currently in a phone call</string>
     <!--Shared All Activities-->
 
     <!--Setup Activity-->
@@ -24,6 +25,13 @@
     <string name="irc">IRC</string>
     <string name="irc_all">International Rescue Committee</string>
     <string name="hospital">Hospital</string>
+    <string name="police">Police</string>
+    <string-array name="places_array">
+        <item>Call</item>
+        <item>Navigate</item>
+    </string-array>
+    <string name="irc_number">(801) 328&#8211;1091</string>
+    <string name="irc_address">221 400 W, Salt Lake City, UT 84110</string>
     <!--Main Activity-->
 
     <!--Non Urgent Activity-->
@@ -74,7 +82,7 @@
     <!--Settings Activity-->
 
 
-    <!--DONT DELETE NOT USED-->
+    <!--!!!DONT DELETE!!! NOT USED-->
     <!--<string name="sign_out">Sign Out</string>-->
     <!--<string name="signed_out">Signed out</string>-->
     <!--<string name="disconnect">Disconnect</string>-->

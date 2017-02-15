@@ -25,7 +25,7 @@ public class CustomCircleNetworkImageView extends ImageView {
     private boolean mCircled;
 
     /**
-     * The URL of the network image to load
+     * The URL of the network image to load_bar
      */
     private String mUrl;
 
@@ -76,12 +76,12 @@ public class CustomCircleNetworkImageView extends ImageView {
     public void setImageUrl(String url, ImageLoader imageLoader) {
         mUrl = url;
         mImageLoader = imageLoader;
-        // The URL has potentially changed. See if we need to load it.
+        // The URL has potentially changed. See if we need to load_bar it.
         loadImageIfNecessary(false);
     }
 
     /**
-     * Sets the default image resource ID to be used for this view until the attempt to load it
+     * Sets the default image resource ID to be used for this view until the attempt to load_bar it
      * completes.
      */
     public void setDefaultImageResId(int defaultImage) {
@@ -90,7 +90,7 @@ public class CustomCircleNetworkImageView extends ImageView {
 
     /**
      * Sets the error image resource ID to be used for this view in the event that the image
-     * requested fails to load.
+     * requested fails to load_bar.
      */
     public void setErrorImageResId(int errorImage) {
         mErrorImageId = errorImage;

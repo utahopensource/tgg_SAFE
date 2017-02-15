@@ -43,7 +43,7 @@ import static org.utos.android.safe.BaseActivity.USER_LANG_LOCALE;
 /**
  * Created by zachariah.davis on 2/12/17.
  */
-public class HospitalDialog extends DialogFragment {
+public class PoliceDialog extends DialogFragment {
 
     private String TAG = "HospitalDialog";
     private String stringKey = "AIzaSyAxgXsIFTM2mO6mccBCv7IXCxnKhbL325s";
@@ -53,7 +53,7 @@ public class HospitalDialog extends DialogFragment {
     private Uri uri;
 
     ////////////
-    private final ArrayList<PlacesModel> hospitalList = new ArrayList<>();
+    private final ArrayList<PlacesModel> policeList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -67,14 +67,14 @@ public class HospitalDialog extends DialogFragment {
 
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
         final View layoutInflater = getActivity().getLayoutInflater().inflate(R.layout.dialog_hospital, null);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setView(layoutInflater).setTitle(getString(R.string.hospital));
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setView(layoutInflater).setTitle(getString(R.string.police));
         ////////////////////////////////////////////////
         mRecyclerView = (RecyclerView) layoutInflater.findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setAutoMeasureEnabled(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new RecyclerViewAdapterPlaces(getActivity(), hospitalList);
+        mAdapter = new RecyclerViewAdapterPlaces(getActivity(), policeList);
         mRecyclerView.setAdapter(mAdapter);
         ////////////////////////////////////////////////
         getResults(((MainActivity) getActivity()).gpsStarterKit.getLatitude(), ((MainActivity) getActivity()).gpsStarterKit.getLongitude(), "");
@@ -94,7 +94,7 @@ public class HospitalDialog extends DialogFragment {
         super.onStart();
 
         Log.d(TAG, "onStart");
-        if (hospitalList.size() == 0) {
+        if (policeList.size() == 0) {
             progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loading), true);
         }
     }
@@ -105,10 +105,9 @@ public class HospitalDialog extends DialogFragment {
             uri = new Uri.Builder().scheme("https").authority("maps.googleapis.com").
                     path("maps/api/place/nearbysearch/json").
                     appendQueryParameter("location", lat + "," + lng).
-                    appendQueryParameter("opennow", "true").
                     appendQueryParameter("rankby", "distance").
                     appendQueryParameter("language", getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG_LOCALE, "en")).
-                    appendQueryParameter("types", "hospital").
+                    appendQueryParameter("types", "police").
                     appendQueryParameter("key", stringKey).
                     build();
         } else {
@@ -116,10 +115,9 @@ public class HospitalDialog extends DialogFragment {
             uri = new Uri.Builder().scheme("https").authority("maps.googleapis.com").
                     path("maps/api/place/nearbysearch/json").
                     appendQueryParameter("location", lat + "," + lng).
-                    appendQueryParameter("opennow", "true").
                     appendQueryParameter("rankby", "distance").
                     appendQueryParameter("language", getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG_LOCALE, "en")).
-                    appendQueryParameter("types", "hospital").
+                    appendQueryParameter("types", "police").
                     appendQueryParameter("key", stringKey).
                     appendQueryParameter("pagetoken", pageToken).
                     build();
@@ -200,16 +198,16 @@ public class HospitalDialog extends DialogFragment {
                         placesModel.setLng(String.valueOf(result.getJSONObject("geometry").getJSONObject("location").getDouble("lng")));
 
                         // add model to list
-                        hospitalList.add(placesModel);
+                        policeList.add(placesModel);
 
                     }
 
-                    if (hospitalList.size() == 0) {
+                    if (policeList.size() == 0) {
                         //                            Toast.makeText(TaxiActivity.this, "No places found, Search Again.", Toast.LENGTH_SHORT).show();
                         mAdapter = new RecyclerViewAdapterEmpty(getActivity(), "no_results");
                         mRecyclerView.setAdapter(mAdapter);
                     } else {
-                        mAdapter = new RecyclerViewAdapterPlaces(getActivity(), hospitalList);
+                        mAdapter = new RecyclerViewAdapterPlaces(getActivity(), policeList);
                         mRecyclerView.setAdapter(mAdapter);
                         ////////////////
                         mAdapter.notifyDataSetChanged();
@@ -275,9 +273,9 @@ public class HospitalDialog extends DialogFragment {
 
         Log.d(TAG, "onDismiss");
         //        if (progressDialog.isShowing()) {
-        //            //            progressDialog.dismiss();
+        //            progressDialog.dismiss();
         //        }
-
+        //
         //        if (getDialog() != null && getDialog().isShowing()) {
         //            if (countDownRunning) {
         //                countDownTimer.cancel();

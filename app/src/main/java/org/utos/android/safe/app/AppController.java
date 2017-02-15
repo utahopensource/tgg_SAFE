@@ -50,4 +50,5 @@ public class AppController extends MyApplication {
             mRequestQueue.cancelAll(tag);
         }
     }
+
 }

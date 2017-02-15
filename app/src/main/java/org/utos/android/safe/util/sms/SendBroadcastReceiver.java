@@ -1,4 +1,4 @@
-package org.utos.android.safe.sms;
+package org.utos.android.safe.util.sms;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

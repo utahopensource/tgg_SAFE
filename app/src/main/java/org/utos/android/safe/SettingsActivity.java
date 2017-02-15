@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
+import android.widget.EditText;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -19,6 +21,8 @@ import android.widget.TextView;
 import org.utos.android.safe.util.localjson.GetCaseWorkers;
 import org.utos.android.safe.util.localjson.LanguagesWorkers;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -70,14 +74,32 @@ public class SettingsActivity extends BaseActivity {
             }
 
             /////////////////////////////
-            // videos
-            //            Preference videosPref = findPreference("app_version");
-            //            videosPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            //                @Override public boolean onPreferenceClick(Preference preference) {
-            //
-            //                    return false;
-            //                }
-            //            });
+            // app licensing
+            // TODO: 2/15/17 add any third party licensing into the html doc in asset folder.. Delete this if we dont use any
+            Preference appLicensingPref = findPreference("app_licensing");
+            appLicensingPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override public boolean onPreferenceClick(Preference preference) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity()).setTitle("Licenses");
+                    WebView wv = new WebView(getActivity());
+                    // load from asset folder
+                    try {
+                        InputStream inputStream = getActivity().getResources().getAssets().open("open_source_licenses.html");
+                        byte[] b = new byte[inputStream.available()];
+                        inputStream.read(b);
+                        wv.loadData(new String(b), "text/html", "utf-8");
+                    } catch (IOException e) {
+                        Log.e(TAG, "Couldn't open upgrade-alert.html", e);
+                    }
+                    alert.setView(wv);
+                    alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alert.show();
+                    return false;
+                }
+            });
 
             /////////////////////////////
             // language
@@ -152,7 +174,7 @@ public class SettingsActivity extends BaseActivity {
                     textViewUserCWN.setText(String.format(getActivity().getString(R.string.user_caseworker_num), getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(CASE_WORKER_NUM, "")));
 
                     //
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setView(layoutInflater).setCancelable(false).setTitle(getString(R.string.pref_profile));
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setView(layoutInflater).setCancelable(false);
                     builder.setPositiveButton(getString(R.string.pref_profile_edit), new DialogInterface.OnClickListener() {
                         @Override public void onClick(DialogInterface dialog, int id) {
                             //
@@ -162,11 +184,11 @@ public class SettingsActivity extends BaseActivity {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setView(layoutInflater).setCancelable(false).setTitle(getString(R.string.pref_profile_edit));
 
                             //
-                            final TextInputEditText inputEditTextName = (TextInputEditText) layoutInflater.findViewById(R.id.input_name);
+                            final EditText inputEditTextName = (EditText) layoutInflater.findViewById(R.id.input_name);
                             inputEditTextName.setText(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_NAME, ""));
 
                             //
-                            final TextInputEditText inputEditTextNum = (TextInputEditText) layoutInflater.findViewById(R.id.input_num);
+                            final EditText inputEditTextNum = (EditText) layoutInflater.findViewById(R.id.input_num);
                             inputEditTextNum.setText(getActivity().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_NUMBER, ""));
 
                             // setup caseworker spinner

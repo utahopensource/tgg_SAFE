@@ -1,6 +1,7 @@
 package org.utos.android.safe;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -55,29 +56,44 @@ public class BaseActivity extends AppCompatActivity {
     public static int MAX_SMS_MESSAGE_LENGTH = 160;
     // SMS Receivers
 
+    private ProgressDialog mProgressDialog;
+
     ///////////////////
     // set language
-    @Override
-    protected void attachBaseContext(Context newBase) {
+    @Override protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LanguageWrapper.wrap(newBase, newBase.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).getString(USER_LANG_LOCALE, "en")));
     }
     //
     ///////////////////
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
 
     //
-    @TargetApi(Build.VERSION_CODES.N)
-    public Locale getCurrentLocale() {
+    @TargetApi(Build.VERSION_CODES.N) public Locale getCurrentLocale() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return getResources().getConfiguration().getLocales().get(0);
         } else {
             //noinspection deprecation
             return getResources().getConfiguration().locale;
+        }
+    }
+
+    public void showProgressDialog(Context ctx, String message, boolean cancelable) {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(ctx);
+            mProgressDialog.setCancelable(cancelable);
+            mProgressDialog.setMessage(message);
+        }
+
+        mProgressDialog.show();
+    }
+
+    public void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 }

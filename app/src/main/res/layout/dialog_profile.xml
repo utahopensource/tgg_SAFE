@@ -7,9 +7,8 @@
     android:padding="15dp">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:text="@string/pref_google_pro"
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
@@ -20,46 +19,30 @@
         android:layout_height="1dp"
         android:background="@color/colorPrimary"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <!--<org.utos.android.safe.util.CustomCircleNetworkImageView-->
-        <!--android:id="@+id/profileIMG"-->
-        <!--android:layout_width="75dp"-->
-        <!--android:layout_height="75dp"-->
-        <!--android:layout_margin="10dp"/>-->
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/googleName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layoutDirection="locale"
-                android:text="Name"
-                android:textDirection="locale"/>
-
-            <TextView
-                android:id="@+id/googleEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layoutDirection="locale"
-                android:text="Email"
-                android:textDirection="locale"/>
-
-        </LinearLayout>
-
-    </RelativeLayout>
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/googleName"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layoutDirection="locale"
+        android:padding="5dp"
+        android:text="Name"
+        android:textColor="@color/colorPrimary"
+        android:textDirection="locale"/>
+
+    <TextView
+        android:id="@+id/googleEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layoutDirection="locale"
+        android:padding="5dp"
+        android:text="Email"
+        android:textColor="@color/colorPrimary"
+        android:textDirection="locale"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/pref_user_pro"
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
@@ -75,6 +58,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layoutDirection="locale"
+        android:padding="5dp"
+        android:textColor="@color/colorPrimary"
         android:textDirection="locale"/>
 
     <TextView
@@ -82,6 +67,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layoutDirection="locale"
+        android:padding="5dp"
+        android:textColor="@color/colorPrimary"
         android:textDirection="locale"/>
 
     <TextView
@@ -89,6 +76,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layoutDirection="locale"
+        android:padding="5dp"
+        android:textColor="@color/colorPrimary"
         android:textDirection="locale"/>
 
     <TextView
@@ -96,6 +85,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layoutDirection="locale"
+        android:padding="5dp"
+        android:textColor="@color/colorPrimary"
         android:textDirection="locale"/>
 
     <TextView
@@ -103,6 +94,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layoutDirection="locale"
+        android:padding="5dp"
+        android:textColor="@color/colorPrimary"
         android:textDirection="locale"/>
 
 </LinearLayout>
