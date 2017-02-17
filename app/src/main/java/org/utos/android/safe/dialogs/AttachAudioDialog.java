@@ -13,8 +13,6 @@ import org.utos.android.safe.R;
 import java.io.File;
 import java.io.IOException;
 
-import static org.utos.android.safe.NonUrgentActivity.REPORT_DIRECTORY_NAME;
-
 /**
  * Created by zachariah.davis on 1/24/17.
  */
@@ -38,13 +36,17 @@ public class AttachAudioDialog {
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            final String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + REPORT_DIRECTORY_NAME + File.separator + "audio_" + (((NonUrgentActivity) ctx).audioArray.size() + 1) + ".mp3";
+            //
+            mediaRecorder.setAudioSamplingRate(44100);
+            mediaRecorder.setAudioEncodingBitRate(16);
+            //
+            final String path = ((NonUrgentActivity) ctx).REPORT_DIRECTORY_NAME + File.separator + "audio_" + (((NonUrgentActivity) ctx).audioArray.size() + 1) + ".mp3";
             mediaRecorder.setOutputFile(path);
-
+            //
             try {
                 mediaRecorder.prepare();
                 mediaRecorder.start();
-
+                //
                 final ProgressDialog mProgressDialog = new ProgressDialog(ctx);
                 mProgressDialog.setTitle(ctx.getString(R.string.audio_record));
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -53,7 +55,11 @@ public class AttachAudioDialog {
                 mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, ctx.getString(R.string.stop_record), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         mProgressDialog.dismiss();
-                        mediaRecorder.stop();
+                        try {
+                            mediaRecorder.stop();
+                        } catch (RuntimeException stopException) {
+                            //handle cleanup here
+                        }
                         mediaRecorder.release();
                         // Save a path
                         ((NonUrgentActivity) ctx).audioArray.add(path);

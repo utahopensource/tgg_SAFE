@@ -2,29 +2,42 @@ package org.utos.android.safe;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import org.utos.android.safe.aws.Constants;
 import org.utos.android.safe.dialogs.AttachAudioDialog;
 import org.utos.android.safe.dialogs.AttachImageDialog;
 import org.utos.android.safe.dialogs.AttachVideoDialog;
@@ -33,11 +46,11 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import static android.Manifest.permission.CALL_PHONE;
 import static android.Manifest.permission.CAMERA;
@@ -60,7 +73,7 @@ public class NonUrgentActivity extends BaseActivity {
     public static final int MEDIA_TYPE_VIDEO = 2;
 
     // directory name to store captured images and videos
-    public static final String REPORT_DIRECTORY_NAME = "SAFE" + File.separator + "Report";
+    public String REPORT_DIRECTORY_NAME;
 
     public AppCompatButton attachImageButton, attachVoiceButton, attachVideoButton;
     private Spinner spinner;
@@ -70,16 +83,20 @@ public class NonUrgentActivity extends BaseActivity {
 
     public ArrayList<String> imageArray, videoArray, audioArray;
 
-    private ProgressDialog mProgressDialogDownload;
+    //    private ProgressDialog mProgressDialogDownload;
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_non_urgent);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorYellow));
+
+        REPORT_DIRECTORY_NAME = getExternalFilesDir(null).getAbsolutePath() + File.separator + "SAFE" + File.separator + "Report";
+
+        // keep screen on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // set title works when language change
         setTitle(getString(R.string.btn_non_urgent));
@@ -109,8 +126,7 @@ public class NonUrgentActivity extends BaseActivity {
     //        deleteEverything();
     //    }
 
-    @Override
-    public void onDestroy() {
+    @Override public void onDestroy() {
         super.onDestroy();
 
         Log.d(TAG, "onDestroy");
@@ -128,7 +144,7 @@ public class NonUrgentActivity extends BaseActivity {
      */
     public File getOutputMediaFile(int type) throws IOException {
         // External sdcard location
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + REPORT_DIRECTORY_NAME);
+        File mediaStorageDir = new File(REPORT_DIRECTORY_NAME);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
@@ -176,8 +192,7 @@ public class NonUrgentActivity extends BaseActivity {
                             setTitle("Camera and Write to Storage Permission").
                             setMessage("This app needs permissions to access camera and write to storage.");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int which) {
+                        @Override public void onClick(DialogInterface dialogInterface, int which) {
                             ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{CAMERA, WRITE_EXTERNAL_STORAGE}, CAM_AND_WRITE_EXTERNAL_STORAGE_PERMISSION);
                         }
                     });
@@ -208,8 +223,7 @@ public class NonUrgentActivity extends BaseActivity {
                             setTitle("Camera and Write to Storage Permission").
                             setMessage("This app needs permissions to access camera and write to storage.");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int which) {
+                        @Override public void onClick(DialogInterface dialogInterface, int which) {
                             ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{CAMERA, WRITE_EXTERNAL_STORAGE}, CAM_AND_WRITE_EXTERNAL_STORAGE_PERMISSION);
                         }
                     });
@@ -238,8 +252,7 @@ public class NonUrgentActivity extends BaseActivity {
                             setTitle("Record Audio and Write to Storage Permission").
                             setMessage("This app needs permissions to record audio and write to storage.");
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int which) {
+                        @Override public void onClick(DialogInterface dialogInterface, int which) {
                             ActivityCompat.requestPermissions(NonUrgentActivity.this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE}, RECORD_AUDIO_WRITE_EXTERNAL_STORAGE_PERMISSION);
                         }
                     });
@@ -289,8 +302,7 @@ public class NonUrgentActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         //  CAMERA_CAPTURE_IMAGE_REQUEST_CODE
@@ -326,7 +338,7 @@ public class NonUrgentActivity extends BaseActivity {
                         BufferedInputStream reader = new BufferedInputStream(inputStream);
 
                         // Create an output stream to a file that you want to save to
-                        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + REPORT_DIRECTORY_NAME);
+                        File storageDir = new File(REPORT_DIRECTORY_NAME);
 
                         // Create the storage directory if it does not exist
                         if (!storageDir.exists()) {
@@ -401,7 +413,7 @@ public class NonUrgentActivity extends BaseActivity {
                         BufferedInputStream reader = new BufferedInputStream(inputStream);
 
                         // Create an output stream to a file that you want to save to
-                        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + REPORT_DIRECTORY_NAME);
+                        File storageDir = new File(REPORT_DIRECTORY_NAME);
 
                         // Create the storage directory if it does not exist
                         if (!storageDir.exists()) {
@@ -471,73 +483,112 @@ public class NonUrgentActivity extends BaseActivity {
     }
 
     public void submitReport(View view) {
-//        mProgressDialogDownload = new ProgressDialog(NonUrgentActivity.this);
-//        mProgressDialogDownload.setMessage("Downloading Update...");
-//        mProgressDialogDownload.setIndeterminate(true);
-//        mProgressDialogDownload.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//        mProgressDialogDownload.setCancelable(false);
-//
-//        ////////////////////////////////
-//        // https://github.com/awslabs/aws-sdk-android-samples/tree/master/S3TransferUtilitySample
-//        // http://docs.aws.amazon.com/mobile-hub/latest/developerguide/google-auth.html
-//        // http://docs.aws.amazon.com/mobile-hub/latest/developerguide/create-oauth-android-clientid.html
-//        ////////////////////////////////
-//        // Initialize the Amazon Cognito credentials provider
-//        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(getApplicationContext(), "us-west-2:da4317d3-fe48-4dcc-b357-7026fd226af0", // Identity Pool ID
-//                Regions.US_WEST_2 // Region
-//        );
-//
-//        // Initialize the Cognito Sync client
-//        CognitoSyncManager syncClient = new CognitoSyncManager(getApplicationContext(), Regions.US_EAST_1, // Region
-//                credentialsProvider);
-//
-//        //
-//        AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
-//        //
-//        TransferUtility transferUtility = new TransferUtility(s3., getApplicationContext());
-//
-//        // Image File
-//        for (String uri : imageArray) {
-//            if (uri != null) {
-//                File imageFile = new File(uri);
-//                TransferObserver observer = transferUtility.upload(Constants.BUCKET_NAME, "dsfs/" + imageFile.getName(), imageFile);
-//                observer.setTransferListener(new TransferListener() {
-//                    @Override public void onStateChanged(int id, TransferState state) {
-//                        if (state.equals(TransferState.COMPLETED)) {
-//                            Log.d(TAG, "onStateChanged COMPLETED");
-//                            mProgressDialogDownload.dismiss();
-//                        } else if (state.equals(TransferState.FAILED)) {
-//                            Log.d(TAG, "onStateChanged FAILED");
-//                            mProgressDialogDownload.dismiss();
-//                        } else if (state.equals(TransferState.CANCELED)) {
-//                            Log.d(TAG, "onStateChanged CANCELED");
-//                            mProgressDialogDownload.dismiss();
-//                        }
-//                    }
-//
-//                    @Override public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-//                        int percentage = (int) (bytesCurrent / bytesTotal * 100);
-//                        Log.d(TAG, "percentage " + percentage);
-//                        Log.d(TAG, "bytesCurrent " + bytesCurrent);
-//                        Log.d(TAG, "bytesTotal " + bytesTotal);
-//                        Log.d(TAG, "id " + id);
-//                        mProgressDialogDownload.show();
-//                        mProgressDialogDownload.setIndeterminate(false);
-//                        mProgressDialogDownload.setMax((int) bytesTotal);
-//                        mProgressDialogDownload.setProgress((int) bytesCurrent);
-//                    }
-//
-//                    @Override public void onError(int id, Exception ex) {
-//                        Log.d(TAG + " image", ex.toString());
-//                        mProgressDialogDownload.dismiss();
-//                    }
-//                });
-//                if (imageFile.exists()) {
-//                    Log.d(TAG + " image", imageFile.getAbsolutePath());
-//                    Log.d(TAG + " size", humanReadableByteCount(imageFile.length(), false));
-//                }
-//            }
-//        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // TODO: 2/15/17 !!!!!!just testing!!!!! 
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////
+        // https://github.com/awslabs/aws-sdk-android-samples/tree/master/S3TransferUtilitySample
+        // http://docs.aws.amazon.com/mobile-hub/latest/developerguide/google-auth.html
+        // http://docs.aws.amazon.com/mobile-hub/latest/developerguide/create-oauth-android-clientid.html
+        ////////////////////////////////
+        // Initialize the Amazon Cognito credentials provider
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(getApplicationContext(), "us-west-2:da4317d3-fe48-4dcc-b357-7026fd226af0", // Identity Pool ID
+                Regions.US_WEST_2 // Region
+        );
+        // Initialize the Cognito Sync client
+        CognitoSyncManager syncClient = new CognitoSyncManager(getApplicationContext(), Regions.US_EAST_1, // Region
+                credentialsProvider);
+        //
+        AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
+        //
+        TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
+
+
+        // Image File
+        AlertDialog.Builder alert = new AlertDialog.Builder(this).setTitle("Upload");
+        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        ScrollView scrollView = new ScrollView(this);
+        scrollView.setLayoutParams(parms);
+        final LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        scrollView.addView(layout);
+        // add LL and SV
+        alert.setView(scrollView);
+        //
+        alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        alert.show();
+
+        // loop image array to upload 
+        for (String uri : imageArray) {
+            if (uri != null) {
+                //
+                final File imageFile = new File(uri);
+                Log.d(TAG, humanReadableByteCount(imageFile.length(), false));
+                reduceImgSize(imageFile);
+                Log.d(TAG, humanReadableByteCount(imageFile.length(), false));
+                ///
+                Log.d(TAG, imageFile.getName());
+                //
+                final TextView tv1 = new TextView(this);
+                tv1.setText(imageFile.getName());
+                layout.addView(tv1);
+                //
+                final TextView tv2 = new TextView(this);
+                tv2.setText(imageFile.getName());
+                layout.addView(tv2);
+                //
+                final ProgressBar progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+                progressBar.setIndeterminate(true);
+                progressBar.setVisibility(View.VISIBLE);
+                layout.addView(progressBar, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+                Log.d(TAG + " image", imageFile.getAbsolutePath());
+                Log.d(TAG + " size", humanReadableByteCount(imageFile.length(), false));
+                TransferObserver observer = transferUtility.upload(Constants.BUCKET_NAME, "dsfs123/" + imageFile.getName(), imageFile);
+                observer.setTransferListener(new TransferListener() {
+                    @Override public void onStateChanged(int id, TransferState state) {
+                        if (state.equals(TransferState.COMPLETED)) {
+                            Log.d(TAG, "onStateChanged COMPLETED");
+                            tv1.setText(imageFile.getName() + " Complete");
+                        } else if (state.equals(TransferState.FAILED)) {
+                            Log.d(TAG, "onStateChanged FAILED");
+                            tv1.setText(imageFile.getName() + " FAILED");
+                        } else if (state.equals(TransferState.CANCELED)) {
+                            Log.d(TAG, "onStateChanged CANCELED");
+                            tv1.setText(imageFile.getName() + " CANCELED");
+                        } else if (state.equals(TransferState.IN_PROGRESS)) {
+                            Log.d(TAG, "onStateChanged IN_PROGRESS");
+                            tv1.setText(imageFile.getName() + " IN_PROGRESS");
+                        }
+                    }
+
+                    @Override public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                        //                        int percentage = (int) (bytesCurrent / bytesTotal * 100);
+                        //                        Log.d(TAG, "percentage " + percentage);
+                        Log.d(TAG, "bytesCurrent " + bytesCurrent);
+                        Log.d(TAG, "bytesTotal " + bytesTotal);
+                        tv2.setText(bytesCurrent + "/" + bytesTotal);
+                        //                        Log.d(TAG, "id " + id);
+                        //                        mProgressDialogDownload.show();
+                        //
+                        progressBar.setIndeterminate(false);
+                        progressBar.setMax((int) bytesTotal);
+                        progressBar.setProgress((int) bytesCurrent);
+                    }
+
+                    @Override public void onError(int id, Exception ex) {
+                        Log.d(TAG + " image", ex.toString());
+                        //                        mProgressDialogDownload.dismiss();
+                    }
+                });
+
+            }
+
+        }
         ////////////////////////////////
 
 
@@ -617,8 +668,7 @@ public class NonUrgentActivity extends BaseActivity {
     ////////////////////////////////////////////////////////
     // Permission Listener
     ////////////////////////////////////////////////////////
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    @Override public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case CAM_AND_WRITE_EXTERNAL_STORAGE_PERMISSION:
                 if (ActivityCompat.checkSelfPermission(this, CAMERA) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -665,5 +715,45 @@ public class NonUrgentActivity extends BaseActivity {
         Log.d("PlayServicesAvailable", "true");
         return true;
     }
+
+    private void reduceImgSize(File file) {
+        try {
+            // BitmapFactory options to downsize the image
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            o.inSampleSize = 6;
+            // factor of downsizing the image
+
+            FileInputStream inputStream = new FileInputStream(file);
+            //Bitmap selectedBitmap = null;
+            BitmapFactory.decodeStream(inputStream, null, o);
+            inputStream.close();
+
+            // The new size we want to scale to
+            final int REQUIRED_SIZE = 75;
+
+            // Find the correct scale value. It should be the power of 2.
+            int scale = 1;
+            while (o.outWidth / scale / 2 >= REQUIRED_SIZE && o.outHeight / scale / 2 >= REQUIRED_SIZE) {
+                scale *= 2;
+            }
+
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            inputStream = new FileInputStream(file);
+
+            Bitmap selectedBitmap = BitmapFactory.decodeStream(inputStream, null, o2);
+            inputStream.close();
+
+            // here i override the original image file
+            file.createNewFile();
+            FileOutputStream outputStream = new FileOutputStream(file);
+
+            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
