@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -42,19 +43,21 @@ public class IRCDialog extends DialogFragment {
         // set images according to RTL
         if (getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
             //Right To Left layout
-            textViewCaseworker.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_person, 0);
-            caseWorkerNum.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_call_color_primary, 0);
-            textViewNav.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_navigation, 0);
-            textViewNumber.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_call_color_primary, 0);
+            textViewCaseworker.setCompoundDrawablesWithIntrinsicBounds(null, null, VectorDrawableCompat.create(getResources(), R.drawable.ic_person, getActivity().getTheme()), null);
+            caseWorkerNum.setCompoundDrawablesWithIntrinsicBounds(null, null, VectorDrawableCompat.create(getResources(), R.drawable.ic_call_color_primary, getActivity().getTheme()), null);
+            textViewNav.setCompoundDrawablesWithIntrinsicBounds(null, null, VectorDrawableCompat.create(getResources(), R.drawable.ic_navigation, getActivity().getTheme()), null);
+            textViewNumber.setCompoundDrawablesWithIntrinsicBounds(null, null, VectorDrawableCompat.create(getResources(), R.drawable.ic_call_color_primary, getActivity().getTheme()), null);
+
             //
             textViewNav.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
             textViewNumber.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
         } else {
             //Left To Right layout
-            textViewCaseworker.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_person, 0, 0, 0);
-            caseWorkerNum.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_call_color_primary, 0, 0, 0);
-            textViewNav.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_navigation, 0, 0, 0);
-            textViewNumber.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_call_color_primary, 0, 0, 0);
+            textViewCaseworker.setCompoundDrawablesWithIntrinsicBounds(VectorDrawableCompat.create(getResources(), R.drawable.ic_person, getActivity().getTheme()), null, null, null);
+            caseWorkerNum.setCompoundDrawablesWithIntrinsicBounds(VectorDrawableCompat.create(getResources(), R.drawable.ic_call_color_primary, getActivity().getTheme()), null, null, null);
+            textViewNav.setCompoundDrawablesWithIntrinsicBounds(VectorDrawableCompat.create(getResources(), R.drawable.ic_navigation, getActivity().getTheme()), null, null, null);
+            textViewNumber.setCompoundDrawablesWithIntrinsicBounds(VectorDrawableCompat.create(getResources(), R.drawable.ic_call_color_primary, getActivity().getTheme()), null, null, null);
+
             //
             textViewNav.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
             textViewNumber.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
@@ -103,9 +106,8 @@ public class IRCDialog extends DialogFragment {
         //
         textViewNav.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                //
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("google.navigation:q=221 400 W, Salt Lake City, UT 84110"));
-                //                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + location.getLatitude() + "," + location.getLongitude()));
+                //                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("google.navigation:q=221 400 W, Salt Lake City, UT 84110"));
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=40.764473, -111.902098"));
                 startActivity(intent);
             }
         });

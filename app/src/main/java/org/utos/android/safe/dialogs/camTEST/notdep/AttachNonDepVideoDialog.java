@@ -1,12 +1,12 @@
 package org.utos.android.safe.dialogs.camTEST.notdep;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Matrix;
@@ -27,7 +27,6 @@ import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.Log;
 import android.util.Size;
@@ -40,33 +39,29 @@ import android.widget.Toast;
 
 import org.utos.android.safe.NonUrgentActivity;
 import org.utos.android.safe.R;
-import org.utos.android.safe.dialogs.camTEST.dep.AutoFitTextureView;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-
 /**
  * Created by zachariah.davis on 1/24/17.
  */
-@TargetApi(21) public class AttachVideoDialogCamera2 extends DialogFragment implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
+@TargetApi(21) public class AttachNonDepVideoDialog extends DialogFragment implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private static final String TAG = "AttachVideoDialogCamera2";
+    private static final String TAG = "AttachNonDepVideoDialog";
 
     private Context ctx;
-    boolean flashOn = false;
-    AppCompatImageButton toggleButtonFlash;
+    private boolean flashOn = false;
+    private AppCompatImageButton toggleButtonFlash;
     private Integer mSensorOrientation;
     private String mNextVideoAbsolutePath;
     private CaptureRequest.Builder mPreviewBuilder;
-    private Surface mRecorderSurface;
 
     private static final int SENSOR_ORIENTATION_DEFAULT_DEGREES = 90;
     private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
@@ -119,11 +114,6 @@ import java.util.concurrent.TimeUnit;
     private Size mPreviewSize;
 
     /**
-     * The {@link android.util.Size} of video recording.
-     */
-    private Size mVideoSize;
-
-    /**
      * MediaRecorder
      */
     private MediaRecorder mMediaRecorder;
@@ -146,10 +136,10 @@ import java.util.concurrent.TimeUnit;
     /**
      * A {@link Semaphore} to prevent the app from exiting before closing the camera.
      */
-    private Semaphore mCameraOpenCloseLock = new Semaphore(1);
+    private final Semaphore mCameraOpenCloseLock = new Semaphore(1);
 
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final View inflate = getActivity().getLayoutInflater().inflate(R.layout.camera2, null);
+        @SuppressLint("InflateParams") final View inflate = getActivity().getLayoutInflater().inflate(R.layout.dialog_video_non_dep, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setView(inflate);
 
         // don't let user cancel dialog
@@ -162,6 +152,10 @@ import java.util.concurrent.TimeUnit;
         AppCompatImageButton closeBtn = (AppCompatImageButton) inflate.findViewById(R.id.closeCam);
         toggleButtonFlash = (AppCompatImageButton) inflate.findViewById(R.id.toggleFlash);
         // UI
+
+        if (!isFlashSupported()) {
+            toggleButtonFlash.setVisibility(View.INVISIBLE);
+        }
 
         // OnClicks
         closeBtn.setOnClickListener(this);
@@ -190,7 +184,7 @@ import java.util.concurrent.TimeUnit;
      * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a
      * {@link TextureView}.
      */
-    private TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
+    private final TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
 
         @Override public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
             openCamera(width, height);
@@ -201,7 +195,11 @@ import java.util.concurrent.TimeUnit;
         }
 
         @Override public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-            return true;
+            if (mCameraDevice != null) {
+                closeCamera();
+                mCameraDevice = null;
+            }
+            return false;
         }
 
         @Override public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
@@ -213,9 +211,9 @@ import java.util.concurrent.TimeUnit;
     /**
      * {@link CameraDevice.StateCallback} is called when {@link CameraDevice} changes its status.
      */
-    private CameraDevice.StateCallback mStateCallback = new CameraDevice.StateCallback() {
+    private final CameraDevice.StateCallback mStateCallback = new CameraDevice.StateCallback() {
 
-        @Override public void onOpened(CameraDevice cameraDevice) {
+        @Override public void onOpened(@NonNull CameraDevice cameraDevice) {
             mCameraDevice = cameraDevice;
             startPreview();
             mCameraOpenCloseLock.release();
@@ -224,13 +222,13 @@ import java.util.concurrent.TimeUnit;
             }
         }
 
-        @Override public void onDisconnected(CameraDevice cameraDevice) {
+        @Override public void onDisconnected(@NonNull CameraDevice cameraDevice) {
             mCameraOpenCloseLock.release();
             cameraDevice.close();
             mCameraDevice = null;
         }
 
-        @Override public void onError(CameraDevice cameraDevice, int error) {
+        @Override public void onError(@NonNull CameraDevice cameraDevice, int error) {
             mCameraOpenCloseLock.release();
             cameraDevice.close();
             mCameraDevice = null;
@@ -243,8 +241,8 @@ import java.util.concurrent.TimeUnit;
     };
 
 
-    public static AttachVideoDialogCamera2 newInstance() {
-        return new AttachVideoDialogCamera2();
+    public static AttachNonDepVideoDialog newInstance() {
+        return new AttachNonDepVideoDialog();
     }
 
     /**
@@ -277,7 +275,7 @@ import java.util.concurrent.TimeUnit;
      */
     private static Size chooseOptimalSize(Size[] choices, int width, int height, Size aspectRatio) {
         // Collect the supported resolutions that are at least as big as the preview Surface
-        List<Size> bigEnough = new ArrayList<Size>();
+        List<Size> bigEnough = new ArrayList<>();
         int w = aspectRatio.getWidth();
         int h = aspectRatio.getHeight();
         for (Size option : choices) {
@@ -322,16 +320,12 @@ import java.util.concurrent.TimeUnit;
                 }
                 break;
             case R.id.closeCam:
-                // UI
-                // Stop recording
-//                if (mMediaRecorder!=null){
-//                    mMediaRecorder.stop();
-//                    mMediaRecorder.reset();
-//                }
-
-                //
+                // close camera dialog
+                if (mIsRecordingVideo) {
+                    // delete current video f recording
+                    deleteCurrentVideo();
+                }
                 getDialog().dismiss();
-
                 break;
             case R.id.toggleFlash:
                 if (!flashOn) {
@@ -385,11 +379,10 @@ import java.util.concurrent.TimeUnit;
     /**
      * Gets whether you should show UI with rationale for requesting permissions.
      *
-     * @param permissions The permissions your app wants to request.
      * @return Whether you can show permission rationale UI.
      */
-    private boolean shouldShowRequestPermissionRationale(String[] permissions) {
-        for (String permission : permissions) {
+    private boolean shouldShowRequestPermissionRationale() {
+        for (String permission : AttachNonDepVideoDialog.VIDEO_PERMISSIONS) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permission)) {
                 return true;
             }
@@ -400,34 +393,33 @@ import java.util.concurrent.TimeUnit;
     /**
      * Requests permissions needed for recording video.
      */
-    private void requestVideoPermissions() {
-        if (shouldShowRequestPermissionRationale(VIDEO_PERMISSIONS)) {
-            new ConfirmationDialog().show(getChildFragmentManager(), FRAGMENT_DIALOG);
-        } else {
-            ActivityCompat.requestPermissions(getActivity(), VIDEO_PERMISSIONS, REQUEST_VIDEO_PERMISSIONS);
-        }
-    }
+    //    private void requestVideoPermissions() {
+    //        if (shouldShowRequestPermissionRationale()) {
+    //            new ConfirmationDialog().show(getChildFragmentManager(), FRAGMENT_DIALOG);
+    //        } else {
+    //            ActivityCompat.requestPermissions(getActivity(), VIDEO_PERMISSIONS, REQUEST_VIDEO_PERMISSIONS);
+    //        }
+    //    }
 
-    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d(TAG, "onRequestPermissionsResult");
-        if (requestCode == REQUEST_VIDEO_PERMISSIONS) {
-            if (grantResults.length == VIDEO_PERMISSIONS.length) {
-                for (int result : grantResults) {
-                    if (result != PackageManager.PERMISSION_GRANTED) {
-                        ErrorDialog.newInstance("perr Request").show(getChildFragmentManager(), FRAGMENT_DIALOG);
-                        break;
-                    }
-                }
-            } else {
-                ErrorDialog.newInstance("perr Request").show(getChildFragmentManager(), FRAGMENT_DIALOG);
-            }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
-    private boolean hasPermissionsGranted(String[] permissions) {
-        for (String permission : permissions) {
+    //    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    //        Log.d(TAG, "onRequestPermissionsResult");
+    //        if (requestCode == REQUEST_VIDEO_PERMISSIONS) {
+    //            if (grantResults.length == VIDEO_PERMISSIONS.length) {
+    //                for (int result : grantResults) {
+    //                    if (result != PackageManager.PERMISSION_GRANTED) {
+    //                        ErrorDialog.newInstance("perr Request").show(getChildFragmentManager(), FRAGMENT_DIALOG);
+    //                        break;
+    //                    }
+    //                }
+    //            } else {
+    //                ErrorDialog.newInstance("perr Request").show(getChildFragmentManager(), FRAGMENT_DIALOG);
+    //            }
+    //        } else {
+    //            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    //        }
+    //    }
+    private boolean hasPermissionsGranted() {
+        for (String permission : AttachNonDepVideoDialog.VIDEO_PERMISSIONS) {
             if (ActivityCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
                 return false;
             }
@@ -439,10 +431,10 @@ import java.util.concurrent.TimeUnit;
      * Tries to open a {@link CameraDevice}. The result is listened by `mStateCallback`.
      */
     private void openCamera(int width, int height) {
-        if (!hasPermissionsGranted(VIDEO_PERMISSIONS)) {
-            requestVideoPermissions();
-            return;
-        }
+        //        if (!hasPermissionsGranted()) {
+        //            requestVideoPermissions();
+        //            return;
+        //        }
         final Activity activity = getActivity();
         if (null == activity || activity.isFinishing()) {
             return;
@@ -459,7 +451,11 @@ import java.util.concurrent.TimeUnit;
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             mSensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
-            mVideoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder.class));
+            assert map != null;
+            /*
+      The {@link android.util.Size} of video recording.
+     */
+            Size mVideoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder.class));
             mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class), width, height, mVideoSize);
 
             int orientation = getResources().getConfiguration().orientation;
@@ -470,14 +466,19 @@ import java.util.concurrent.TimeUnit;
             }
             configureTransform(width, height);
             mMediaRecorder = new MediaRecorder();
-            manager.openCamera(cameraId, mStateCallback, null);
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                manager.openCamera(cameraId, mStateCallback, null);
+            } else {
+                getDialog().dismiss();
+            }
         } catch (CameraAccessException e) {
             Toast.makeText(activity, "Cannot access the camera.", Toast.LENGTH_SHORT).show();
             activity.finish();
         } catch (NullPointerException e) {
+            e.printStackTrace();
             // Currently an NPE is thrown when the Camera2API is used but not supported on the
             // device this code runs.
-            ErrorDialog.newInstance("Cam Error").show(getChildFragmentManager(), FRAGMENT_DIALOG);
+            //            ErrorDialog.newInstance("Cam Error").show(getChildFragmentManager(), FRAGMENT_DIALOG);
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted while trying to lock camera opening.");
         }
@@ -519,20 +520,35 @@ import java.util.concurrent.TimeUnit;
             Surface previewSurface = new Surface(texture);
             mPreviewBuilder.addTarget(previewSurface);
 
-            mCameraDevice.createCaptureSession(Arrays.asList(previewSurface), new CameraCaptureSession.StateCallback() {
+            mCameraDevice.createCaptureSession(Collections.singletonList(previewSurface), new CameraCaptureSession.StateCallback() {
 
-                @Override public void onConfigured(CameraCaptureSession cameraCaptureSession) {
+                @Override public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
                     mPreviewSession = cameraCaptureSession;
                     updatePreview();
                 }
 
-                @Override public void onConfigureFailed(CameraCaptureSession cameraCaptureSession) {
+                @Override public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
                     Activity activity = getActivity();
                     if (null != activity) {
                         Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
                     }
                 }
             }, mBackgroundHandler);
+
+            //            mCameraDevice.createCaptureSession(Arrays.asList(previewSurface), new CameraCaptureSession.StateCallback() {
+            //
+            //                @Override public void onConfigured(CameraCaptureSession cameraCaptureSession) {
+            //                    mPreviewSession = cameraCaptureSession;
+            //                    updatePreview();
+            //                }
+            //
+            //                @Override public void onConfigureFailed(CameraCaptureSession cameraCaptureSession) {
+            //                    Activity activity = getActivity();
+            //                    if (null != activity) {
+            //                        Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
+            //                    }
+            //                }
+            //            }, mBackgroundHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -597,15 +613,28 @@ import java.util.concurrent.TimeUnit;
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         if (mNextVideoAbsolutePath == null || mNextVideoAbsolutePath.isEmpty()) {
-            mNextVideoAbsolutePath = getVideoFilePath(getActivity());
+            mNextVideoAbsolutePath = getVideoFilePath();
         }
-        // format video
+        // External location
+        File mediaStorageDir = new File(((NonUrgentActivity) ctx).REPORT_DIRECTORY_NAME);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.e(((NonUrgentActivity) ctx).REPORT_DIRECTORY_NAME, "Oops! Failed create " + ((NonUrgentActivity) ctx).REPORT_DIRECTORY_NAME + " directory");
+            }
+        }
         mMediaRecorder.setOutputFile(mNextVideoAbsolutePath);
-        // todo add to array
+        ///////////////
+        // add to array
         ((NonUrgentActivity) getActivity()).videoArray.add(mNextVideoAbsolutePath);
-        mMediaRecorder.setVideoEncodingBitRate(10000000);
+        // set text
+        ((NonUrgentActivity) getActivity()).attachVideoButton.setText(String.valueOf(((NonUrgentActivity) getActivity()).videoArray.size()));
+        ///////////////
+        mMediaRecorder.setVideoEncodingBitRate(1000000);
         mMediaRecorder.setVideoFrameRate(30);
-        mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
+        mMediaRecorder.setVideoSize(640, 480);
+        //        mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
@@ -620,7 +649,7 @@ import java.util.concurrent.TimeUnit;
         mMediaRecorder.prepare();
     }
 
-    private String getVideoFilePath(Context context) {
+    private String getVideoFilePath() {
 
         //        File finalDestImage = new File(storageDir.getPath() + File.separator + "video_" + (videoArray.size() + 1) + ".mp4");
 
@@ -646,7 +675,7 @@ import java.util.concurrent.TimeUnit;
             mPreviewBuilder.addTarget(previewSurface);
 
             // Set up Surface for the MediaRecorder
-            mRecorderSurface = mMediaRecorder.getSurface();
+            Surface mRecorderSurface = mMediaRecorder.getSurface();
             surfaces.add(mRecorderSurface);
             mPreviewBuilder.addTarget(mRecorderSurface);
 
@@ -659,7 +688,7 @@ import java.util.concurrent.TimeUnit;
                     getActivity().runOnUiThread(new Runnable() {
                         @Override public void run() {
                             // UI
-                            mRecordBtn.setText("Stop");
+                            mRecordBtn.setText(getString(R.string.btn_stop));
                             mIsRecordingVideo = true;
 
                             // flash stuff
@@ -667,9 +696,7 @@ import java.util.concurrent.TimeUnit;
                             try {
                                 CameraManager manager = (CameraManager) getActivity().getSystemService(Context.CAMERA_SERVICE);
                                 String cameraId = manager.getCameraIdList()[0];
-                                CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
-                                boolean flashAvailable = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
-                                if (characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)) {
+                                if (isFlashSupported()) {
                                     // flash stuff
                                     if (flashOn) {
                                         //
@@ -691,13 +718,11 @@ import java.util.concurrent.TimeUnit;
                                             e.printStackTrace();
                                         }
                                     }
-                                } else {
-                                    //todo: throw Exception
-
                                 }
                             } catch (NullPointerException e) {
-
+                                e.printStackTrace();
                             } catch (CameraAccessException e) {
+                                e.printStackTrace();
                                 Toast.makeText(getActivity(), "Cannot access the camera.", Toast.LENGTH_SHORT).show();
                                 getActivity().finish();
                             }
@@ -715,9 +740,7 @@ import java.util.concurrent.TimeUnit;
                     }
                 }
             }, mBackgroundHandler);
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (CameraAccessException | IOException e) {
             e.printStackTrace();
         }
 
@@ -733,24 +756,23 @@ import java.util.concurrent.TimeUnit;
     private void stopRecordingVideo() {
         // UI
         mIsRecordingVideo = false;
-        mRecordBtn.setText("Record");
+        //        mRecordBtn.setText("Record");
         // Stop recording
         mMediaRecorder.stop();
         mMediaRecorder.reset();
-
-        Activity activity = getActivity();
-        if (null != activity) {
-            Toast.makeText(activity, "Video saved: " + mNextVideoAbsolutePath, Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "Video saved: " + mNextVideoAbsolutePath);
-        }
+        //
         mNextVideoAbsolutePath = null;
-        startPreview();
+        //        startPreview();
+
+        // close dialog when done
+        getDialog().dismiss();
+
     }
 
     /**
      * Compares two {@code Size}s based on their areas.
      */
-    static class CompareSizesByArea implements Comparator<Size> {
+    private static class CompareSizesByArea implements Comparator<Size> {
 
         @Override public int compare(Size lhs, Size rhs) {
             // We cast here to ensure the multiplications won't overflow
@@ -759,56 +781,59 @@ import java.util.concurrent.TimeUnit;
 
     }
 
-    public static class ErrorDialog extends DialogFragment {
+    //    public static class ErrorDialog extends DialogFragment {
+    //
+    //        private static final String ARG_MESSAGE = "message";
+    //
+    //        public static ErrorDialog newInstance(String message) {
+    //            ErrorDialog dialog = new ErrorDialog();
+    //            Bundle args = new Bundle();
+    //            args.putString(ARG_MESSAGE, message);
+    //            dialog.setArguments(args);
+    //            return dialog;
+    //        }
+    //
+    //        @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+    //            final Activity activity = getActivity();
+    //            return new AlertDialog.Builder(activity).setMessage(getArguments().getString(ARG_MESSAGE)).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+    //                @Override public void onClick(DialogInterface dialogInterface, int i) {
+    //                    activity.finish();
+    //                }
+    //            }).create();
+    //        }
+    //
+    //    }
 
-        private static final String ARG_MESSAGE = "message";
+    //    public static class ConfirmationDialog extends DialogFragment {
+    //
+    //        @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+    //            final Fragment parent = getParentFragment();
+    //            return new AlertDialog.Builder(getActivity()).setMessage("permission_request").setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+    //                @Override public void onClick(DialogInterface dialog, int which) {
+    //                    ActivityCompat.requestPermissions(getActivity(), VIDEO_PERMISSIONS, REQUEST_VIDEO_PERMISSIONS);
+    //                }
+    //            }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+    //                @Override public void onClick(DialogInterface dialog, int which) {
+    //                    parent.getActivity().finish();
+    //                }
+    //            }).create();
+    //        }
+    //
+    //    }
 
-        public static ErrorDialog newInstance(String message) {
-            ErrorDialog dialog = new ErrorDialog();
-            Bundle args = new Bundle();
-            args.putString(ARG_MESSAGE, message);
-            dialog.setArguments(args);
-            return dialog;
-        }
-
-        @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Activity activity = getActivity();
-            return new AlertDialog.Builder(activity).setMessage(getArguments().getString(ARG_MESSAGE)).setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                @Override public void onClick(DialogInterface dialogInterface, int i) {
-                    activity.finish();
-                }
-            }).create();
-        }
-
-    }
-
-    public static class ConfirmationDialog extends DialogFragment {
-
-        @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Fragment parent = getParentFragment();
-            return new AlertDialog.Builder(getActivity()).setMessage("permission_request").setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                @Override public void onClick(DialogInterface dialog, int which) {
-                    ActivityCompat.requestPermissions(getActivity(), VIDEO_PERMISSIONS, REQUEST_VIDEO_PERMISSIONS);
-                }
-            }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override public void onClick(DialogInterface dialog, int which) {
-                    parent.getActivity().finish();
-                }
-            }).create();
-        }
-
-    }
-
-    /**
-     * @param packageManager
-     * @return true <b>if the device support camera flash</b><br/>
-     * false <b>if the device doesn't support camera flash</b>
-     */
-    private boolean isFlashSupported(PackageManager packageManager) {
+    private boolean isFlashSupported() {
         // if device support camera flash?
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
-            return true;
+        return getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+    }
+
+    private void deleteCurrentVideo() {
+        if (!mNextVideoAbsolutePath.equals("") || mNextVideoAbsolutePath != null) {
+            File file = new File(mNextVideoAbsolutePath);
+            @SuppressWarnings("UnusedAssignment") boolean deleted = file.delete();
+            // remove from videoArray list
+            ((NonUrgentActivity) ctx).videoArray.remove(((NonUrgentActivity) ctx).videoArray.size() - 1);
+            // set text
+            ((NonUrgentActivity) getActivity()).attachVideoButton.setText(String.valueOf(((NonUrgentActivity) getActivity()).videoArray.size()));
         }
-        return false;
     }
 }

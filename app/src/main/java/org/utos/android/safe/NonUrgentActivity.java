@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
@@ -68,12 +69,12 @@ public class NonUrgentActivity extends BaseActivity {
     public static final int SELECT_VIDEO_SELECTION_REQUEST_CODE = 300;
     public static final int CAPTURE_VIDEO_SELECTION_REQUEST_CODE = 400;
 
+    // directory name to store captured images and videos
+    public String REPORT_DIRECTORY_NAME;
+
     // media types
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
-
-    // directory name to store captured images and videos
-    public String REPORT_DIRECTORY_NAME;
 
     public AppCompatButton attachImageButton, attachVoiceButton, attachVideoButton;
     private Spinner spinner;
@@ -93,7 +94,17 @@ public class NonUrgentActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorYellow));
 
-        REPORT_DIRECTORY_NAME = getExternalFilesDir(null).getAbsolutePath() + File.separator + "SAFE" + File.separator + "Report";
+        // create file structure
+        REPORT_DIRECTORY_NAME = getExternalFilesDir(null).getAbsolutePath() + File.separator + "Report";
+        // External location
+        File mediaStorageDir = new File(REPORT_DIRECTORY_NAME);
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.e(REPORT_DIRECTORY_NAME, "Oops! Failed create " + REPORT_DIRECTORY_NAME + " directory");
+            }
+        }
+        // create file structure
 
         // keep screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -116,6 +127,13 @@ public class NonUrgentActivity extends BaseActivity {
         attachImageButton = (AppCompatButton) findViewById(R.id.attachImage);
         attachVoiceButton = (AppCompatButton) findViewById(R.id.attachVoice);
         attachVideoButton = (AppCompatButton) findViewById(R.id.attachVideo);
+        AppCompatButton submitButton = (AppCompatButton) findViewById(R.id.submitButton);
+
+        // set images
+        submitButton.setCompoundDrawablesWithIntrinsicBounds(null, null, VectorDrawableCompat.create(getResources(), R.drawable.ic_send, getTheme()), null);
+        attachImageButton.setCompoundDrawablesWithIntrinsicBounds(null, VectorDrawableCompat.create(getResources(), R.drawable.ic_add_photo, getTheme()), null, null);
+        attachVoiceButton.setCompoundDrawablesWithIntrinsicBounds(null, VectorDrawableCompat.create(getResources(), R.drawable.ic_mic, getTheme()), null, null);
+        attachVideoButton.setCompoundDrawablesWithIntrinsicBounds(null, VectorDrawableCompat.create(getResources(), R.drawable.ic_video, getTheme()), null, null);
 
     }
 
@@ -143,13 +161,13 @@ public class NonUrgentActivity extends BaseActivity {
      * returning image / video
      */
     public File getOutputMediaFile(int type) throws IOException {
-        // External sdcard location
+        // External location
         File mediaStorageDir = new File(REPORT_DIRECTORY_NAME);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d(REPORT_DIRECTORY_NAME, "Oops! Failed create " + REPORT_DIRECTORY_NAME + " directory");
+                Log.e(REPORT_DIRECTORY_NAME, "Oops! Failed create " + REPORT_DIRECTORY_NAME + " directory");
                 return null;
             }
         }
@@ -274,11 +292,13 @@ public class NonUrgentActivity extends BaseActivity {
         imageArray.remove(imageArray.size() - 1);
     }
 
-    private void deleteCurrentVideo() {
-        File file = new File(mCurrentVideoPath);
-        boolean deleted = file.delete();
-        // remove from videoArray list
-        videoArray.remove(videoArray.size() - 1);
+    public void deleteCurrentVideo() {
+        if (mCurrentVideoPath != "" || mCurrentVideoPath != null) {
+            File file = new File(mCurrentVideoPath);
+            boolean deleted = file.delete();
+            // remove from videoArray list
+            videoArray.remove(videoArray.size() - 1);
+        }
     }
 
     private void deleteEverything() {
@@ -386,23 +406,23 @@ public class NonUrgentActivity extends BaseActivity {
 
         }
 
-        // CAPTURE_VIDEO_SELECTION_REQUEST_CODE
-        if (requestCode == CAPTURE_VIDEO_SELECTION_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // set text
-                attachVideoButton.setText(String.valueOf(videoArray.size()));
-            } else if (resultCode == RESULT_CANCELED) {
-                // user cancelled recording
-                Toast.makeText(getApplicationContext(), "User cancelled video recording", Toast.LENGTH_SHORT).show();
-                // delete file
-                deleteCurrentVideo();
-            } else {
-                // failed to record video
-                Toast.makeText(getApplicationContext(), "Sorry! Failed to record video", Toast.LENGTH_SHORT).show();
-                // delete file
-                deleteCurrentVideo();
-            }
-        }
+        //        // CAPTURE_VIDEO_SELECTION_REQUEST_CODE
+        //        if (requestCode == CAPTURE_VIDEO_SELECTION_REQUEST_CODE) {
+        //            if (resultCode == RESULT_OK) {
+        //                // set text
+        //                attachVideoButton.setText(String.valueOf(videoArray.size()));
+        //            } else if (resultCode == RESULT_CANCELED) {
+        //                // user cancelled recording
+        //                Toast.makeText(getApplicationContext(), "User cancelled video recording", Toast.LENGTH_SHORT).show();
+        //                // delete file
+        //                deleteCurrentVideo();
+        //            } else {
+        //                // failed to record video
+        //                Toast.makeText(getApplicationContext(), "Sorry! Failed to record video", Toast.LENGTH_SHORT).show();
+        //                // delete file
+        //                deleteCurrentVideo();
+        //            }
+        //        }
 
         //  SELECT_VIDEO_SELECTION_REQUEST_CODE
         if (requestCode == SELECT_VIDEO_SELECTION_REQUEST_CODE) {
@@ -483,6 +503,18 @@ public class NonUrgentActivity extends BaseActivity {
     }
 
     public void submitReport(View view) {
+        ArrayList<String> allFiles = new ArrayList<>();
+        for (String uri : imageArray) {
+            allFiles.add(uri);
+        }
+        for (String uri : audioArray) {
+            allFiles.add(uri);
+        }
+        for (String uri : videoArray) {
+            allFiles.add(uri);
+        }
+
+
         ////////////////////////////////////////////////////////////////////////////////////////////////
         // TODO: 2/15/17 !!!!!!just testing!!!!! 
         ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -523,7 +555,7 @@ public class NonUrgentActivity extends BaseActivity {
         alert.show();
 
         // loop image array to upload 
-        for (String uri : imageArray) {
+        for (String uri : allFiles) {
             if (uri != null) {
                 //
                 final File imageFile = new File(uri);

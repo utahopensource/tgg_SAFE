@@ -3,6 +3,7 @@ package org.utos.android.safe.dialogs;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -11,7 +12,8 @@ import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import org.utos.android.safe.R;
-import org.utos.android.safe.dialogs.camTEST.notdep.AttachVideoDialogCamera2;
+import org.utos.android.safe.dialogs.camTEST.dep.AttachDepVideoDialog;
+import org.utos.android.safe.dialogs.camTEST.notdep.AttachNonDepVideoDialog;
 
 import static org.utos.android.safe.NonUrgentActivity.SELECT_VIDEO_SELECTION_REQUEST_CODE;
 
@@ -41,17 +43,17 @@ public class AttachVideoDialog extends DialogFragment {
                     case 0:
                         // Take Video
                         if (isExternalStorageReadable() && isExternalStorageWritable()) {
-                            //                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                            //                                // your code using Camera API here - is between 1-20
-                            //                                new AttachVideoDialogV2().show(getActivity().getSupportFragmentManager(), "dialog");
-                            //                            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            //                                // your code using Camera2 API here - is api 21 or higher
-                            //                                new AttachVideoDialogCamera2().show(getActivity().getSupportFragmentManager(), "dialog");
-                            //                            }
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                                // your code using Camera API here - is between 1-20
+                                new AttachDepVideoDialog().show(getActivity().getSupportFragmentManager(), "dialog");
+                            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                // your code using Camera2 API here - is api 21 or higher
+                                new AttachNonDepVideoDialog().show(getActivity().getSupportFragmentManager(), "dialog");
+                            }
 
                             //
-                            new AttachVideoDialogCamera2().show(getActivity().getSupportFragmentManager(), "dialog");
-//                            new AttachVideoDialogV2().show(getActivity().getSupportFragmentManager(), "dialog");
+                            //                            new AttachNonDepVideoDialog().show(getActivity().getSupportFragmentManager(), "dialog");
+                            //                            new AttachDepVideoDialog().show(getActivity().getSupportFragmentManager(), "dialog");
 
 
                             //                            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);

@@ -1,4 +1,4 @@
-package org.utos.android.safe.dialogs.camTEST.dep;
+package org.utos.android.safe.dialogs.camTEST.notdep;
 
 /*
  * Copyright 2014 The Android Open Source Project

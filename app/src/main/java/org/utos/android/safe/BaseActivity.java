@@ -1,11 +1,11 @@
 package org.utos.android.safe;
 
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import org.utos.android.safe.wrapper.LanguageWrapper;
 
@@ -68,11 +68,12 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "" + getCurrentLocale());
     }
 
-
     //
-    @TargetApi(Build.VERSION_CODES.N) public Locale getCurrentLocale() {
+    public Locale getCurrentLocale() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return getResources().getConfiguration().getLocales().get(0);
         } else {
@@ -80,20 +81,29 @@ public class BaseActivity extends AppCompatActivity {
             return getResources().getConfiguration().locale;
         }
     }
+    //    @TargetApi(Build.VERSION_CODES.N) public Locale getCurrentLocale() {
+    //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    //            return getResources().getConfiguration().getLocales().get(0);
+    //        } else {
+    //            //noinspection deprecation
+    //            return getResources().getConfiguration().locale;
+    //        }
+    //    }
 
-    public void showProgressDialog(Context ctx, String message, boolean cancelable) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(ctx);
-            mProgressDialog.setCancelable(cancelable);
-            mProgressDialog.setMessage(message);
-        }
-
-        mProgressDialog.show();
-    }
-
-    public void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
-    }
+    //    public void showProgressDialog(Context ctx, String message, boolean cancelable) {
+    //        if (mProgressDialog == null) {
+    //            mProgressDialog = new ProgressDialog(ctx);
+    //            mProgressDialog.setCancelable(cancelable);
+    //            mProgressDialog.setMessage(message);
+    //            mProgressDialog.setIndeterminate(true);
+    //        }
+    //
+    //        mProgressDialog.show();
+    //    }
+    //
+    //    public void hideProgressDialog() {
+    //        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+    //            mProgressDialog.dismiss();
+    //        }
+    //    }
 }

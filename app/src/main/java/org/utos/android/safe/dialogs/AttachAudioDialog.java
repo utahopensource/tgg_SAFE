@@ -40,7 +40,7 @@ public class AttachAudioDialog {
             mediaRecorder.setAudioSamplingRate(44100);
             mediaRecorder.setAudioEncodingBitRate(16);
             //
-            final String path = ((NonUrgentActivity) ctx).REPORT_DIRECTORY_NAME + File.separator + "audio_" + (((NonUrgentActivity) ctx).audioArray.size() + 1) + ".mp3";
+            final String path = ((NonUrgentActivity)ctx).REPORT_DIRECTORY_NAME + File.separator + "audio_" + (((NonUrgentActivity) ctx).audioArray.size() + 1) + ".mp3";
             mediaRecorder.setOutputFile(path);
             //
             try {
@@ -52,7 +52,7 @@ public class AttachAudioDialog {
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 mProgressDialog.setCancelable(false);
                 mProgressDialog.setMessage(ctx.getString(R.string.start_talking));
-                mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, ctx.getString(R.string.stop_record), new DialogInterface.OnClickListener() {
+                mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, ctx.getString(R.string.btn_stop), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         mProgressDialog.dismiss();
                         try {

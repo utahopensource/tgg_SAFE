@@ -43,7 +43,6 @@
     <string name="attach_video">Attach Video</string>
     <string name="audio_record">Audio Recording</string>
     <string name="start_talking">Start Talking</string>
-    <string name="stop_record">Stop Recording</string>
     <string-array name="get_pic">
         <item>Take Photo</item>
         <item>Select Photo</item>
@@ -60,6 +59,8 @@
         <item>5</item>
     </string-array>
     <string name="btn_submit">Submit</string>
+    <string name="btn_record">Record</string>
+    <string name="btn_stop">Stop</string>
     <!--Non Urgent Activity-->
 
     <!--Settings Activity-->
